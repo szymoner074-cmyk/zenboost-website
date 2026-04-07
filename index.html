@@ -26,17 +26,17 @@
             scroll-behavior: smooth;
         }
 
-        .bg-pattern {
+       .bg-pattern {
             pointer-events: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; /* Zmień z 1 na -1 jeśli tak nie masz */
             background: 
                 radial-gradient(circle at 15% 15%, rgba(168, 85, 247, 0.12) 0%, transparent 40%),
                 radial-gradient(circle at 85% 85%, rgba(0, 255, 255, 0.08) 0%, transparent 40%),
                 linear-gradient(rgba(255,255,255,0.01) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(255,255,255,0.01) 1px, transparent 1px);
             background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
-            z-index: -1;
         }
 
         nav {
