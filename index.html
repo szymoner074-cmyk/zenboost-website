@@ -3,145 +3,187 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZenBoost | Profesjonalna Optymalizacja i Development</title>
+    <title>ZenBoost | Szybkie Doładowania i Rozwój 🌿</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
-        :root { --p: #a855f7; --bg: #0f172a; --card: #1e293b; }
-        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; margin: 0; line-height: 1.6; }
-        header { padding: 80px 20px; text-align: center; background: radial-gradient(circle, rgba(168,85,247,0.1) 0%, rgba(15,23,42,1) 70%); }
-        .section { max-width: 1000px; margin: 60px auto; padding: 0 20px; }
-        h2 { color: var(--p); border-bottom: 2px solid var(--p); display: inline-block; padding-bottom: 5px; }
-        
-        /* Grid Cennika */
-        .price-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 30px; }
-        .price-card { background: var(--card); padding: 25px; border-radius: 15px; border: 1px solid #334155; transition: 0.3s; }
-        .price-card:hover { border-color: var(--p); transform: translateY(-5px); }
-        .price-card h3 { margin-top: 0; color: var(--p); }
-        .price { font-size: 1.5rem; font-weight: bold; margin: 15px 0; }
-        
-        /* Sekcje info */
-        .info-box { background: rgba(168,85,247,0.05); border-left: 4px solid var(--p); padding: 20px; margin: 20px 0; border-radius: 0 10px 10px 0; }
-        
-        button { background: var(--p); color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; transition: 0.3s; }
-        button:hover { opacity: 0.8; box-shadow: 0 0 15px var(--p); }
+        :root { --p: #a855f7; --bg: #0f172a; --card: #1e293b; --t: 0.3s ease-in-out; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: var(--bg); color: white; font-family: 'Poppins', sans-serif; overflow-x: hidden; }
 
+        /* Neon Background Głowicy */
+        header { 
+            position: relative; padding: 120px 20px; text-align: center;
+            background: radial-gradient(circle at center, rgba(168,85,247,0.1) 0%, rgba(15,23,42,1) 80%);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        header h1 { font-size: 4rem; font-weight: 800; text-transform: uppercase; margin-bottom: 15px; }
+        header h1 span { color: var(--p); text-shadow: 0 0 20px var(--p); }
+        header p { font-size: 1.2rem; max-width: 600px; margin: auto; opacity: 0.8; }
+
+        .container { max-width: 1200px; margin: auto; padding: 60px 20px; }
+        
+        /* Sekcje info (Dlaczego my, AnyDesk) */
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px; margin-bottom: 80px; }
+        .info-card { 
+            background: var(--card); padding: 30px; border-radius: 20px; 
+            border: 1px solid transparent; transition: var(--t); position: relative;
+        }
+        .info-card:hover { border-color: var(--p); box-shadow: 0 0 30px rgba(168,85,247,0.1); }
+        .info-card h3 { color: var(--p); font-size: 1.5rem; margin-bottom: 15px; }
+        .info-card p { opacity: 0.8; font-size: 0.95rem; line-height: 1.6; }
+
+        /* Zaufanie AnyDesk - Wyróżnienie */
+        .anydesk-box { border: 2px solid #4ade80 !important; background: rgba(74,222,128,0.03) !important; }
+        .anydesk-box h3 { color: #4ade80 !important; }
+
+        /* Cennik */
+        .category { margin-top: 60px; text-align: center; }
+        .category h2 { font-size: 2.2rem; font-weight: 800; color: #f1f5f9; display: inline-block; padding: 0 10px; border-bottom: 2px solid var(--p); margin-bottom: 40px; }
+        
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
+        .price-card { 
+            background: var(--card); padding: 30px; border-radius: 25px; 
+            border: 1px solid transparent; transition: var(--t);
+            cursor: pointer; display: flex; flex-direction: column; align-items: flex-start;
+        }
+        .price-card:hover { transform: translateY(-5px); border-color: var(--p); }
+        .price-card h3 { font-size: 1.3rem; margin-bottom: 5px; color: #f1f5f9; }
+        .price-card .p-price { font-size: 2rem; font-weight: 800; margin: 15px 0 20px; color: #f8fafc; }
+        .price-card ul { list-style: none; text-align: left; width: 100%; opacity: 0.8; font-size: 0.9rem; flex-grow: 1; }
+        .price-card ul li { margin: 8px 0; display: flex; align-items: center; }
+        .price-card ul li::before { content: '✅'; margin-right: 10px; font-size: 0.8rem; }
+        
+        button { 
+            background: var(--p); color: white; border: none; padding: 15px 30px; border-radius: 10px; 
+            cursor: pointer; font-weight: bold; width: 100%; margin-top: 25px; transition: var(--t); font-size: 1rem;
+        }
+        button:hover { opacity: 0.9; box-shadow: 0 0 20px var(--p); }
+
+        /* Modal */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); align-items: center; justify-content: center; z-index: 1000; }
-        .modal-content { background: var(--card); padding: 30px; border-radius: 20px; width: 90%; max-width: 450px; border: 1px solid var(--p); }
-        input, select { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; box-sizing: border-box; }
+        .modal-content { 
+            background: var(--card); padding: 40px; border-radius: 25px; width: 90%; max-width: 450px;
+            border: 1px solid var(--p); position: relative;
+        }
+        .close { position: absolute; top: 15px; right: 20px; font-size: 1.5rem; cursor: pointer; color: #64748b; }
+        input { width: 100%; padding: 15px; margin: 12px 0; border-radius: 10px; border: 1px solid #334155; background: #0f172a; color: white; }
     </style>
 </head>
 <body>
 
 <header>
-    <h1 style="font-size: 3rem; margin: 0;">ZEN<span style="color: var(--p)">BOOST</span></h1>
-    <p style="font-size: 1.2rem; opacity: 0.8;">Twoje kompleksowe rozwiązanie w świecie gamingu i developmentu</p>
+    <h1>ZEN<span class="neon-text">BOOST</span> 🌿</h1>
+    <p>Profesjonalne doładowania, boty Discord i optymalizacje systemowe pod Twoje dyktando.</p>
 </header>
 
-<div class="section">
-    <h2>Dlaczego akurat my?</h2>
-    <div class="info-box">
-        <p><strong>Doświadczenie i Precyzja:</strong> Nie działamy po omacku. Każda optymalizacja systemu jest poprzedzona analizą podzespołów. Zwiększamy FPS i zmniejszamy Input Lag tam, gdzie inni rozkładają ręce.</p>
-        <p><strong>Transparentność:</strong> Jesteśmy legalnie działającym projektem z setkami zadowolonych klientów. Każde zlecenie traktujemy indywidualnie, dbając o najwyższą jakość kodu i konfiguracji.</p>
-    </div>
-</div>
-
-<div class="section">
-    <h2>Bezpieczeństwo AnyDesk</h2>
-    <div class="info-box" style="border-color: #4ade80;">
-        <p><strong>Pełna kontrola w Twoich rękach:</strong> Udostępnienie komputera przez AnyDesk odbywa się pod Twoim nadzorem. W każdej sekundzie widzisz, co robimy na Twoim ekranie.</p>
-        <p><strong>Gwarancja Prywatności:</strong> Nie otwieramy Twoich prywatnych plików, folderów ani przeglądarki. Skupiamy się wyłącznie na usługach systemowych, rejestrze i konfiguracji gier. Możesz przerwać połączenie jednym kliknięciem w dowolnym momencie.</p>
-    </div>
-</div>
-
-<div class="section">
-    <h2>Cennik Usług</h2>
-    
-    <h3>🤖 Boty Discord</h3>
-    <div class="price-grid">
-        <div class="price-card">
-            <h3>Podstawowy Bot</h3>
-            <p>Podstawowe komendy, administracja, powitania.</p>
-            <div class="price">100 - 150 zł</div>
-            <button onclick="openModal('Bot Podstawowy')">Zamów teraz</button>
+<div class="container">
+    <div class="info-grid">
+        <div class="info-card">
+            <h3>Dlaczego akurat my?</h3>
+            <p><strong>Doświadczenie:</strong> Jesteśmy zespołem, który w gamingu siedzi od lat. Optymalizujemy sprzęt dla pro graczy, kodujemy boty dla największych społeczności i tworzymy landing page, które konwertują.</p>
+            <p><strong>Transparentność:</strong> Jesteśmy legalnie działającym projektem z setkami zadowolonych klientów. Nie obiecujemy cudów – gwarantujemy realne wyniki i wsparcie techniczne 24/7.</p>
         </div>
-        <div class="price-card">
-            <h3>Średni Bot</h3>
-            <p>Ekonomia, systemy levelowania, logi, integracje.</p>
-            <div class="price">180 - 230 zł</div>
-            <button onclick="openModal('Bot Średni')">Zamów teraz</button>
-        </div>
-        <div class="price-card">
-            <h3>Zaawansowany Bot</h3>
-            <p>Własny dashboard, systemy płatności, pełna customizacja.</p>
-            <div class="price">250 - 300 zł+</div>
-            <button onclick="openModal('Bot Zaawansowany')">Zamów teraz</button>
+        <div class="info-card anydesk-box">
+            <h3>Bezpieczeństwo AnyDesk</h3>
+            <p><strong>Pełna kontrola w Twoich rękach:</strong> Udostępnienie dostępu przez AnyDesk odbywa się *tylko* pod Twoim nadzorem. W każdej sekundzie widzisz każdy ruch naszej myszki i każdą zmienioną linijkę w rejestrze.</p>
+            <p><strong>Gwarancja Prywatności:</strong> Interesuje nas *wyłącznie* usługa systemowa. Nie otwieramy Twoich prywatnych folderów, przeglądarki ani aplikacji. Po zakończeniu sesji usuwamy wszystkie narzędzia dostępowe.</p>
         </div>
     </div>
 
-    <h3 style="margin-top: 40px;">⚡ Optymalizacje PC</h3>
-    <div class="price-grid">
-        <div class="price-card">
-            <h3>Full System Tweak</h3>
-            <p>System + BIOS + 24/7 Support.</p>
-            <div class="price">20 - 50 zł</div>
-            <button onclick="openModal('Optymalizacja Systemu')">Zamów teraz</button>
-        </div>
-        <div class="price-card">
-            <h3>Pro Gaming Pack</h3>
-            <p>Custom Windows + Monitor Settings + BIOS + Tweak.</p>
-            <div class="price">70 - 100 zł</div>
-            <button onclick="openModal('Pro Gaming Pack')">Zamów teraz</button>
-        </div>
-        <div class="price-card">
-            <h3>Extreme Performance</h3>
-            <p>Overclocking + Router Settings + Custom OS + BIOS.</p>
-            <div class="price">120 - 150 zł</div>
-            <button onclick="openModal('Extreme Performance')">Zamów teraz</button>
+    <div class="category">
+        <h2>Boty Discord</h2>
+        <div class="grid">
+            <div class="price-card">
+                <h3>Podstawowy Bot</h3>
+                <p>Ekonomia + powitania + logi.</p>
+                <div class="p-price">100 zł</div>
+                <ul>
+                    <li>Podstawowe komendy</li>
+                    <li>System powitań i pożegnań</li>
+                    <li>Wsparcie 24/7</li>
+                </ul>
+                <button onclick="openModal('Podstawowy Bot')">ZAMÓW TERAZ</button>
+            </div>
+            <div class="price-card">
+                <h3>Średni Bot</h3>
+                <p>Pełna customizacja dla społeczności.</p>
+                <div class="p-price">180 zł</div>
+                <ul>
+                    <li>Własny dashboard WWW</li>
+                    <li>Integracja z API</li>
+                    <li>Płatności PSC/BLIK</li>
+                </ul>
+                <button onclick="openModal('Średni Bot')">ZAMÓW TERAZ</button>
+            </div>
+            <div class="price-card">
+                <h3>Zaawansowany Bot</h3>
+                <p>System OAuth2 + Dashboard.</p>
+                <div class="p-price">250 zł</div>
+                <ul>
+                    <li>Zarządzanie przez WWW</li>
+                    <li>Analizy i statystyki</li>
+                    <li>Dostęp do serwera (self-host)</li>
+                </ul>
+                <button onclick="openModal('Zaawansowany Bot')">ZAMÓW TERAZ</button>
+            </div>
         </div>
     </div>
 
-    <h3 style="margin-top: 40px;">🌐 Strony WWW</h3>
-    <div class="price-grid">
-        <div class="price-card">
-            <h3>Landing Page</h3>
-            <p>Jednostronicowa witryna, linki social media.</p>
-            <div class="price">50 - 150 zł</div>
-            <button onclick="openModal('Landing Page WWW')">Zamów teraz</button>
-        </div>
-        <div class="price-card">
-            <h3>Unikalny Layout</h3>
-            <p>Animowane przyciski, widgety Discord, galeria.</p>
-            <div class="price">250 - 500 zł</div>
-            <button onclick="openModal('Unikalny Layout WWW')">Zamów teraz</button>
-        </div>
-        <div class="price-card">
-            <h3>Sklep / OAuth2</h3>
-            <p>Logowanie Discord, system płatności, system newsów.</p>
-            <div class="price">600 - 900 zł</div>
-            <button onclick="openModal('Sklep / OAuth2 WWW')">Zamów teraz</button>
+    <div class="category">
+        <h2>Optymalizacja PC</h2>
+        <div class="grid">
+            <div class="price-card">
+                <h3>Tweak Basic</h3>
+                <p>Szybki start w niskiej cenie.</p>
+                <div class="p-price">20 zł</div>
+                <ul>
+                    <li>Czyszczenie systemu (Cache)</li>
+                    <li>Optymalizacja usług Windows</li>
+                    <li>Konfiguracja 1 gry</li>
+                </ul>
+                <button onclick="openModal('Tweak Basic PC')">ZAMÓW TERAZ</button>
+            </div>
+            <div class="price-card">
+                <h3>Tweak Gaming Pack</h3>
+                <p>Dla wymagających graczy.</p>
+                <div class="p-price">70 zł</div>
+                <ul>
+                    <li>Tweaks BIOS + Monitor Settings</li>
+                    <li>Custom OS Deployment</li>
+                    <li>Optymalizacja 2 gier</li>
+                </ul>
+                <button onclick="openModal('Tweak Gaming Pack PC')">ZAMÓW TERAZ</button>
+            </div>
+            <div class="price-card">
+                <h3>Extreme Performance</h3>
+                <p>Dla pro graczy i streamerów.</p>
+                <div class="p-price">120 zł</div>
+                <ul>
+                    <li>Overclocking CPU + GPU (safe)</li>
+                    <li>Router + Monitor Tweaks</li>
+                    <li>Dedykowany Windows</li>
+                </ul>
+                <button onclick="openModal('Extreme Performance PC')">ZAMÓW TERAZ</button>
+            </div>
         </div>
     </div>
 </div>
 
 <div id="orderModal" class="modal">
     <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
         <h2 id="modalTitle" style="color: var(--p)">Zamówienie</h2>
         <input type="text" id="nick" placeholder="Twój Nick Discord">
-        <input type="text" id="kontakt" placeholder="Metoda kontaktu (np. Discord/Instagram)">
-        <select id="payment">
-            <option value="BLIK">Płatność: BLIK</option>
-            <option value="PSC">Płatność: PSC</option>
-            <option value="Przelew">Płatność: Przelew</option>
-        </select>
-        <button onclick="sendOrder()">WYŚLIJ ZGŁOSZENIE</button>
-        <button onclick="closeModal()" style="background: transparent; margin-top: 10px;">Anuluj</button>
+        <input type="text" id="contacto" placeholder="Metoda płatności (np. BLIK)">
+        <button onclick="sendOrder()">POTWIERDZAM ZGŁOSZENIE</button>
     </div>
 </div>
 
 <script>
-    let selectedItem = "";
+    let currentItem = "";
 
     function openModal(item) {
-        selectedItem = item;
+        currentItem = item;
         document.getElementById('modalTitle').innerText = item;
         document.getElementById('orderModal').style.display = 'flex';
     }
@@ -152,20 +194,20 @@
 
     async function sendOrder() {
         const nick = document.getElementById('nick').value;
-        const kontakt = document.getElementById('kontakt').value;
-        const pay = document.getElementById('payment').value;
+        const kontakt = document.getElementById('contacto').value;
 
         if(!nick || !kontakt) return alert("Wypełnij dane kontaktowe!");
 
         const data = {
             klient: nick,
-            gra: "Zamówienie z Cennika",
-            typ: selectedItem,
-            specs: "Płatność: " + pay,
-            kontakt: kontakt
+            gra: "Cennik WWW",
+            typ: currentItem,
+            specs: "Płatność: " + kontakt,
+            kontakt: "Discord: " + nick
         };
 
         try {
+            // Zauważ, że te apostrofy ` są bardzo ważne!
             const response = await fetch(`http://93.189.89.101:3000/nowe-zamowienie`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -173,10 +215,10 @@
             });
 
             if(response.ok) {
-                alert("🚀 Zgłoszenie wysłane! Zaraz otworzymy ticket na Discordzie.");
+                alert("🚀 Wysłano! Sprawdź Discorda.");
                 closeModal();
-            } else { alert("❌ Błąd serwera bota."); }
-        } catch(e) { alert("❌ Brak połączenia. Sprawdź Tarcze Brave!"); }
+            } else { alert("❌ Błąd serwera."); }
+        } catch(e) { alert("❌ Brak połączenia. Wyłącz Shields w Brave!"); }
     }
 </script>
 
