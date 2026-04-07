@@ -281,82 +281,70 @@
 
         function openModal(product) {
             document.getElementById('modalProduct').innerText = product;
-            overlay.style.display = 'flex'; // Najpierw pokazujemy kontener
-            
-            // Mały trick JS, żeby odpalić animację CSS milisekundę później
+            overlay.style.display = 'flex';
             setTimeout(() => {
                 overlay.classList.add('active');
             }, 10);
         }
 
         function closeModal() {
-            overlay.classList.remove('active'); // Zdejmujemy klasę animacji
-            
-            // Czekamy na koniec animacji (0.6s) i dopiero ukrywamy display
+            overlay.classList.remove('active');
             setTimeout(() => {
                 overlay.style.display = 'none';
             }, 600);
         }
 
-        // Zamykanie po kliknięciu poza okno
         overlay.addEventListener('click', function(e) {
-            if (e.target === overlay) {
-                closeModal();
-            }
+            if (e.target === overlay) closeModal();
         });
 
         function selectPay(el) {
             document.querySelectorAll('.pay-option').forEach(opt => opt.classList.remove('selected'));
             el.classList.add('selected');
         }
+
         async function confirmOrder() {
-    const nick = document.getElementById('discordNick').value;
-    const produkt = document.getElementById('modalProduct').innerText;
-    const metodaElement = document.querySelector('.pay-option.selected');
-    const metoda = metodaElement ? metodaElement.innerText : 'Nie wybrano';
+            const nick = document.getElementById('discordNick').value;
+            const produkt = document.getElementById('modalProduct').innerText;
+            const metodaElement = document.querySelector('.pay-option.selected');
+            const metoda = metodaElement ? metodaElement.innerText : 'Nie wybrano';
 
-    if(!nick) return alert('Wpisz swój nick z Discorda!');
-    if(!metodaElement) return alert('Wybierz metodę płatności (BLIK lub PSC)!');
+            if(!nick) return alert('Wpisz nick Discord!');
+            if(!metodaElement) return alert('Wybierz metodę płatności!');
 
-    // --- TUTAJ WPISZ IP SWOJEGO VPS ---
-    const VPS_IP = "TWOJE_IP_VPS"; 
+            const VPS_IP = "93.189.89.101"; // <--- WPISZ TU SWOJE IP!
 
-    try {
-        // Pokazujemy użytkownikowi, że coś się dzieje
-        const btn = document.querySelector('.modal .buy-btn');
-        btn.innerText = "WYSYŁANIE...";
-        btn.disabled = true;
+            try {
+                const btn = document.querySelector('.modal .buy-btn');
+                btn.innerText = "WYSYŁANIE...";
+                btn.disabled = true;
 
-        const response = await fetch(`http://${VPS_IP}:3000/nowe-zamowienie`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                klient: nick,
-                gra: "Zamówienie ze strony WWW",
-                typ: produkt,
-                specs: "Klient wysłał zamówienie przez formularz neon-flow.",
-                kontakt: `Płatność: ${metoda}`
-            })
-        });
+                const response = await fetch(`http://${VPS_IP}:3000/nowe-zamowienie`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        klient: nick,
+                        gra: "Zamówienie WWW",
+                        typ: produkt,
+                        specs: "Formularz Neon-Flow",
+                        kontakt: `Metoda: ${metoda}`
+                    })
+                });
 
-        if (response.ok) {
-            alert('✅ SUKCES! Twoje zamówienie trafiło do ZenBoost. Sprawdź Discorda - Twój kanał został właśnie stworzony!');
-            closeModal();
-        } else {
-            alert('❌ Błąd bota. Upewnij się, że bot ZenBoost jest włączony na serwerze.');
+                if (response.ok) {
+                    alert('✅ Sukces! Sprawdź Discorda!');
+                    closeModal();
+                } else {
+                    alert('❌ Błąd bota.');
+                }
+            } catch (error) {
+                alert('❌ Brak połączenia z botem. Sprawdź IP i Port 3000.');
+            } finally {
+                const btn = document.querySelector('.modal .buy-btn');
+                btn.innerText = "POTWIERDZAM ZAKUP";
+                btn.disabled = false;
+            }
         }
-    } catch (error) {
-        console.error('Błąd połączenia:', error);
-        alert('❌ Nie udało się połączyć z serwerem. Sprawdź czy odblokowałeś port 3000 (sudo ufw allow 3000).');
-    } finally {
-        const btn = document.querySelector('.modal .buy-btn');
-        btn.innerText = "POTWIERDZAM ZAKUP";
-        btn.disabled = false;
-    }
-}
-        
     </script>
 </body>
 </html>
