@@ -304,47 +304,43 @@
         }
 
         async function confirmOrder() {
-            const nick = document.getElementById('discordNick').value;
-            const produkt = document.getElementById('modalProduct').innerText;
-            const metodaElement = document.querySelector('.pay-option.selected');
-            const metoda = metodaElement ? metodaElement.innerText : 'Nie wybrano';
+    const VPS_IP = "93.189.89.101";
+    
+    // Pobieranie danych z pól formularza
+    const nick = document.getElementById('nick').value;
+    const specs = document.getElementById('specs').value;
+    const kontakt = document.getElementById('kontakt').value;
 
-            if(!nick) return alert('Wpisz nick Discord!');
-            if(!metodaElement) return alert('Wybierz metodę płatności!');
+    if(!nick) {
+        alert("Wpisz chociaż swój nick!");
+        return;
+    }
 
-            const VPS_IP = "93.189.89.101"; // <--- WPISZ TU SWOJE IP!
+    const data = {
+        klient: nick,
+        gra: selectedProduct || "Nie wybrano",
+        typ: selectedType || "Nie wybrano",
+        specs: specs,
+        kontakt: kontakt
+    };
 
-            try {
-                const btn = document.querySelector('.modal .buy-btn');
-                btn.innerText = "WYSYŁANIE...";
-                btn.disabled = true;
+    try {
+        const response = await fetch(`http://${VPS_IP}:3000/nowe-zamowienie`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
 
-                fetch(https:cors-anywhere.herokuapp.com/http:${VPS_IP}:3000/nowe-zamowienie, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        klient: nick,
-                        gra: "Zamówienie WWW",
-                        typ: produkt,
-                        specs: "Formularz Neon-Flow",
-                        kontakt: `Metoda: ${metoda}`
-                    })
-                });
-
-                if (response.ok) {
-                    alert('✅ Sukces! Sprawdź Discorda!');
-                    closeModal();
-                } else {
-                    alert('❌ Błąd bota.');
-                }
-            } catch (error) {
-                alert('❌ Brak połączenia z botem. Sprawdź IP i Port 3000.');
-            } finally {
-                const btn = document.querySelector('.modal .buy-btn');
-                btn.innerText = "POTWIERDZAM ZAKUP";
-                btn.disabled = false;
-            }
+        if (response.ok) {
+            alert("🚀 Zamówienie wysłane! Sprawdź Discorda.");
+        } else {
+            alert("❌ Serwer bota odpowiedział błędem.");
         }
+    } catch (error) {
+        console.error(error);
+        alert("❌ Brak połączenia. Wyłącz Shields (Lwa) w Brave i sprawdź ustawienia 'Insecure content'.");
+    }
+}
     </script>
 </body>
 </html>
