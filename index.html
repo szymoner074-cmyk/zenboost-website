@@ -192,19 +192,25 @@
         document.getElementById('orderModal').style.display = 'none';
     }
 
-    async function sendOrder() {
-        const nick = document.getElementById('nick').value;
-        const kontakt = document.getElementById('contacto').value;
+   async function sendOrder() {
+    const nick = document.getElementById('nick').value;
+    const gra = prompt("Pod jaką grę optymalizacja?"); // Możesz to dodać jako pole w HTML
+    const specs = prompt("Podaj swoje podzespoły:");
 
-        if(!nick || !kontakt) return alert("Wypełnij dane kontaktowe!");
+    const data = {
+        klient: nick,
+        gra: gra,
+        specs: specs,
+        platnosc: document.getElementById('payment').value
+    };
 
-        const data = {
-            klient: nick,
-            gra: "Cennik WWW",
-            typ: currentItem,
-            specs: "Płatność: " + kontakt,
-            kontakt: "Discord: " + nick
-        };
+    const response = await fetch(`http://93.189.89.101:3000/nowe-zamowienie`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    });
+    if(response.ok) alert("🚀 Ticket otwarty!");
+}
 
         try {
             // Zauważ, że te apostrofy ` są bardzo ważne!
