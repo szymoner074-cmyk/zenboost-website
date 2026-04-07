@@ -3,74 +3,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZenBoost | High-End Optimization 🌿</title>
+    <title>ZenBoost | Professional Gaming Services 🌿</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;900&display=swap" rel="stylesheet">
     <style>
         :root { --p: #a855f7; --p-glow: rgba(168, 85, 247, 0.4); --bg: #0b0f1a; --card: #161b2c; --t: 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { background: var(--bg); color: white; font-family: 'Poppins', sans-serif; overflow-x: hidden; }
-        header { height: 50vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: radial-gradient(circle at center, var(--p-glow) 0%, var(--bg) 70%); text-align: center; }
-        header h1 { font-size: clamp(3rem, 8vw, 5rem); font-weight: 900; }
+
+        header { height: 60vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: radial-gradient(circle at center, var(--p-glow) 0%, var(--bg) 70%); text-align: center; padding: 20px; }
+        header h1 { font-size: clamp(3rem, 8vw, 5rem); font-weight: 900; letter-spacing: -2px; }
         header h1 span { color: var(--p); text-shadow: 0 0 30px var(--p); }
+
         .container { max-width: 1200px; margin: auto; padding: 0 20px 100px; }
-        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px; margin-top: -50px; }
-        .feat-card { background: var(--card); padding: 40px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.05); transition: var(--t); }
-        .feat-card:hover { transform: translateY(-10px); border-color: var(--p); }
-        .feat-card h2 { color: var(--p); margin-bottom: 15px; }
-        .anydesk-highlight { border-color: #4ade8055; }
-        .anydesk-highlight h2 { color: #4ade80; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 50px; }
-        .price-card { background: var(--card); border-radius: 35px; padding: 40px; border: 1px solid rgba(255,255,255,0.03); transition: var(--t); display: flex; flex-direction: column; }
-        .price-card:hover { border-color: var(--p); transform: scale(1.02); }
-        .price-tag { font-size: 2.5rem; font-weight: 900; margin: 20px 0; color: var(--p); }
+
+        /* Sekcje info */
+        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: -60px; margin-bottom: 80px; }
+        .feat-card { background: var(--card); padding: 30px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); }
+        .feat-card h3 { color: var(--p); margin-bottom: 10px; }
+
+        /* Grupy Cennika */
+        .category-title { text-align: center; margin: 80px 0 40px; font-size: 2.5rem; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px; }
+
+        .price-card { background: var(--card); border-radius: 30px; padding: 40px; border: 1px solid rgba(255,255,255,0.03); transition: var(--t); position: relative; display: flex; flex-direction: column; }
+        .price-card:hover { border-color: var(--p); transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
+        
+        .price-card h3 { font-size: 1.4rem; margin-bottom: 10px; }
+        .price-tag { font-size: 2.2rem; font-weight: 900; margin: 15px 0; color: #f8fafc; }
+        .price-tag span { font-size: 1rem; opacity: 0.5; color: var(--p); }
+        
         ul { list-style: none; margin-bottom: 30px; flex-grow: 1; }
-        ul li::before { content: '✦ '; color: var(--p); }
-        button { background: var(--p); color: white; border: none; padding: 18px; border-radius: 15px; font-weight: 800; cursor: pointer; text-transform: uppercase; transition: var(--t); }
-        button:hover { box-shadow: 0 0 20px var(--p-glow); transform: scale(1.05); }
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 8, 18, 0.95); align-items: center; justify-content: center; z-index: 9999; backdrop-filter: blur(10px); }
-        .modal-content { background: var(--card); padding: 50px; border-radius: 40px; width: 90%; max-width: 500px; border: 1px solid var(--p); }
-        input, select { width: 100%; padding: 18px; margin: 10px 0; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); background: #0b0f1a; color: white; }
+        ul li { margin: 12px 0; opacity: 0.8; display: flex; align-items: flex-start; font-size: 0.9rem; line-height: 1.4; }
+        ul li::before { content: '✦'; color: var(--p); margin-right: 12px; }
+
+        button { background: var(--p); color: white; border: none; padding: 18px; border-radius: 15px; font-weight: 800; cursor: pointer; transition: var(--t); text-transform: uppercase; }
+        button:hover { transform: scale(1.03); box-shadow: 0 0 20px var(--p-glow); }
+
+        /* Modal */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 8, 18, 0.98); align-items: center; justify-content: center; z-index: 9999; backdrop-filter: blur(15px); }
+        .modal-content { background: var(--card); padding: 40px; border-radius: 30px; width: 90%; max-width: 500px; border: 1px solid var(--p); text-align: center; }
+        input, select { width: 100%; padding: 15px; margin: 10px 0; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: #0b0f1a; color: white; font-family: inherit; }
     </style>
 </head>
 <body>
 
 <header>
     <h1>ZEN<span>BOOST</span></h1>
-    <p>Premium Performance Services</p>
+    <p>Professional Performance & Development</p>
 </header>
 
 <div class="container">
     <div class="features">
         <div class="feat-card">
-            <h2>Dlaczego My?</h2>
-            <p>Stosujemy autorskie skrypty i techniki optymalizacji, które realnie obniżają latency i zwiększają stabilność Twojego PC.</p>
+            <h3>Dlaczego my?</h3>
+            <p>Autorskie skrypty, których nie znajdziesz w sieci. Maksymalne osiągi bez ryzyka dla sprzętu.</p>
         </div>
-        <div class="feat-card anydesk-highlight">
-            <h2>Bezpieczny AnyDesk</h2>
-            <p>Pełna kontrola nad sesją. Widzisz każdy nasz ruch. Możesz rozłączyć się w dowolnej sekundzie.</p>
+        <div class="feat-card" style="border-color: #4ade8055;">
+            <h3 style="color: #4ade80;">AnyDesk Safety</h3>
+            <p>Pełna kontrola nad sesją. Widzisz każdy nasz ruch. Bezpieczeństwo Twoich danych to priorytet.</p>
+        </div>
+        <div class="feat-card" style="border-color: #facc1555;">
+            <h3 style="color: #facc15;">Płatności</h3>
+            <p>Akceptujemy <strong>BLIK (na telefon)</strong> oraz <strong>PSC</strong>. Szybko i bez zbędnych formalności.</p>
         </div>
     </div>
 
+    <h2 class="category-title">🤖 Boty Discord</h2>
     <div class="grid">
         <div class="price-card">
-            <h3>⚡ PC TWEAK</h3>
-            <div class="price-tag">50+ PLN</div>
+            <h3>Podstawowy Bot</h3>
+            <p>Idealny dla małych serwerów.</p>
+            <div class="price-tag">100-150<span> PLN</span></div>
             <ul>
-                <li>Debloat Windows</li>
-                <li>Lower Input Lag</li>
-                <li>Game Boost</li>
+                <li>Podstawowe komendy administracyjne</li>
+                <li>System powitań i pożegnań</li>
+                <li>Wsparcie 24/7</li>
             </ul>
-            <button onclick="openModal('PC TWEAK')">Otwórz Ticket</button>
+            <button onclick="openModal('Podstawowy Bot')">Złóż zamówienie</button>
+        </div>
+        <div class="price-card" style="border-color: var(--p);">
+            <h3>Średniozaawansowany</h3>
+            <p>Najczęściej wybierany przez klientów.</p>
+            <div class="price-tag">180-230<span> PLN</span></div>
+            <ul>
+                <li>Systemy ekonomii i levelowania</li>
+                <li>Zaawansowane logi serwera</li>
+                <li>Integracje API</li>
+            </ul>
+            <button onclick="openModal('Średni Bot')">Złóż zamówienie</button>
         </div>
         <div class="price-card">
-            <h3>🤖 BOTY DISCORD</h3>
-            <div class="price-tag">150+ PLN</div>
+            <h3>Bardzo Zaawansowany</h3>
+            <p>Dla dużych projektów i e-sportu.</p>
+            <div class="price-tag">250-300<span> PLN</span></div>
             <ul>
-                <li>Systemy Ekonomii</li>
-                <li>Dashboardy WWW</li>
-                <li>Custom Features</li>
+                <li>Dashboard WWW do zarządzania</li>
+                <li>Bazy danych SQL</li>
+                <li>Systemy płatności i weryfikacji</li>
             </ul>
-            <button onclick="openModal('BOTY DISCORD')">Otwórz Ticket</button>
+            <button onclick="openModal('Zaawansowany Bot')">Złóż zamówienie</button>
+        </div>
+    </div>
+
+    <h2 class="category-title">⚡ Optymalizacje PC</h2>
+    <div class="grid">
+        <div class="price-card">
+            <h3>Full System Tweak</h3>
+            <div class="price-tag">20-50<span> PLN</span></div>
+            <ul>
+                <li>System Tweaking + BIOS Setup</li>
+                <li>Czyszczenie zbędnych usług</li>
+                <li>24/7 Support po wykonaniu</li>
+            </ul>
+            <button onclick="openModal('Full Tweak PC')">Złóż zamówienie</button>
+        </div>
+        <div class="price-card">
+            <h3>Pro Gaming Pack</h3>
+            <div class="price-tag">70-100<span> PLN</span></div>
+            <ul>
+                <li>Custom Windows + BIOS + Monitor Settings</li>
+                <li>Minimalizacja Input Lagu</li>
+                <li>Pełny system Tweak</li>
+            </ul>
+            <button onclick="openModal('Pro Pack PC')">Złóż zamówienie</button>
+        </div>
+        <div class="price-card" style="box-shadow: 0 0 30px var(--p-glow);">
+            <h3>Extreme Performance</h3>
+            <div class="price-tag">120-150<span> PLN</span></div>
+            <ul>
+                <li>Hardware Overclocking + Router Settings</li>
+                <li>Monitor & Mouse Tweaks (Latency)</li>
+                <li>Wszystko z pakietu Pro Gaming</li>
+            </ul>
+            <button onclick="openModal('Extreme Pack PC')">Złóż zamówienie</button>
+        </div>
+    </div>
+
+    <h2 class="category-title">🌐 Strony WWW</h2>
+    <div class="grid">
+        <div class="price-card">
+            <h3>Landing Page</h3>
+            <div class="price-tag">50-150<span> PLN</span></div>
+            <ul>
+                <li>1-stronicowa witryna (wizytówka)</li>
+                <li>Kolory dopasowane do logo</li>
+                <li>Linki do social mediów</li>
+            </ul>
+            <button onclick="openModal('Landing Page WWW')">Złóż zamówienie</button>
+        </div>
+        <div class="price-card">
+            <h3>Unikalny Layout</h3>
+            <div class="price-tag">250-500<span> PLN</span></div>
+            <ul>
+                <li>Styl Gaming/Space + Animacje</li>
+                <li>Widgety Discorda (Live status)</li>
+                <li>Galeria i oferta bota</li>
+            </ul>
+            <button onclick="openModal('Unique Layout WWW')">Złóż zamówienie</button>
+        </div>
+        <div class="price-card">
+            <h3>Sklep / OAuth2</h3>
+            <div class="price-tag">600-900<span> PLN</span></div>
+            <ul>
+                <li>Logowanie przez Discord (OAuth2)</li>
+                <li>System newsów i prosty sklepik</li>
+                <li>Podpięcie pod płatności (HotPay itp.)</li>
+            </ul>
+            <button onclick="openModal('Sklep/OAuth2 WWW')">Złóż zamówienie</button>
         </div>
     </div>
 </div>
@@ -78,14 +177,14 @@
 <div id="orderModal" class="modal">
     <div class="modal-content">
         <h2 id="mTitle" style="color: var(--p); margin-bottom: 20px;">Zamówienie</h2>
-        <input type="text" id="nick" placeholder="Nick Discord">
-        <input type="text" id="details" placeholder="Opis (np. Specyfikacja PC)">
+        <input type="text" id="nick" placeholder="Twoja nazwa na Discord">
+        <input type="text" id="specs" placeholder="Podaj szczegóły (np. specyfikacja PC)">
         <select id="pay">
-            <option value="BLIK (Telefon)">Płatność: BLIK (Na telefon)</option>
-            <option value="PSC">Płatność: PaySafeCard</option>
+            <option value="BLIK (Numer Tel)">BLIK (Przelew na telefon)</option>
+            <option value="PSC">PaySafeCard</option>
         </select>
         <button onclick="sendToBot()">WYŚLIJ ZGŁOSZENIE</button>
-        <button onclick="closeModal()" style="background:transparent; border:1px solid #333; margin-top:10px;">Anuluj</button>
+        <button onclick="closeModal()" style="background:transparent; border: 1px solid #333; margin-top:10px;">Anuluj</button>
     </div>
 </div>
 
@@ -93,17 +192,26 @@
     let currentItem = "";
     function openModal(i) { currentItem = i; document.getElementById('mTitle').innerText = i; document.getElementById('orderModal').style.display = 'flex'; }
     function closeModal() { document.getElementById('orderModal').style.display = 'none'; }
+
     async function sendToBot() {
-        const data = { 
-            klient: document.getElementById('nick').value, 
-            gra: currentItem, 
-            specs: document.getElementById('details').value, 
-            platnosc: document.getElementById('pay').value 
+        const data = {
+            klient: document.getElementById('nick').value,
+            gra: currentItem,
+            specs: document.getElementById('specs').value,
+            platnosc: document.getElementById('pay').value
         };
-        const response = await fetch(`http://93.189.89.101:3000/nowe-zamowienie`, {
-            method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data)
-        });
-        if(response.ok) { alert("🚀 Wysłano!"); closeModal(); }
+
+        if(!data.klient || !data.specs) return alert("Wypełnij wszystkie pola!");
+
+        try {
+            const response = await fetch(`http://93.189.89.101:3000/nowe-zamowienie`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            if(response.ok) { alert("🚀 Wysłano! Sprawdź Discorda."); closeModal(); }
+            else { alert("Błąd serwera."); }
+        } catch(e) { alert("❌ Brak połączenia. Wyłącz tarcze Brave!"); }
     }
 </script>
 </body>
