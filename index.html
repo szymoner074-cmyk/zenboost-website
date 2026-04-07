@@ -319,7 +319,7 @@
                 btn.innerText = "WYSYŁANIE...";
                 btn.disabled = true;
 
-                const response = await fetch(`http://${VPS_IP}:3000/nowe-zamowienie`, {
+                fetch(https:cors-anywhere.herokuapp.com/http:${VPS_IP}:3000/nowe-zamowienie, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
