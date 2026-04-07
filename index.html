@@ -3,55 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZenBoost | Szybkie Doładowania</title>
+    <title>ZenBoost | Profesjonalna Optymalizacja i Development</title>
     <style>
-        :root { --p: #a855f7; --bg: #0f172a; }
-        body { background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; text-align: center; margin: 0; padding: 20px; }
-        .container { max-width: 800px; margin: auto; }
-        .card { background: #1e293b; padding: 20px; border-radius: 15px; border: 1px solid var(--p); margin: 10px; cursor: pointer; transition: 0.3s; }
-        .card:hover { transform: scale(1.05); box-shadow: 0 0 20px var(--p); }
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); align-items: center; justify-content: center; }
-        .modal-content { background: #1e293b; padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; }
-        input { width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; border: none; }
-        button { background: var(--p); color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; }
-        .status { color: #4ade80; margin-bottom: 20px; }
+        :root { --p: #a855f7; --bg: #0f172a; --card: #1e293b; }
+        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; margin: 0; line-height: 1.6; }
+        header { padding: 80px 20px; text-align: center; background: radial-gradient(circle, rgba(168,85,247,0.1) 0%, rgba(15,23,42,1) 70%); }
+        .section { max-width: 1000px; margin: 60px auto; padding: 0 20px; }
+        h2 { color: var(--p); border-bottom: 2px solid var(--p); display: inline-block; padding-bottom: 5px; }
+        
+        /* Grid Cennika */
+        .price-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 30px; }
+        .price-card { background: var(--card); padding: 25px; border-radius: 15px; border: 1px solid #334155; transition: 0.3s; }
+        .price-card:hover { border-color: var(--p); transform: translateY(-5px); }
+        .price-card h3 { margin-top: 0; color: var(--p); }
+        .price { font-size: 1.5rem; font-weight: bold; margin: 15px 0; }
+        
+        /* Sekcje info */
+        .info-box { background: rgba(168,85,247,0.05); border-left: 4px solid var(--p); padding: 20px; margin: 20px 0; border-radius: 0 10px 10px 0; }
+        
+        button { background: var(--p); color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; transition: 0.3s; }
+        button:hover { opacity: 0.8; box-shadow: 0 0 15px var(--p); }
+
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); align-items: center; justify-content: center; z-index: 1000; }
+        .modal-content { background: var(--card); padding: 30px; border-radius: 20px; width: 90%; max-width: 450px; border: 1px solid var(--p); }
+        input, select { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; box-sizing: border-box; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1 style="color: var(--p)">🌿 ZenBoost Store</h1>
-    <p class="status">● System Online (93.189.89.101)</p>
+<header>
+    <h1 style="font-size: 3rem; margin: 0;">ZEN<span style="color: var(--p)">BOOST</span></h1>
+    <p style="font-size: 1.2rem; opacity: 0.8;">Twoje kompleksowe rozwiązanie w świecie gamingu i developmentu</p>
+</header>
 
-    <div class="card" onclick="openModal('ZenBoost Premium', '49.99 PLN')">
-        <h3>💎 ZenBoost Premium</h3>
-        <p>Najlepszy wybór dla Twojego konta</p>
-        <button>Wybierz - 49.99 PLN</button>
+<div class="section">
+    <h2>Dlaczego akurat my?</h2>
+    <div class="info-box">
+        <p><strong>Doświadczenie i Precyzja:</strong> Nie działamy po omacku. Każda optymalizacja systemu jest poprzedzona analizą podzespołów. Zwiększamy FPS i zmniejszamy Input Lag tam, gdzie inni rozkładają ręce.</p>
+        <p><strong>Transparentność:</strong> Jesteśmy legalnie działającym projektem z setkami zadowolonych klientów. Każde zlecenie traktujemy indywidualnie, dbając o najwyższą jakość kodu i konfiguracji.</p>
+    </div>
+</div>
+
+<div class="section">
+    <h2>Bezpieczeństwo AnyDesk</h2>
+    <div class="info-box" style="border-color: #4ade80;">
+        <p><strong>Pełna kontrola w Twoich rękach:</strong> Udostępnienie komputera przez AnyDesk odbywa się pod Twoim nadzorem. W każdej sekundzie widzisz, co robimy na Twoim ekranie.</p>
+        <p><strong>Gwarancja Prywatności:</strong> Nie otwieramy Twoich prywatnych plików, folderów ani przeglądarki. Skupiamy się wyłącznie na usługach systemowych, rejestrze i konfiguracji gier. Możesz przerwać połączenie jednym kliknięciem w dowolnym momencie.</p>
+    </div>
+</div>
+
+<div class="section">
+    <h2>Cennik Usług</h2>
+    
+    <h3>🤖 Boty Discord</h3>
+    <div class="price-grid">
+        <div class="price-card">
+            <h3>Podstawowy Bot</h3>
+            <p>Podstawowe komendy, administracja, powitania.</p>
+            <div class="price">100 - 150 zł</div>
+            <button onclick="openModal('Bot Podstawowy')">Zamów teraz</button>
+        </div>
+        <div class="price-card">
+            <h3>Średni Bot</h3>
+            <p>Ekonomia, systemy levelowania, logi, integracje.</p>
+            <div class="price">180 - 230 zł</div>
+            <button onclick="openModal('Bot Średni')">Zamów teraz</button>
+        </div>
+        <div class="price-card">
+            <h3>Zaawansowany Bot</h3>
+            <p>Własny dashboard, systemy płatności, pełna customizacja.</p>
+            <div class="price">250 - 300 zł+</div>
+            <button onclick="openModal('Bot Zaawansowany')">Zamów teraz</button>
+        </div>
     </div>
 
-    <div class="card" onclick="openModal('ZenBoost Basic', '19.99 PLN')">
-        <h3>⚡ ZenBoost Basic</h3>
-        <p>Szybki start w niskiej cenie</p>
-        <button>Wybierz - 19.99 PLN</button>
+    <h3 style="margin-top: 40px;">⚡ Optymalizacje PC</h3>
+    <div class="price-grid">
+        <div class="price-card">
+            <h3>Full System Tweak</h3>
+            <p>System + BIOS + 24/7 Support.</p>
+            <div class="price">20 - 50 zł</div>
+            <button onclick="openModal('Optymalizacja Systemu')">Zamów teraz</button>
+        </div>
+        <div class="price-card">
+            <h3>Pro Gaming Pack</h3>
+            <p>Custom Windows + Monitor Settings + BIOS + Tweak.</p>
+            <div class="price">70 - 100 zł</div>
+            <button onclick="openModal('Pro Gaming Pack')">Zamów teraz</button>
+        </div>
+        <div class="price-card">
+            <h3>Extreme Performance</h3>
+            <p>Overclocking + Router Settings + Custom OS + BIOS.</p>
+            <div class="price">120 - 150 zł</div>
+            <button onclick="openModal('Extreme Performance')">Zamów teraz</button>
+        </div>
+    </div>
+
+    <h3 style="margin-top: 40px;">🌐 Strony WWW</h3>
+    <div class="price-grid">
+        <div class="price-card">
+            <h3>Landing Page</h3>
+            <p>Jednostronicowa witryna, linki social media.</p>
+            <div class="price">50 - 150 zł</div>
+            <button onclick="openModal('Landing Page WWW')">Zamów teraz</button>
+        </div>
+        <div class="price-card">
+            <h3>Unikalny Layout</h3>
+            <p>Animowane przyciski, widgety Discord, galeria.</p>
+            <div class="price">250 - 500 zł</div>
+            <button onclick="openModal('Unikalny Layout WWW')">Zamów teraz</button>
+        </div>
+        <div class="price-card">
+            <h3>Sklep / OAuth2</h3>
+            <p>Logowanie Discord, system płatności, system newsów.</p>
+            <div class="price">600 - 900 zł</div>
+            <button onclick="openModal('Sklep / OAuth2 WWW')">Zamów teraz</button>
+        </div>
     </div>
 </div>
 
 <div id="orderModal" class="modal">
     <div class="modal-content">
-        <h2 id="mTitle">Zamówienie</h2>
-        <input type="text" id="nick" placeholder="Twój Nick Discord (np. Seyven#1234)">
-        <input type="text" id="kontakt" placeholder="Metoda płatności (PSC/BLIK)">
-        <button onclick="sendToBot()">POTWIERDZAM ZAKUP</button>
-        <button onclick="closeModal()" style="background: #475569; margin-top: 10px;">Anuluj</button>
+        <h2 id="modalTitle" style="color: var(--p)">Zamówienie</h2>
+        <input type="text" id="nick" placeholder="Twój Nick Discord">
+        <input type="text" id="kontakt" placeholder="Metoda kontaktu (np. Discord/Instagram)">
+        <select id="payment">
+            <option value="BLIK">Płatność: BLIK</option>
+            <option value="PSC">Płatność: PSC</option>
+            <option value="Przelew">Płatność: Przelew</option>
+        </select>
+        <button onclick="sendOrder()">WYŚLIJ ZGŁOSZENIE</button>
+        <button onclick="closeModal()" style="background: transparent; margin-top: 10px;">Anuluj</button>
     </div>
 </div>
 
 <script>
-    let currentProduct = "";
+    let selectedItem = "";
 
-    function openModal(name, price) {
-        currentProduct = name;
-        document.getElementById('mTitle').innerText = name + " - " + price;
+    function openModal(item) {
+        selectedItem = item;
+        document.getElementById('modalTitle').innerText = item;
         document.getElementById('orderModal').style.display = 'flex';
     }
 
@@ -59,37 +150,33 @@
         document.getElementById('orderModal').style.display = 'none';
     }
 
-    async function sendToBot() {
+    async function sendOrder() {
         const nick = document.getElementById('nick').value;
         const kontakt = document.getElementById('kontakt').value;
+        const pay = document.getElementById('payment').value;
 
-        if(!nick || !kontakt) return alert("Wypełnij wszystkie pola!");
+        if(!nick || !kontakt) return alert("Wypełnij dane kontaktowe!");
 
         const data = {
             klient: nick,
-            gra: "Sklep Internetowy",
-            typ: currentProduct,
-            specs: "Brak dodatkowych uwag",
+            gra: "Zamówienie z Cennika",
+            typ: selectedItem,
+            specs: "Płatność: " + pay,
             kontakt: kontakt
         };
 
         try {
-            // BACKTICKI SĄ TUTAJ KLUCZEM! ` `
             const response = await fetch(`http://93.189.89.101:3000/nowe-zamowienie`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
             });
 
-            if (response.ok) {
-                alert("🚀 WYSŁANO! Sprawdź Discorda.");
+            if(response.ok) {
+                alert("🚀 Zgłoszenie wysłane! Zaraz otworzymy ticket na Discordzie.");
                 closeModal();
-            } else {
-                alert("❌ Błąd serwera bota.");
-            }
-        } catch (e) {
-            alert("❌ Brak połączenia! Upewnij się, że masz wyłączone Tarcze Brave i Allow w ustawieniach.");
-        }
+            } else { alert("❌ Błąd serwera bota."); }
+        } catch(e) { alert("❌ Brak połączenia. Sprawdź Tarcze Brave!"); }
     }
 </script>
 
