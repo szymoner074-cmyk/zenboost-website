@@ -47,8 +47,19 @@
         .logo { font-family: 'Orbitron'; font-weight: 700; color: #fff; letter-spacing: 2px; }
         .logo span { color: var(--primary); }
 
-        .container { max-width: 1200px; margin: 0 auto; padding: 60px 20px; }
-
+        .container {
+            position: relative; /* To pozwala z-indexowi zadziałać */
+            z-index: 10;        /* Wyżej niż tło */
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 60px 20px;
+        }
+        /* Na wszelki wypadek dodajmy to też do kart */
+        .price-card {
+            position: relative;
+            z-index: 11;
+            /* ... reszta twojego kodu ... */
+        }
         /* HERO */
         .hero {
             height: 70vh;
