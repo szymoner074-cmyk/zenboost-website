@@ -303,42 +303,38 @@
             el.classList.add('selected');
         }
 
-        async function confirmOrder() {
-    const VPS_IP = "93.189.89.101";
-    
-    // Pobieranie danych z pól formularza
-    const nick = document.getElementById('nick').value;
-    const specs = document.getElementById('specs').value;
-    const kontakt = document.getElementById('kontakt').value;
+        aasync function confirmOrder() {
+    const nick = document.getElementById('discordNick').value;
+    const produkt = document.getElementById('modalProduct').innerText;
+    const metodaElement = document.querySelector('.pay-option.selected');
+    const metoda = metodaElement ? metodaElement.innerText : 'Nie wybrano';
 
-    if(!nick) {
-        alert("Wpisz chociaż swój nick!");
-        return;
-    }
+    if(!nick) return alert('Wpisz nick Discord!');
 
     const data = {
         klient: nick,
-        gra: selectedProduct || "Nie wybrano",
-        typ: selectedType || "Nie wybrano",
-        specs: specs,
-        kontakt: kontakt
+        gra: "ZenBoost Website",
+        typ: produkt,
+        specs: "Formularz Neon-Flow",
+        kontakt: `Metoda płatności: ${metoda}`
     };
 
     try {
-        const response = await fetch(`http://${VPS_IP}:3000/nowe-zamowienie`, {
+        // Zauważ backticki ` ` poniżej!
+        const response = await fetch(`http://93.189.89.101:3000/nowe-zamowienie`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         });
 
         if (response.ok) {
-            alert("🚀 Zamówienie wysłane! Sprawdź Discorda.");
+            alert("🚀 WYSŁANO! Sprawdź Discorda.");
+            closeModal();
         } else {
-            alert("❌ Serwer bota odpowiedział błędem.");
+            alert("❌ Serwer bota odrzucił połączenie.");
         }
     } catch (error) {
-        console.error(error);
-        alert("❌ Brak połączenia. Wyłącz Shields (Lwa) w Brave i sprawdź ustawienia 'Insecure content'.");
+        alert("❌ Błąd połączenia. Upewnij się, że Allow jest zaznaczone!");
     }
 }
     </script>
