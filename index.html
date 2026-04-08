@@ -20,33 +20,34 @@
         .feat-card { background: var(--card); padding: 30px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); }
         .feat-card h3 { color: var(--p); margin-bottom: 10px; }
 
-        .category-title { text-align: center; margin: 80px 0 40px; font-size: 2.5rem; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; }
+        .category-title { text-align: center; margin: 80px 0 40px; font-size: 2.5rem; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; color: white; }
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px; margin-bottom: 60px; }
 
-        .price-card { background: var(--card); border-radius: 30px; padding: 40px; border: 1px solid rgba(255,255,255,0.03); transition: var(--t); display: flex; flex-direction: column; }
-        .price-card:hover { border-color: var(--blue); transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
+        /* KARTA PRODUKTU */
+        .price-card { background: var(--card); border-radius: 30px; padding: 40px; border: 1px solid rgba(255,255,255,0.03); transition: var(--t); display: flex; flex-direction: column; position: relative; }
+        .price-card:hover { border-color: var(--p); transform: translateY(-10px); box-shadow: 0 0 30px var(--p-glow); }
         
+        /* PLAKIETKA POLECANE */
+        .badge-recommended { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: var(--p); color: white; padding: 6px 20px; border-radius: 50px; font-weight: 900; font-size: 0.8rem; text-transform: uppercase; box-shadow: 0 0 20px var(--p); white-space: nowrap; z-index: 10; }
+
         /* CENY NA NIEBIESKO + WIELKIE PLN */
         .price-tag { font-size: 2.5rem; font-weight: 900; margin: 15px 0; color: var(--blue); text-shadow: 0 0 15px rgba(59, 130, 246, 0.3); display: flex; align-items: baseline; justify-content: center; }
         .price-tag span { font-size: 2.5rem; font-weight: 900; color: var(--blue); margin-left: 8px; }
         
         ul { list-style: none; margin-bottom: 30px; flex-grow: 1; }
-        ul li { margin: 12px 0; opacity: 0.8; display: flex; align-items: flex-start; font-size: 0.85rem; line-height: 1.4; }
+        ul li { margin: 12px 0; opacity: 0.8; display: flex; align-items: flex-start; font-size: 0.85rem; line-height: 1.4; text-align: left; }
         ul li::before { content: '✦'; color: var(--p); margin-right: 12px; }
 
         button { background: var(--p); color: white; border: none; padding: 18px; border-radius: 15px; font-weight: 800; cursor: pointer; transition: var(--t); text-transform: uppercase; }
-        button:hover { background: var(--blue); transform: scale(1.03); box-shadow: 0 0 20px rgba(59, 130, 246, 0.4); }
+        button:hover { transform: scale(1.03); box-shadow: 0 0 20px var(--p); }
 
         /* SEKCJA OWNERÓW */
         .owner-section { text-align: center; padding: 100px 20px; background: #0b0f1a; border-top: 1px solid rgba(255,255,255,0.05); }
         .owner-title { font-size: 2.5rem; font-weight: 900; color: white; margin-bottom: 60px; letter-spacing: 3px; text-transform: uppercase; }
         .owner-grid { display: flex; justify-content: center; gap: 80px; flex-wrap: wrap; }
         .owner-card { text-align: center; transition: var(--t); }
-        
         .avatar-frame { width: 160px; height: 160px; border-radius: 50%; border: 3px solid var(--p); padding: 5px; box-shadow: 0 0 15px var(--p-glow); transition: var(--t); overflow: hidden; margin: 0 auto 15px; }
         .avatar-frame img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
-        
-        /* Turbofioletowa animacja */
         .owner-card:hover .avatar-frame { transform: scale(1.15); box-shadow: 0 0 45px var(--p); border-color: #d8b4fe; }
         .owner-nick { font-size: 1.6rem; font-weight: 900; color: white; text-transform: uppercase; letter-spacing: 1px; transition: var(--t); }
         .owner-card:hover .owner-nick { color: var(--p); text-shadow: 0 0 10px var(--p-glow); }
@@ -72,35 +73,13 @@
             <h3>Dlaczego my?</h3>
             <p>Autorskie skrypty i maksymalne osiągi bez ryzyka dla sprzętu.</p>
         </div>
-        <div class="feat-card" style="border-color: #4ade8055;">
-            <h3 style="color: #4ade80;">AnyDesk Safety</h3>
+        <div class="feat-card">
+            <h3>AnyDesk Safety</h3>
             <p>Pełna kontrola nad sesją. Widzisz każdy nasz ruch.</p>
         </div>
-        <div class="feat-card" style="border-color: #facc1555;">
-            <h3 style="color: #facc15;">Płatności</h3>
+        <div class="feat-card">
+            <h3>Płatności</h3>
             <p>Akceptujemy <strong>BLIK</strong> oraz <strong>PSC</strong>.</p>
-        </div>
-    </div>
-
-    <h2 class="category-title">🤖 Boty Discord</h2>
-    <div class="grid">
-        <div class="price-card">
-            <h3>Podstawowy Bot</h3>
-            <div class="price-tag">100-150<span>PLN</span></div>
-            <ul><li>Komendy administracyjne</li><li>System powitań</li><li>Wsparcie 24/7</li></ul>
-            <button onclick="openModal('Podstawowy Bot')">Złóż zamówienie</button>
-        </div>
-        <div class="price-card" style="border-color: var(--blue);">
-            <h3>Średniozaawansowany</h3>
-            <div class="price-tag">180-230<span>PLN</span></div>
-            <ul><li>Ekonomia i Levelowanie</li><li>Zaawansowane logi</li><li>Integracje API</li></ul>
-            <button onclick="openModal('Średni Bot')">Złóż zamówienie</button>
-        </div>
-        <div class="price-card">
-            <h3>Bardzo Zaawansowany</h3>
-            <div class="price-tag">250-300<span>PLN</span></div>
-            <ul><li>Dashboard WWW</li><li>Bazy danych SQL</li><li>Płatności i weryfikacja</li></ul>
-            <button onclick="openModal('Zaawansowany Bot')">Złóż zamówienie</button>
         </div>
     </div>
 
@@ -109,20 +88,56 @@
         <div class="price-card">
             <h3>Full System Tweak</h3>
             <div class="price-tag">20-50<span>PLN</span></div>
-            <ul><li>System Tweaking + BIOS Setup</li><li>Czyszczenie zbędnych usług</li><li>24/7 Support</li></ul>
+            <ul>
+                <li>System Tweaking + BIOS Setup</li>
+                <li>Czyszczenie zbędnych usług</li>
+                <li>24/7 Support po wykonaniu</li>
+            </ul>
             <button onclick="openModal('Full System Tweak')">Złóż zamówienie</button>
         </div>
         <div class="price-card">
+            <div class="badge-recommended">POLECANE!</div>
             <h3>Pro Gaming Pack</h3>
             <div class="price-tag">70-100<span>PLN</span></div>
-            <ul><li>Custom Windows + BIOS + Monitor</li><li>Minimalizacja Input Lagu</li><li>Wszystko z pakietu Full</li></ul>
+            <ul>
+                <li>Custom Windows + BIOS + Monitor</li>
+                <li>Minimalizacja Input Lagu</li>
+                <li>Pełny system Tweak</li>
+            </ul>
             <button onclick="openModal('Pro Gaming Pack')">Złóż zamówienie</button>
         </div>
-        <div class="price-card" style="border-color: var(--blue); box-shadow: 0 0 30px rgba(59, 130, 246, 0.2);">
+        <div class="price-card">
             <h3>Extreme Performance</h3>
             <div class="price-tag">120-150<span>PLN</span></div>
-            <ul><li>Hardware Overclocking + Router</li><li>Latency Tweaks (Monitor & Mouse)</li><li>Pełny pakiet Extreme</li></ul>
+            <ul>
+                <li>Hardware Overclocking + Router</li>
+                <li>Monitor & Mouse Tweaks (Latency)</li>
+                <li>Wszystko z pakietu Pro Gaming</li>
+            </ul>
             <button onclick="openModal('Extreme Performance')">Złóż zamówienie</button>
+        </div>
+    </div>
+
+    <h2 class="category-title">🤖 Boty Discord</h2>
+    <div class="grid">
+        <div class="price-card">
+            <h3>Podstawowy Bot</h3>
+            <div class="price-tag">100-150<span>PLN</span></div>
+            <ul><li>Komendy administracyjne</li><li>System powitań i pożegnań</li><li>Wsparcie 24/7</li></ul>
+            <button onclick="openModal('Podstawowy Bot')">Złóż zamówienie</button>
+        </div>
+        <div class="price-card">
+            <div class="badge-recommended">POLECANE!</div>
+            <h3>Średniozaawansowany</h3>
+            <div class="price-tag">180-230<span>PLN</span></div>
+            <ul><li>Systemy ekonomii i levelowania</li><li>Zaawansowane logi serwera</li><li>Integracje API</li></ul>
+            <button onclick="openModal('Średni Bot')">Złóż zamówienie</button>
+        </div>
+        <div class="price-card">
+            <h3>Bardzo Zaawansowany</h3>
+            <div class="price-tag">250-300<span>PLN</span></div>
+            <ul><li>Dashboard WWW do zarządzania</li><li>Bazy danych SQL</li><li>Płatności i weryfikacja</li></ul>
+            <button onclick="openModal('Zaawansowany Bot')">Złóż zamówienie</button>
         </div>
     </div>
 
@@ -135,6 +150,7 @@
             <button onclick="openModal('Landing Page')">Złóż zamówienie</button>
         </div>
         <div class="price-card">
+            <div class="badge-recommended">POLECANE!</div>
             <h3>Unikalny Layout</h3>
             <div class="price-tag">250-500<span>PLN</span></div>
             <ul><li>Styl Gaming/Space + Animacje</li><li>Widgety Discorda</li><li>Pełna oferta</li></ul>
@@ -163,7 +179,7 @@
     </div>
 </section>
 
-<footer>zenboost-tweak.pl | Wszelkie prawa zastrzeżone | discord: https://discord.gg/FTKcYYf42S</footer>
+<footer>zenboost-tweak.pl | Wszelkie prawa zastrzeżone | discord: szymon896</footer>
 
 <div id="orderModal" class="modal">
     <div class="modal-content">
