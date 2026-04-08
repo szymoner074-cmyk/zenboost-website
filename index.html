@@ -26,7 +26,6 @@
         .price-card { background: var(--card); border-radius: 30px; padding: 40px; border: 1px solid rgba(255,255,255,0.03); transition: var(--t); display: flex; flex-direction: column; }
         .price-card:hover { border-color: var(--p); transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
         
-        .price-card h3 { font-size: 1.4rem; margin-bottom: 10px; }
         .price-tag { font-size: 2.2rem; font-weight: 900; margin: 15px 0; color: #f8fafc; }
         .price-tag span { font-size: 1rem; opacity: 0.5; color: var(--p); }
         
@@ -37,19 +36,43 @@
         button { background: var(--p); color: white; border: none; padding: 18px; border-radius: 15px; font-weight: 800; cursor: pointer; transition: var(--t); text-transform: uppercase; }
         button:hover { transform: scale(1.03); box-shadow: 0 0 20px var(--p-glow); }
 
-        /* SEKCJA OWNERÓW */
-        .owner-section { text-align: center; padding: 100px 20px; background: linear-gradient(to bottom, var(--bg), #05080f); }
+        /* MISTRZOWSKA SEKCJA OWNERÓW */
+        .owner-section { text-align: center; padding: 100px 20px; background: #0b0f1a; }
         .owner-title { font-size: 2.5rem; font-weight: 900; color: white; margin-bottom: 60px; letter-spacing: 3px; text-transform: uppercase; }
-        .owner-grid { display: flex; justify-content: center; gap: 60px; flex-wrap: wrap; }
+        .owner-grid { display: flex; justify-content: center; gap: 80px; flex-wrap: wrap; }
         
-        .owner-card { background: var(--card); border-radius: 30px; padding: 40px; width: 350px; transition: var(--t); border: 1px solid rgba(168, 85, 247, 0.1); }
-        .owner-card:hover { transform: translateY(-10px); border-color: var(--p); box-shadow: 0 0 30px var(--p-glow); }
+        .owner-card { text-align: center; transition: var(--t); }
+        
+        /* Stylistyka samych awatarów z neonowym obramowaniem */
+        .avatar-frame {
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            border: 4px solid var(--p);
+            padding: 5px;
+            background: transparent;
+            box-shadow: 0 0 15px var(--p-glow);
+            transition: var(--t);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-        .avatar-wrapper { width: 200px; height: 200px; margin: 0 auto 25px; border-radius: 50%; border: 4px solid var(--p); padding: 5px; box-shadow: 0 0 20px var(--p-glow); overflow: hidden; }
-        .avatar-wrapper img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+        .avatar-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            transition: var(--t);
+        }
 
-        .owner-card h4 { font-size: 2rem; margin-bottom: 10px; color: white; text-transform: uppercase; }
-        .status-badge { display: inline-block; background: rgba(168, 85, 247, 0.1); border: 2px solid var(--p); padding: 8px 25px; border-radius: 50px; color: #a29bfe; font-weight: bold; text-transform: uppercase; }
+        /* 💥 REAKCJA NA NAJECHANIE MYSZKĄ */
+        .owner-card:hover .avatar-frame {
+            transform: scale(1.1);
+            box-shadow: 0 0 35px var(--p); /* Mocniejszy blask fioletowy */
+            border-color: #d8b4fe; /* Jaśniejszy neon */
+        }
 
         /* Modal */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 8, 18, 0.98); align-items: center; justify-content: center; z-index: 9999; backdrop-filter: blur(15px); }
@@ -74,7 +97,7 @@
         </div>
         <div class="feat-card" style="border-color: #4ade8055;">
             <h3 style="color: #4ade80;">AnyDesk Safety</h3>
-            <p>Pełna kontrola nad sesją. Bezpieczeństwo to priorytet.</p>
+            <p>Pełna kontrola nad sesją. Widzisz każdy nasz ruch.</p>
         </div>
         <div class="feat-card" style="border-color: #facc1555;">
             <h3 style="color: #facc15;">Płatności</h3>
@@ -82,17 +105,25 @@
         </div>
     </div>
 
-    <h2 class="category-title">🤖 Boty Discord</h2>
+    <h2 class="category-title">⚡ Nasza Oferta</h2>
     <div class="grid">
         <div class="price-card">
-            <h3>Podstawowy Bot</h3>
-            <div class="price-tag">100-150<span> PLN</span></div>
-            <button onclick="openModal('Podstawowy Bot')">Złóż zamówienie</button>
+            <h3>Full System Tweak</h3>
+            <div class="price-tag">20-50<span> PLN</span></div>
+            <ul>
+                <li>System Tweaking + BIOS Setup</li>
+                <li>Czyszczenie zbędnych usług</li>
+            </ul>
+            <button onclick="openModal('Full Tweak PC')">Złóż zamówienie</button>
         </div>
-        <div class="price-card" style="border-color: var(--p);">
-            <h3>Średniozaawansowany</h3>
-            <div class="price-tag">180-230<span> PLN</span></div>
-            <button onclick="openModal('Średni Bot')">Złóż zamówienie</button>
+        <div class="price-card" style="border-color: var(--p); box-shadow: 0 0 30px var(--p-glow);">
+            <h3>Extreme Performance</h3>
+            <div class="price-tag">120-150<span> PLN</span></div>
+            <ul>
+                <li>Overclocking + Router Settings</li>
+                <li>Minimalizacja Input Lagu</li>
+            </ul>
+            <button onclick="openModal('Extreme Pack PC')">Złóż zamówienie</button>
         </div>
     </div>
 </div>
@@ -101,18 +132,14 @@
     <h2 class="owner-title">OWNERZY SERWERA</h2>
     <div class="owner-grid">
         <div class="owner-card">
-            <div class="avatar-wrapper">
+            <div class="avatar-frame">
                 <img src="z.png" alt="ZenBoost">
             </div>
-            <h4>ZenBoost</h4>
-            <div class="status-badge">Owner</div>
         </div>
         <div class="owner-card">
-            <div class="avatar-wrapper">
+            <div class="avatar-frame">
                 <img src="s.jpg" alt="Seyven">
             </div>
-            <h4>Seyven</h4>
-            <div class="status-badge">Owner</div>
         </div>
     </div>
 </section>
@@ -125,9 +152,9 @@
     <div class="modal-content">
         <h2 id="mTitle" style="color: var(--p); margin-bottom: 20px;">Zamówienie</h2>
         <input type="text" id="nick" placeholder="Twoja nazwa na Discord">
-        <input type="text" id="specs" placeholder="Szczegóły (np. specyfikacja PC)">
+        <input type="text" id="specs" placeholder="Podaj szczegóły (np. specyfikacja PC)">
         <select id="pay">
-            <option value="BLIK">BLIK (Przelew na tel)</option>
+            <option value="BLIK">BLIK (Przelew na telefon)</option>
             <option value="PSC">PaySafeCard</option>
         </select>
         <button onclick="sendToBot()">WYŚLIJ ZGŁOSZENIE</button>
@@ -139,11 +166,23 @@
     let currentItem = "";
     function openModal(i) { currentItem = i; document.getElementById('mTitle').innerText = i; document.getElementById('orderModal').style.display = 'flex'; }
     function closeModal() { document.getElementById('orderModal').style.display = 'none'; }
+
     async function sendToBot() {
-        const data = { klient: document.getElementById('nick').value, gra: currentItem, specs: document.getElementById('specs').value, platnosc: document.getElementById('pay').value };
+        const data = {
+            klient: document.getElementById('nick').value,
+            gra: currentItem,
+            specs: document.getElementById('specs').value,
+            platnosc: document.getElementById('pay').value
+        };
+
         if(!data.klient || !data.specs) return alert("Wypełnij wszystkie pola!");
+
         try {
-           const response = await fetch('https://api.zenboost-tweak.pl/api/nowe-zamowienie', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+           const response = await fetch('https://api.zenboost-tweak.pl/api/nowe-zamowienie', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
             if(response.ok) { alert("🚀 Wysłano! Sprawdź Discorda."); closeModal(); }
             else { alert("Błąd serwera."); }
         } catch(e) { alert("❌ Brak połączenia."); }
