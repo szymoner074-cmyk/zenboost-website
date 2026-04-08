@@ -32,22 +32,17 @@
 
         .container { max-width: 1200px; margin: auto; padding: 0 20px 50px; }
 
-        /* SEKCJA DLACZEGO AKURAT MY (1:1 WEDŁUG SS) */
         .why-us-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 80px; }
         .why-card { background: var(--card); padding: 35px; border-radius: 25px; border: 1px solid rgba(168, 85, 247, 0.1); transition: var(--t); text-align: left; }
         .why-card:hover { transform: translateY(-10px); border-color: var(--p); box-shadow: 0 0 30px var(--p-glow); }
         .why-card i { font-size: 2.8rem; color: var(--p); margin-bottom: 20px; }
-        .why-card h4 { color: #fff; margin-bottom: 12px; font-weight: 800; font-size: 1.1rem; }
-        .why-card p { font-size: 0.85rem; line-height: 1.5; }
+        .why-card h4 { color: #fff; margin-bottom: 12px; font-weight: 800; }
 
-        /* KATEGORIE */
         .category-title { text-align: center; margin: 80px 0 40px; font-size: 2.5rem; font-weight: 900; text-transform: uppercase; color: var(--accent); letter-spacing: 4px; }
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px; margin-bottom: 60px; }
         
         .price-card { background: var(--card); border-radius: 30px; padding: 45px; border: 1px solid rgba(255,255,255,0.03); transition: var(--t); position: relative; display: flex; flex-direction: column; }
         .price-card:hover { border-color: var(--p); transform: translateY(-12px); box-shadow: 0 0 40px var(--p-glow); }
-        
-        /* ŚRODKOWY PRODUKT */
         .price-card.featured { border: 2px solid var(--p); box-shadow: 0 0 25px var(--p-glow); }
         .badge-recommended { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: var(--p); color: white; padding: 8px 25px; border-radius: 50px; font-weight: 900; font-size: 0.8rem; text-transform: uppercase; box-shadow: 0 0 20px var(--p); }
 
@@ -55,29 +50,25 @@
         .price-tag span { font-size: 1.8rem; margin-left: 5px; }
 
         ul { list-style: none; margin-bottom: 30px; flex-grow: 1; }
-        ul li { margin: 12px 0; color: var(--text-soft); display: flex; align-items: center; font-size: 0.85rem; }
+        ul li { margin: 10px 0; color: var(--text-soft); display: flex; align-items: center; font-size: 0.85rem; }
         ul li i { color: var(--p); margin-right: 12px; font-size: 1rem; }
 
         button { width: 100%; background: var(--p); color: #fff; border: none; padding: 18px; border-radius: 15px; font-weight: 800; cursor: pointer; transition: var(--t); text-transform: uppercase; }
         button:hover { transform: scale(1.05); filter: brightness(1.2); }
 
-        /* OWNERZY */
         .owner-section { text-align: center; padding: 80px 20px; background: rgba(0,0,0,0.3); border-top: 1px solid rgba(255,255,255,0.05); }
         .owner-grid { display: flex; justify-content: center; gap: 60px; flex-wrap: wrap; margin-top: 40px; }
         .owner-card { text-align: center; cursor: pointer; transition: var(--t); }
         .avatar-frame { width: 150px; height: 150px; border-radius: 50%; border: 3px solid var(--p); padding: 5px; box-shadow: 0 0 15px var(--p-glow); overflow: hidden; margin: 0 auto 20px; transition: var(--t); }
         .avatar-frame img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
         .owner-nick { font-size: 1.4rem; font-weight: 900; color: var(--text-soft); text-transform: uppercase; letter-spacing: 2px; transition: var(--t); }
-        
         .owner-card:hover .avatar-frame { transform: scale(1.1); box-shadow: 0 0 45px var(--p); border-color: #fff; }
         .owner-card:hover .owner-nick { color: var(--p); text-shadow: 0 0 15px var(--p); }
 
-        /* STOPKA - TWÓRCA STRONY */
         footer { text-align: center; padding: 80px 20px; border-top: 1px solid rgba(255,255,255,0.05); }
         .creator-title { font-size: 2rem; font-weight: 900; color: var(--p); margin-bottom: 25px; text-transform: uppercase; letter-spacing: 3px; }
         .creator-avatar { width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--p); padding: 5px; margin: 0 auto 15px; overflow: hidden; transition: var(--t); box-shadow: 0 0 15px var(--p); }
         .creator-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
-        .creator-avatar:hover { transform: scale(1.2) rotate(5deg); box-shadow: 0 0 30px var(--p); }
         .creator-nick { font-weight: 900; color: var(--text-soft); text-transform: uppercase; font-size: 1.2rem; }
     </style>
 </head>
@@ -97,38 +88,12 @@
 <div class="container">
     <h2 style="text-align:center; color:#fff; font-size:2.5rem; margin-bottom:50px; text-transform:uppercase;">Dlaczego akurat my?</h2>
     <div class="why-us-grid">
-        <div class="why-card">
-            <i class="fas fa-shield-alt"></i>
-            <h4>Bezpieczeństwo</h4>
-            <p>Dzięki AnyDesk masz pełny podgląd sesji. Widzisz każdy nasz ruch, co gwarantuje pełne bezpieczeństwo Twoich danych.</p>
-        </div>
-        <div class="why-card">
-            <i class="fas fa-bolt"></i>
-            <h4>Wydajność</h4>
-            <p>Gwarantujemy najwyższe FPS i najniższe opóźnienia. Twój komputer zacznie pracować na 100% swoich możliwości.</p>
-        </div>
-        <div class="why-row-custom" style="display: contents;">
-            <div class="why-card">
-                <i class="fas fa-user-check"></i>
-                <h4>Zaufanie</h4>
-                <p>Setki zadowolonych klientów i tysiące godzin spędzonych na optymalizacji PC. Nasze opinie mówią same za siebie.</p>
-            </div>
-            <div class="why-card">
-                <i class="fas fa-microchip"></i>
-                <h4>Autorskie Metody</h4>
-                <p>Nie używamy gotowców. Korzystamy z własnych skryptów i metod, które są bezpieczne dla Twojego hardware.</p>
-            </div>
-            <div class="why-card">
-                <i class="fas fa-lock"></i>
-                <h4>Ochrona Prywatności</h4>
-                <p>Twoje pliki i prywatność są święte. Podczas sesji skupiamy się wyłącznie na optymalizacji systemu.</p>
-            </div>
-            <div class="why-card">
-                <i class="fas fa-medal"></i>
-                <h4>Pełny Profesjonalizm</h4>
-                <p>Podchodzimy do każdego zlecenia z pasją i precyzją. Każdy detal systemu jest przez nas dokładnie sprawdzany.</p>
-            </div>
-        </div>
+        <div class="why-card"><i class="fas fa-shield-alt"></i><h4>Bezpieczeństwo</h4><p>Dzięki AnyDesk masz pełny podgląd sesji. Widzisz każdy nasz ruch.</p></div>
+        <div class="why-card"><i class="fas fa-bolt"></i><h4>Wydajność</h4><p>Gwarantujemy najwyższe FPS i najniższe opóźnienia na Twoim sprzęcie.</p></div>
+        <div class="why-card"><i class="fas fa-user-check"></i><h4>Zaufanie</h4><p>Setki zadowolonych klientów i tysiące godzin spędzonych na optymalizacji.</p></div>
+        <div class="why-card"><i class="fas fa-microchip"></i><h4>Autorskie Metody</h4><p>Korzystamy z własnych skryptów bezpiecznych dla Twojego hardware.</p></div>
+        <div class="why-card"><i class="fas fa-lock"></i><h4>Ochrona Prywatności</h4><p>Twoje pliki są święte. Skupiamy się wyłącznie na optymalizacji systemu.</p></div>
+        <div class="why-card"><i class="fas fa-medal"></i><h4>Pełny Profesjonalizm</h4><p>Każdy detal systemu jest przez nas dokładnie sprawdzany i strojony.</p></div>
     </div>
 
     <h2 class="category-title">⚡ Optymalizacje PC</h2>
@@ -149,20 +114,24 @@
             <div class="price-tag">100<span>PLN</span></div>
             <ul>
                 <li><i class="fas fa-check-circle"></i> Custom Windows</li>
-                <li><i class="fas fa-check-circle"></i> BIOS + System Tweak</li>
+                <li><i class="fas fa-check-circle"></i> Full System Tweaking</li>
+                <li><i class="fas fa-check-circle"></i> BIOS Tweaking</li>
                 <li><i class="fas fa-check-circle"></i> Monitor Settings</li>
                 <li><i class="fas fa-check-circle"></i> 24/7 support</li>
             </ul>
             <button onclick="openModal('Lepszy Boost')">WYBIERZ</button>
         </div>
         <div class="price-card">
-            <h3>Extreme Boost</h3>
+            <h3>Custom Windows + Boost</h3>
             <div class="price-tag">150<span>PLN</span></div>
             <ul>
+                <li><i class="fas fa-check-circle"></i> Custom Windows</li>
+                <li><i class="fas fa-check-circle"></i> Full System Tweaking</li>
                 <li><i class="fas fa-check-circle"></i> Hardware Overclocking</li>
-                <li><i class="fas fa-check-circle"></i> Router Optimization</li>
-                <li><i class="fas fa-check-circle"></i> Pełny Pakiet Custom</li>
-                <li><i class="fas fa-check-circle"></i> Latency Optimization</li>
+                <li><i class="fas fa-check-circle"></i> BIOS Tweaking</li>
+                <li><i class="fas fa-check-circle"></i> Router Settings</li>
+                <li><i class="fas fa-check-circle"></i> Monitor Settings</li>
+                <li><i class="fas fa-check-circle"></i> 24/7 support</li>
             </ul>
             <button onclick="openModal('Extreme Boost')">WYBIERZ</button>
         </div>
@@ -174,11 +143,9 @@
             <h3>Startowy Bot</h3>
             <div class="price-tag">200<span>PLN</span></div>
             <ul>
-                <li><i class="fas fa-check-circle"></i> Systemy Administracji</li>
-                <li><i class="fas fa-check-circle"></i> Zaawansowane Logi</li>
-                <li><i class="fas fa-check-circle"></i> Auto-Moderacja</li>
-                <li><i class="fas fa-check-circle"></i> System powitalny Embed</li>
-                <li><i class="fas fa-check-circle"></i> Komendy Informacyjne</li>
+                <li><i class="fas fa-check-circle"></i> Administracja i Moderacja</li>
+                <li><i class="fas fa-check-circle"></i> Auto-Moderacja treści</li>
+                <li><i class="fas fa-check-circle"></i> System powitań Embed</li>
             </ul>
             <button onclick="openModal('Bot 200')">WYBIERZ</button>
         </div>
@@ -188,11 +155,9 @@
             <div class="price-tag">500<span>PLN</span></div>
             <ul>
                 <li><i class="fas fa-check-circle"></i> Pełna Ekonomia & Sklep</li>
-                <li><i class="fas fa-check-circle"></i> Bazy Danych SQL</li>
                 <li><i class="fas fa-check-circle"></i> System Levelowania (XP)</li>
-                <li><i class="fas fa-check-circle"></i> Integracja API (Twitch/YT)</li>
-                <li><i class="fas fa-check-circle"></i> Autorskie Minigry</li>
-                <li><i class="fas fa-check-circle"></i> System Ticketów</li>
+                <li><i class="fas fa-check-circle"></i> Zaawansowane Logi Serwera</li>
+                <li><i class="fas fa-check-circle"></i> System Ticketów (Support)</li>
             </ul>
             <button onclick="openModal('Bot 500')">WYBIERZ</button>
         </div>
@@ -200,11 +165,14 @@
             <h3>Mega Custom Bot</h3>
             <div class="price-tag">1000<span>PLN</span></div>
             <ul>
-                <li><i class="fas fa-check-circle"></i> Dashboard WWW</li>
-                <li><i class="fas fa-check-circle"></i> Weryfikacja OAuth2</li>
-                <li><i class="fas fa-check-circle"></i> Systemy Płatności BLIK</li>
-                <li><i class="fas fa-check-circle"></i> Pełna Customizacja</li>
-                <li><i class="fas fa-check-circle"></i> Optymalizacja kodu</li>
+                <li><i class="fas fa-check-circle"></i> Profesjonalny Dashboard WWW</li>
+                <li><i class="fas fa-check-circle"></i> Weryfikacja OAuth2 Discord</li>
+                <li><i class="fas fa-check-circle"></i> System Płatności BLIK/Stripe</li>
+                <li><i class="fas fa-check-circle"></i> Bazy Danych SQL (Szybkość)</li>
+                <li><i class="fas fa-check-circle"></i> Integracja z Twitch & YouTube</li>
+                <li><i class="fas fa-check-circle"></i> Hosting w Cenie (Pierwszy msc)</li>
+                <li><i class="fas fa-check-circle"></i> Autorskie Minigry Losowe</li>
+                <li><i class="fas fa-check-circle"></i> Optymalizacja pod Duży Ruch</li>
             </ul>
             <button onclick="openModal('Bot 1000')">WYBIERZ</button>
         </div>
@@ -217,9 +185,8 @@
             <div class="price-tag">300<span>PLN</span></div>
             <ul>
                 <li><i class="fas fa-check-circle"></i> Modern One-Page Design</li>
-                <li><i class="fas fa-check-circle"></i> Pełna Responsywność</li>
-                <li><i class="fas fa-check-circle"></i> Optymalizacja Szybkości</li>
-                <li><i class="fas fa-check-circle"></i> Formularz Kontaktowy</li>
+                <li><i class="fas fa-check-circle"></i> Podpięcie Własnej Domeny</li>
+                <li><i class="fas fa-check-circle"></i> Certyfikat Bezpieczeństwa SSL</li>
             </ul>
             <button onclick="openModal('WWW 300')">WYBIERZ</button>
         </div>
@@ -228,11 +195,10 @@
             <h3>Strona Gamingowa</h3>
             <div class="price-tag">600<span>PLN</span></div>
             <ul>
-                <li><i class="fas fa-check-circle"></i> Design Premium (Glow)</li>
-                <li><i class="fas fa-check-circle"></i> Animacje Premium</li>
-                <li><i class="fas fa-check-circle"></i> Panel Zarządzania treścią</li>
-                <li><i class="fas fa-check-circle"></i> Widgety Discord (Live)</li>
-                <li><i class="fas fa-check-circle"></i> SEO Optimization</li>
+                <li><i class="fas fa-check-circle"></i> Design Premium (Glow Effect)</li>
+                <li><i class="fas fa-check-circle"></i> Animacje Framer / JS</li>
+                <li><i class="fas fa-check-circle"></i> Pełna Responsywność Mobile</li>
+                <li><i class="fas fa-check-circle"></i> Widgety Discord Live Status</li>
             </ul>
             <button onclick="openModal('WWW 600')">WYBIERZ</button>
         </div>
@@ -241,10 +207,13 @@
             <div class="price-tag">1000<span>PLN</span></div>
             <ul>
                 <li><i class="fas fa-check-circle"></i> Logowanie Discord OAuth2</li>
-                <li><i class="fas fa-check-circle"></i> System Płatności BLIK</li>
-                <li><i class="fas fa-check-circle"></i> Zaawansowany Dashboard</li>
-                <li><i class="fas fa-check-circle"></i> Baza danych SQL</li>
+                <li><i class="fas fa-check-circle"></i> System Płatności (BLIK/PayPal)</li>
+                <li><i class="fas fa-check-circle"></i> Zaawansowany Panel Admina</li>
                 <li><i class="fas fa-check-circle"></i> Pełna Integracja z Botem</li>
+                <li><i class="fas fa-check-circle"></i> Automatyczne Nadawanie Roli</li>
+                <li><i class="fas fa-check-circle"></i> System Statystyk Serwera</li>
+                <li><i class="fas fa-check-circle"></i> Panel Zarządzania treścią CMS</li>
+                <li><i class="fas fa-check-circle"></i> Pełna Optymalizacja SEO</li>
             </ul>
             <button onclick="openModal('WWW 1000')">WYBIERZ</button>
         </div>
@@ -252,16 +221,10 @@
 </div>
 
 <section class="owner-section">
-    <h2 style="color:#fff; text-transform:uppercase; letter-spacing:4px; font-size:2rem; margin-bottom:10px;">Ownerzy Serwera</h2>
+    <h2 style="color:#fff; text-transform:uppercase; letter-spacing:4px; margin-bottom:10px;">Ownerzy Serwera</h2>
     <div class="owner-grid">
-        <div class="owner-card">
-            <div class="avatar-frame"><img src="z.png"></div>
-            <div class="owner-nick">ZenBoost</div>
-        </div>
-        <div class="owner-card">
-            <div class="avatar-frame"><img src="s.jpg"></div>
-            <div class="owner-nick">Seyven</div>
-        </div>
+        <div class="owner-card"><div class="avatar-frame"><img src="z.png"></div><div class="owner-nick">ZenBoost</div></div>
+        <div class="owner-card"><div class="avatar-frame"><img src="s.jpg"></div><div class="owner-nick">Seyven</div></div>
     </div>
 </section>
 
