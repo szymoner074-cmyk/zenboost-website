@@ -16,12 +16,14 @@
 
         .container { max-width: 1200px; margin: auto; padding: 0 20px 50px; }
 
+        /* Sekcje Info */
         .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: -60px; margin-bottom: 80px; }
         .feat-card { background: var(--card); padding: 30px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); }
         .feat-card h3 { color: var(--p); margin-bottom: 10px; }
 
-        .category-title { text-align: center; margin: 80px 0 40px; font-size: 2.5rem; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; color: var(--p); }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px; margin-bottom: 40px; }
+        /* Cenniki */
+        .category-title { text-align: center; margin: 80px 0 40px; font-size: 2.5rem; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px; margin-bottom: 60px; }
 
         .price-card { background: var(--card); border-radius: 30px; padding: 40px; border: 1px solid rgba(255,255,255,0.03); transition: var(--t); display: flex; flex-direction: column; }
         .price-card:hover { border-color: var(--p); transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
@@ -30,22 +32,22 @@
         .price-tag span { font-size: 1rem; opacity: 0.5; color: var(--p); }
         
         ul { list-style: none; margin-bottom: 30px; flex-grow: 1; }
-        ul li { margin: 12px 0; opacity: 0.8; display: flex; align-items: flex-start; font-size: 0.9rem; line-height: 1.4; }
+        ul li { margin: 12px 0; opacity: 0.8; display: flex; align-items: flex-start; font-size: 0.85rem; line-height: 1.4; }
         ul li::before { content: '✦'; color: var(--p); margin-right: 12px; }
 
         button { background: var(--p); color: white; border: none; padding: 18px; border-radius: 15px; font-weight: 800; cursor: pointer; transition: var(--t); text-transform: uppercase; }
         button:hover { transform: scale(1.03); box-shadow: 0 0 20px var(--p-glow); }
 
-        /* SEKCJA OWNERÓW - MNIEJSZA I Z NAPISAMI */
+        /* SEKCJA OWNERÓW */
         .owner-section { text-align: center; padding: 100px 20px; background: #0b0f1a; border-top: 1px solid rgba(255,255,255,0.05); }
-        .owner-title { font-size: 2rem; font-weight: 900; color: white; margin-bottom: 60px; letter-spacing: 3px; text-transform: uppercase; }
+        .owner-title { font-size: 2.5rem; font-weight: 900; color: white; margin-bottom: 60px; letter-spacing: 3px; text-transform: uppercase; }
         .owner-grid { display: flex; justify-content: center; gap: 80px; flex-wrap: wrap; }
         
-        .owner-card { text-align: center; transition: var(--t); }
+        .owner-card { text-align: center; transition: var(--t); cursor: pointer; }
         
         .avatar-frame {
-            width: 160px; /* ZMNIEJSZONE */
-            height: 160px; /* ZMNIEJSZONE */
+            width: 160px;
+            height: 160px;
             border-radius: 50%;
             border: 3px solid var(--p);
             padding: 5px;
@@ -58,19 +60,12 @@
         .avatar-frame img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
 
         .owner-card:hover .avatar-frame {
-            transform: scale(1.15); /* LEPSZA ANIMACJA POWIĘKSZENIA */
-            box-shadow: 0 0 40px var(--p);
+            transform: scale(1.15);
+            box-shadow: 0 0 45px var(--p);
             border-color: #d8b4fe;
         }
 
-        .owner-nick { 
-            font-size: 1.5rem; 
-            font-weight: 900; 
-            color: white; 
-            text-transform: uppercase; 
-            letter-spacing: 1px;
-            transition: var(--t);
-        }
+        .owner-nick { font-size: 1.6rem; font-weight: 900; color: white; text-transform: uppercase; letter-spacing: 1px; transition: var(--t); }
         .owner-card:hover .owner-nick { color: var(--p); text-shadow: 0 0 10px var(--p-glow); }
 
         /* Modal */
@@ -104,50 +99,105 @@
         </div>
     </div>
 
-    <h2 class="category-title">⚡ Optymalizacje PC</h2>
-    <div class="grid">
-        <div class="price-card">
-            <h3>Standard Tweak</h3>
-            <div class="price-tag">30-50<span> PLN</span></div>
-            <ul>
-                <li>System Optimization</li>
-                <li>BIOS Setup</li>
-                <li>Debloat Windows</li>
-            </ul>
-            <button onclick="openModal('Standard Tweak')">Zamów teraz</button>
-        </div>
-        <div class="price-card" style="border-color: var(--p); box-shadow: 0 0 20px var(--p-glow);">
-            <h3>Extreme Performance</h3>
-            <div class="price-tag">120-150<span> PLN</span></div>
-            <ul>
-                <li>Overclocking CPU/GPU</li>
-                <li>Low Latency Router</li>
-                <li>Monitor & Mouse Tweak</li>
-            </ul>
-            <button onclick="openModal('Extreme Performance')">Zamów teraz</button>
-        </div>
-    </div>
-
     <h2 class="category-title">🤖 Boty Discord</h2>
     <div class="grid">
         <div class="price-card">
-            <h3>Basic Bot</h3>
-            <div class="price-tag">100-140<span> PLN</span></div>
+            <h3>Podstawowy Bot</h3>
+            <div class="price-tag">100-150<span> PLN</span></div>
             <ul>
-                <li>Administracja & Logi</li>
-                <li>System powitań</li>
+                <li>Komendy administracyjne</li>
+                <li>System powitań i pożegnań</li>
+                <li>Wsparcie 24/7</li>
             </ul>
-            <button onclick="openModal('Basic Bot')">Zamów teraz</button>
+            <button onclick="openModal('Podstawowy Bot')">Złóż zamówienie</button>
+        </div>
+        <div class="price-card" style="border-color: var(--p);">
+            <h3>Średniozaawansowany</h3>
+            <div class="price-tag">180-230<span> PLN</span></div>
+            <ul>
+                <li>Systemy ekonomii i levelowania</li>
+                <li>Zaawansowane logi serwera</li>
+                <li>Integracje API</li>
+            </ul>
+            <button onclick="openModal('Średni Bot')">Złóż zamówienie</button>
         </div>
         <div class="price-card">
-            <h3>Advanced Bot</h3>
-            <div class="price-tag">200-300<span> PLN</span></div>
+            <h3>Bardzo Zaawansowany</h3>
+            <div class="price-tag">250-300<span> PLN</span></div>
             <ul>
-                <li>System Ekonomii</li>
-                <li>Integracje API</li>
-                <li>Dashboard (opcja)</li>
+                <li>Dashboard WWW do zarządzania</li>
+                <li>Bazy danych SQL</li>
+                <li>Systemy płatności i weryfikacji</li>
             </ul>
-            <button onclick="openModal('Advanced Bot')">Zamów teraz</button>
+            <button onclick="openModal('Zaawansowany Bot')">Złóż zamówienie</button>
+        </div>
+    </div>
+
+    <h2 class="category-title">⚡ Optymalizacje PC</h2>
+    <div class="grid">
+        <div class="price-card">
+            <h3>Full System Tweak</h3>
+            <div class="price-tag">20-50<span> PLN</span></div>
+            <ul>
+                <li>System Tweaking + BIOS Setup</li>
+                <li>Czyszczenie zbędnych usług</li>
+                <li>24/7 Support po wykonaniu</li>
+            </ul>
+            <button onclick="openModal('Full System Tweak')">Złóż zamówienie</button>
+        </div>
+        <div class="price-card">
+            <h3>Pro Gaming Pack</h3>
+            <div class="price-tag">70-100<span> PLN</span></div>
+            <ul>
+                <li>Custom Windows + BIOS + Monitor</li>
+                <li>Minimalizacja Input Lagu</li>
+                <li>Pełny system Tweak</li>
+            </ul>
+            <button onclick="openModal('Pro Gaming Pack')">Złóż zamówienie</button>
+        </div>
+        <div class="price-card" style="box-shadow: 0 0 30px var(--p-glow); border-color: var(--p);">
+            <h3>Extreme Performance</h3>
+            <div class="price-tag">120-150<span> PLN</span></div>
+            <ul>
+                <li>Hardware Overclocking + Router</li>
+                <li>Monitor & Mouse Tweaks (Latency)</li>
+                <li>Wszystko z pakietu Pro Gaming</li>
+            </ul>
+            <button onclick="openModal('Extreme Performance')">Złóż zamówienie</button>
+        </div>
+    </div>
+
+    <h2 class="category-title">🌐 Strony WWW</h2>
+    <div class="grid">
+        <div class="price-card">
+            <h3>Landing Page</h3>
+            <div class="price-tag">50-150<span> PLN</span></div>
+            <ul>
+                <li>1-stronicowa witryna (wizytówka)</li>
+                <li>Kolory dopasowane do logo</li>
+                <li>Linki do social mediów</li>
+            </ul>
+            <button onclick="openModal('Landing Page')">Złóż zamówienie</button>
+        </div>
+        <div class="price-card">
+            <h3>Unikalny Layout</h3>
+            <div class="price-tag">250-500<span> PLN</span></div>
+            <ul>
+                <li>Styl Gaming/Space + Animacje</li>
+                <li>Widgety Discorda (Live status)</li>
+                <li>Galeria i oferta bota</li>
+            </ul>
+            <button onclick="openModal('Unikalny Layout')">Złóż zamówienie</button>
+        </div>
+        <div class="price-card">
+            <h3>Sklep / OAuth2</h3>
+            <div class="price-tag">600-900<span> PLN</span></div>
+            <ul>
+                <li>Logowanie przez Discord (OAuth2)</li>
+                <li>System newsów i prosty sklepik</li>
+                <li>Podpięcie pod płatności</li>
+            </ul>
+            <button onclick="openModal('Sklep WWW')">Złóż zamówienie</button>
         </div>
     </div>
 </div>
