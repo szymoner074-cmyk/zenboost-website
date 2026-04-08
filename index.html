@@ -35,7 +35,7 @@
 
         .container { max-width: 1200px; margin: auto; padding: 0 20px 50px; }
 
-        /* DLACZEGO AKURAT MY */
+        /* SEKCJA DLACZEGO AKURAT MY */
         .why-us-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 80px; }
         .why-card { background: var(--card); padding: 35px; border-radius: 25px; border: 1px solid rgba(168, 85, 247, 0.1); transition: var(--t); text-align: left; }
         .why-card:hover { transform: translateY(-10px); border-color: var(--p); box-shadow: 0 0 30px var(--p-glow); }
@@ -48,6 +48,8 @@
         
         .price-card { background: var(--card); border-radius: 30px; padding: 45px; border: 1px solid rgba(255,255,255,0.03); transition: var(--t); position: relative; display: flex; flex-direction: column; }
         .price-card:hover { border-color: var(--p); transform: translateY(-12px); box-shadow: 0 0 40px var(--p-glow); }
+        
+        /* ŚRODKOWY PRODUKT */
         .price-card.featured { border: 2px solid var(--p); box-shadow: 0 0 25px var(--p-glow); }
         .badge-recommended { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: var(--p); color: white; padding: 8px 25px; border-radius: 50px; font-weight: 900; font-size: 0.8rem; text-transform: uppercase; box-shadow: 0 0 20px var(--p); z-index: 10; }
 
@@ -73,9 +75,12 @@
         /* STOPKA */
         footer { text-align: center; padding: 80px 20px; border-top: 1px solid rgba(255,255,255,0.05); }
         .creator-title { font-size: 2rem; font-weight: 900; color: var(--p); margin-bottom: 25px; text-transform: uppercase; letter-spacing: 3px; }
+        
+        /* ANIMACJA AVATARA W STOPCE */
         .creator-avatar { width: 90px; height: 90px; border-radius: 50%; border: 3px solid var(--p); padding: 5px; margin: 0 auto 15px; overflow: hidden; transition: var(--t-slow); box-shadow: 0 0 15px var(--p); cursor: pointer; }
         .creator-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
         .creator-avatar:hover { transform: scale(1.15) rotate(10deg); box-shadow: 0 0 35px var(--p); border-color: #fff; }
+        
         .creator-nick { font-weight: 900; color: var(--text-soft); text-transform: uppercase; font-size: 1.2rem; transition: var(--t); }
         footer:hover .creator-nick { color: var(--p); text-shadow: 0 0 10px var(--p); }
 
@@ -98,7 +103,7 @@
         .form-group label { display: block; color: #b5bac1; font-size: 12px; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; }
         .form-group label span { color: #f23f42; margin-left: 4px; }
         
-        .modal-input { width: 100%; background: #1e1f22; border: none; border-radius: 3px; padding: 10px; color: #dbdee1; font-family: inherit; font-size: 16px; }
+        .modal-input, .modal-select { width: 100%; background: #1e1f22; border: none; border-radius: 3px; padding: 10px; color: #dbdee1; font-family: inherit; font-size: 16px; }
         .modal-textarea { width: 100%; background: #1e1f22; border: none; border-radius: 3px; padding: 10px; color: #dbdee1; font-family: inherit; font-size: 16px; resize: none; min-height: 80px; }
         
         .modal-footer { background: #2b2d31; padding: 16px; display: flex; justify-content: flex-end; gap: 20px; align-items: center; }
@@ -169,13 +174,13 @@
             <div class="badge-recommended">POLECANE!</div>
             <h3>Ekonomiczny Plus</h3>
             <div class="price-tag">500<span>PLN</span></div>
-            <ul><li><i class="fas fa-check-circle"></i> Pełna Ekonomia & Sklep</li><li><i class="fas fa-check-circle"></i> Bazy Danych SQL</li><li><i class="fas fa-check-circle"></i> System Levelowania (XP)</li><li><i class="fas fa-check-circle"></i> Zaawansowane Logi</li><li><i class="fas fa-check-circle"></i> System Ticketów Online</li></ul>
+            <ul><li><i class="fas fa-check-circle"></i> Pełna Ekonomia & Sklep</li><li><i class="fas fa-check-circle"></i> Bazy Danych SQL</li><li><i class="fas fa-check-circle"></i> System Levelowania (XP)</li><li><i class="fas fa-check-circle"></i> Zaawansowane Logi Serwera</li></ul>
             <button class="buy-btn" onclick="openModal('Ekonomiczny Plus (500 PLN)')">WYBIERZ</button>
         </div>
         <div class="price-card">
             <h3>Mega Custom Bot</h3>
             <div class="price-tag">1000<span>PLN</span></div>
-            <ul><li><i class="fas fa-check-circle"></i> Dashboard WWW Premium</li><li><i class="fas fa-check-circle"></i> Weryfikacja OAuth2</li><li><i class="fas fa-check-circle"></i> Systemy Płatności BLIK</li><li><i class="fas fa-check-circle"></i> Integracje Twitch & YouTube</li><li><i class="fas fa-check-circle"></i> Hosting w cenie</li><li><i class="fas fa-check-circle"></i> Autorskie Minigry</li><li><i class="fas fa-check-circle"></i> Pełna Customizacja</li></ul>
+            <ul><li><i class="fas fa-check-circle"></i> Dashboard WWW Premium</li><li><i class="fas fa-check-circle"></i> Weryfikacja OAuth2</li><li><i class="fas fa-check-circle"></i> Systemy Płatności BLIK</li><li><i class="fas fa-check-circle"></i> Integracje Twitch & YT</li><li><i class="fas fa-check-circle"></i> Autorskie Minigry</li><li><i class="fas fa-check-circle"></i> Hosting w cenie</li><li><i class="fas fa-check-circle"></i> Pełna Customizacja</li></ul>
             <button class="buy-btn" onclick="openModal('Mega Custom Bot (1000 PLN)')">WYBIERZ</button>
         </div>
     </div>
@@ -219,19 +224,45 @@
     <div class="creator-nick">Seyven</div>
 </footer>
 
+<!-- FORMULARZ ZAMÓWIENIA (IMAGE 227D24 STYLE) -->
 <div id="orderModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
             <h2><span>ZB</span> Formularz ZenBoost</h2>
             <div class="close-btn" onclick="closeModal()">&times;</div>
         </div>
+        
         <div class="modal-body">
-            <div class="warning-box"><i class="fas fa-exclamation-triangle"></i><p>Twoje zgłoszenie trafi bezpośrednio do <strong>Bota ZenBoost</strong>, który otworzy ticket na serwerze.</p></div>
-            <div class="form-group"><label>Twój Nick Discord<span>*</span></label><input type="text" id="nickDiscord" class="modal-input" placeholder="np. seyven#0000"></div>
-            <div class="form-group"><label>Produkt<span>*</span></label><input type="text" id="interest" class="modal-input" readonly></div>
-            <div class="form-group"><label>Specyfikacja / Uwagi<span>*</span></label><textarea id="details" class="modal-textarea" placeholder="Wpisz tutaj szczegóły zamówienia..."></textarea></div>
-            <div class="form-group"><label>Płatność<span>*</span></label><input type="text" id="payment" class="modal-input" placeholder="BLIK lub PSC"></div>
+            <div class="warning-box">
+                <i class="fas fa-exclamation-triangle"></i>
+                <p>Ten formularz zostanie przesłany do: <strong>ZenBoost | Bot</strong>. Nie udostępniaj haseł ani innych wrażliwych informacji.</p>
+            </div>
+
+            <div class="form-group">
+                <label>Twój Nick Discord<span>*</span></label>
+                <input type="text" id="nickDiscord" class="modal-input" placeholder="np. seyven#0000">
+            </div>
+
+            <div class="form-group">
+                <label>Co Cię interesuje?<span>*</span></label>
+                <input type="text" id="interest" class="modal-input" readonly>
+            </div>
+
+            <div class="form-group">
+                <label>Opis / Specyfikacja PC<span>*</span></label>
+                <textarea id="details" class="modal-textarea" placeholder="Wpisz szczegóły zamówienia..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Metoda Płatności<span>*</span></label>
+                <select id="payment" class="modal-select">
+                    <option value="" disabled selected>Wybierz metodę...</option>
+                    <option value="BLIK (poprzez numer telefonu)">BLIK (poprzez numer telefonu)</option>
+                    <option value="PSC">PaySafeCard (PSC)</option>
+                </select>
+            </div>
         </div>
+
         <div class="modal-footer">
             <button class="btn-cancel" onclick="closeModal()">Anuluj</button>
             <button class="btn-submit" onclick="sendOrder()">Wyślij</button>
@@ -240,6 +271,11 @@
 </div>
 
 <script>
+    // --- KONFIGURACJA BOT / TICKETY ---
+    const discordInvite = "https://discord.gg/pH5yNGd22k";
+    const ticketChannelURL = "https://discord.com/channels/YOUR_SERVER_ID/TICKET_CHANNEL_ID"; // Link do ticketa/kanału
+    // ----------------------------------
+
     window.onscroll = function() {
         const box = document.getElementById('social-box');
         if (window.pageYOffset > 100) { box.classList.add('scrolled'); } 
@@ -262,7 +298,7 @@
         const payment = document.getElementById('payment').value;
 
         if(!nick || !details || !payment) {
-            alert("Wypełnij wszystkie pola!");
+            alert("Wypełnij wszystkie pola oznaczone gwiazdką!");
             return;
         }
 
@@ -274,7 +310,7 @@
         };
 
         try {
-            // Wysyłanie do bota (Twój API Endpoint bota)
+            // Wysyłanie do Twojego bota
             const response = await fetch('https://api.zenboost-tweak.pl/api/nowe-zamowienie', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -282,14 +318,21 @@
             });
 
             if (response.ok) {
-                alert("🚀 BOT: Zgłoszenie przyjęte! Sprawdź nasz serwer discord! – otwieram dla Ciebie ticket.");
+                // Nowy komunikat zgodnie z prośbą
+                alert("🚀 ZAPRASZAMY CIEBIE NA NASZ SERWER DISCORD NA TICKET!\n\nLink do serwera: " + discordInvite);
                 closeModal();
+                // Czyścimy formularz
+                document.getElementById('nickDiscord').value = '';
+                document.getElementById('details').value = '';
+                document.getElementById('payment').selectedIndex = 0;
             } else {
-                alert("Zgłoszenie wysłane do bota!");
+                // Fallback jeśli bot nie odpowie OK, ale dane wyszły
+                alert("🚀 ZAPRASZAMY CIEBIE NA NASZ SERWER DISCORD NA TICKET!\n\nLink: " + discordInvite);
                 closeModal();
             }
         } catch(e) {
-            alert("Zgłoszenie wysłane! Zaraz dostaniesz wiadomość na ticket.");
+            // Success alert nawet przy błędzie fetch (jeśli bot odbiera ale nie zwraca CORS)
+            alert("🚀 ZAPRASZAMY CIEBIE NA NASZ SERWER DISCORD NA TICKET!\n\nLink: " + discordInvite);
             closeModal();
         }
     }
