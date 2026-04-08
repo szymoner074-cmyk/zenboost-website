@@ -51,7 +51,7 @@
         
         /* ŚRODKOWY PRODUKT */
         .price-card.featured { border: 2px solid var(--p); box-shadow: 0 0 25px var(--p-glow); }
-        .badge-recommended { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: var(--p); color: white; padding: 8px 25px; border-radius: 50px; font-weight: 900; font-size: 0.8rem; text-transform: uppercase; box-shadow: 0 0 20px var(--p); z-index: 10; }
+        .badge-recommended { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: var(--p); color: white; padding: 8px 25px; border-radius: 50px; font-weight: 900; font-size: 0.7rem; text-transform: uppercase; box-shadow: 0 0 20px var(--p); z-index: 10; }
 
         .price-tag { font-size: 2.8rem; font-weight: 900; margin: 20px 0; color: #3b82f6; text-align: center; }
         .price-tag span { font-size: 1.8rem; margin-left: 5px; }
@@ -76,7 +76,6 @@
         footer { text-align: center; padding: 80px 20px; border-top: 1px solid rgba(255,255,255,0.05); }
         .creator-title { font-size: 2rem; font-weight: 900; color: var(--p); margin-bottom: 25px; text-transform: uppercase; letter-spacing: 3px; }
         
-        /* ANIMACJA AVATARA W STOPCE */
         .creator-avatar { width: 90px; height: 90px; border-radius: 50%; border: 3px solid var(--p); padding: 5px; margin: 0 auto 15px; overflow: hidden; transition: var(--t-slow); box-shadow: 0 0 15px var(--p); cursor: pointer; }
         .creator-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
         .creator-avatar:hover { transform: scale(1.15) rotate(10deg); box-shadow: 0 0 35px var(--p); border-color: #fff; }
@@ -103,14 +102,22 @@
         .form-group label { display: block; color: #b5bac1; font-size: 12px; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; }
         .form-group label span { color: #f23f42; margin-left: 4px; }
         
-        .modal-input, .modal-select { width: 100%; background: #1e1f22; border: none; border-radius: 3px; padding: 10px; color: #dbdee1; font-family: inherit; font-size: 16px; }
-        .modal-textarea { width: 100%; background: #1e1f22; border: none; border-radius: 3px; padding: 10px; color: #dbdee1; font-family: inherit; font-size: 16px; resize: none; min-height: 80px; }
+        .modal-input, .modal-select { width: 100%; background: #1e1f22; border: none; border-radius: 3px; padding: 10px; color: #dbdee1; font-family: inherit; font-size: 16px; outline: none; }
+        .modal-textarea { width: 100%; background: #1e1f22; border: none; border-radius: 3px; padding: 10px; color: #dbdee1; font-family: inherit; font-size: 16px; resize: none; min-height: 80px; outline: none; }
         
         .modal-footer { background: #2b2d31; padding: 16px; display: flex; justify-content: flex-end; gap: 20px; align-items: center; }
         .btn-cancel { background: transparent; border: none; color: #fff; cursor: pointer; font-size: 14px; font-weight: 500; }
         .btn-cancel:hover { text-decoration: underline; }
         .btn-submit { background: var(--blue); color: white; border: none; padding: 10px 24px; border-radius: 3px; font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.2s; }
         .btn-submit:hover { background: #4752c4; }
+
+        /* SUCCESS STATE */
+        #success-state { display: none; padding: 30px 20px; text-align: center; }
+        #success-state i { font-size: 4rem; color: #23a559; margin-bottom: 20px; }
+        #success-state h3 { color: #fff; margin-bottom: 15px; font-weight: 800; text-transform: uppercase; }
+        #success-state p { color: #dbdee1; margin-bottom: 30px; font-size: 1rem; line-height: 1.5; }
+        .success-link-btn { display: inline-block; background: #23a559; color: white; text-decoration: none; padding: 14px 30px; border-radius: 5px; font-weight: 800; font-size: 0.9rem; transition: var(--t); text-transform: uppercase; }
+        .success-link-btn:hover { background: #1a7f45; transform: scale(1.05); }
     </style>
 </head>
 <body>
@@ -167,20 +174,20 @@
         <div class="price-card">
             <h3>Startowy Bot</h3>
             <div class="price-tag">200<span>PLN</span></div>
-            <ul><li><i class="fas fa-check-circle"></i> Systemy Administracji</li><li><i class="fas fa-check-circle"></i> Auto-Moderacja treści</li><li><i class="fas fa-check-circle"></i> System powitalny Embed</li></ul>
+            <ul><li><i class="fas fa-check-circle"></i> Systemy Administracji</li><li><i class="fas fa-check-circle"></i> Auto-Moderacja treści</li></ul>
             <button class="buy-btn" onclick="openModal('Startowy Bot (200 PLN)')">WYBIERZ</button>
         </div>
         <div class="price-card featured">
             <div class="badge-recommended">POLECANE!</div>
             <h3>Ekonomiczny Plus</h3>
             <div class="price-tag">500<span>PLN</span></div>
-            <ul><li><i class="fas fa-check-circle"></i> Pełna Ekonomia & Sklep</li><li><i class="fas fa-check-circle"></i> Bazy Danych SQL</li><li><i class="fas fa-check-circle"></i> System Levelowania (XP)</li><li><i class="fas fa-check-circle"></i> Zaawansowane Logi Serwera</li></ul>
+            <ul><li><i class="fas fa-check-circle"></i> Pełna Ekonomia & Sklep</li><li><i class="fas fa-check-circle"></i> Bazy Danych SQL</li><li><i class="fas fa-check-circle"></i> System Levelowania (XP)</li><li><i class="fas fa-check-circle"></i> Zaawansowane Logi</li></ul>
             <button class="buy-btn" onclick="openModal('Ekonomiczny Plus (500 PLN)')">WYBIERZ</button>
         </div>
         <div class="price-card">
             <h3>Mega Custom Bot</h3>
             <div class="price-tag">1000<span>PLN</span></div>
-            <ul><li><i class="fas fa-check-circle"></i> Dashboard WWW Premium</li><li><i class="fas fa-check-circle"></i> Weryfikacja OAuth2</li><li><i class="fas fa-check-circle"></i> Systemy Płatności BLIK</li><li><i class="fas fa-check-circle"></i> Integracje Twitch & YT</li><li><i class="fas fa-check-circle"></i> Autorskie Minigry</li><li><i class="fas fa-check-circle"></i> Hosting w cenie</li><li><i class="fas fa-check-circle"></i> Pełna Customizacja</li></ul>
+            <ul><li><i class="fas fa-check-circle"></i> Dashboard WWW Premium</li><li><i class="fas fa-check-circle"></i> Weryfikacja OAuth2</li><li><i class="fas fa-check-circle"></i> Płatności BLIK/PayPal</li></ul>
             <button class="buy-btn" onclick="openModal('Mega Custom Bot (1000 PLN)')">WYBIERZ</button>
         </div>
     </div>
@@ -191,20 +198,20 @@
         <div class="price-card">
             <h3>Landing Page</h3>
             <div class="price-tag">300<span>PLN</span></div>
-            <ul><li><i class="fas fa-check-circle"></i> Modern One-Page</li><li><i class="fas fa-check-circle"></i> Responsywność Mobile</li><li><i class="fas fa-check-circle"></i> Podpięcie Domeny</li></ul>
+            <ul><li><i class="fas fa-check-circle"></i> Modern One-Page</li><li><i class="fas fa-check-circle"></i> Responsywność Mobile</li></ul>
             <button class="buy-btn" onclick="openModal('Landing Page (300 PLN)')">WYBIERZ</button>
         </div>
         <div class="price-card featured">
             <div class="badge-recommended">POLECANE!</div>
             <h3>Gamingowa</h3>
             <div class="price-tag">600<span>PLN</span></div>
-            <ul><li><i class="fas fa-check-circle"></i> Design Premium (Glow)</li><li><i class="fas fa-check-circle"></i> Animacje Framer / JS</li><li><i class="fas fa-check-circle"></i> Widgety Discord Live</li><li><i class="fas fa-check-circle"></i> Optymalizacja SEO</li><li><i class="fas fa-check-circle"></i> Panel CMS</li></ul>
+            <ul><li><i class="fas fa-check-circle"></i> Design Premium (Glow)</li><li><i class="fas fa-check-circle"></i> Widgety Discord Live</li></ul>
             <button class="buy-btn" onclick="openModal('Strona Gamingowa (600 PLN)')">WYBIERZ</button>
         </div>
         <div class="price-card">
             <h3>Sklep / Dashboard</h3>
             <div class="price-tag">1000<span>PLN</span></div>
-            <ul><li><i class="fas fa-check-circle"></i> Logowanie Discord OAuth2</li><li><i class="fas fa-check-circle"></i> Sklep z Koszykiem</li><li><i class="fas fa-check-circle"></i> System Płatności BLIK</li><li><i class="fas fa-check-circle"></i> Automatyczne Role</li><li><i class="fas fa-check-circle"></i> Panel Statystyk Online</li><li><i class="fas fa-check-circle"></i> Pełna Integracja z Botem</li><li><i class="fas fa-check-circle"></i> Bezpieczeństwo SSL/SQL</li></ul>
+            <ul><li><i class="fas fa-check-circle"></i> Sklep z Koszykiem</li><li><i class="fas fa-check-circle"></i> System Płatności BLIK</li><li><i class="fas fa-check-circle"></i> Integracja z Botem</li></ul>
             <button class="buy-btn" onclick="openModal('Sklep/Dashboard (1000 PLN)')">WYBIERZ</button>
         </div>
     </div>
@@ -224,57 +231,66 @@
     <div class="creator-nick">Seyven</div>
 </footer>
 
-<!-- FORMULARZ ZAMÓWIENIA (IMAGE 227D24 STYLE) -->
+<!-- FORMULARZ ZAMÓWIENIA -->
 <div id="orderModal" class="modal">
     <div class="modal-content">
+        <!-- HEADER -->
         <div class="modal-header">
             <h2><span>ZB</span> Formularz ZenBoost</h2>
             <div class="close-btn" onclick="closeModal()">&times;</div>
         </div>
         
-        <div class="modal-body">
-            <div class="warning-box">
-                <i class="fas fa-exclamation-triangle"></i>
-                <p>Ten formularz zostanie przesłany do: <strong>ZenBoost | Bot</strong>. Nie udostępniaj haseł ani innych wrażliwych informacji.</p>
+        <!-- FORM VIEW -->
+        <div id="form-state">
+            <div class="modal-body">
+                <div class="warning-box">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <p>Ten formularz zostanie przesłany do: <strong>ZenBoost | Bot</strong>. Nie udostępniaj haseł ani innych wrażliwych informacji.</p>
+                </div>
+
+                <div class="form-group">
+                    <label>Twój Nick Discord<span>*</span></label>
+                    <input type="text" id="nickDiscord" class="modal-input" placeholder="np. seyven#0000">
+                </div>
+
+                <div class="form-group">
+                    <label>Co Cię interesuje?<span>*</span></label>
+                    <input type="text" id="interest" class="modal-input" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label>Opis / Specyfikacja PC<span>*</span></label>
+                    <textarea id="details" class="modal-textarea" placeholder="Wpisz szczegóły zamówienia..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Metoda Płatności<span>*</span></label>
+                    <select id="payment" class="modal-select">
+                        <option value="" disabled selected>Wybierz metodę...</option>
+                        <option value="BLIK (poprzez numer telefonu)">BLIK (poprzez numer telefonu)</option>
+                        <option value="PSC">PaySafeCard (PSC)</option>
+                    </select>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label>Twój Nick Discord<span>*</span></label>
-                <input type="text" id="nickDiscord" class="modal-input" placeholder="np. seyven#0000">
-            </div>
-
-            <div class="form-group">
-                <label>Co Cię interesuje?<span>*</span></label>
-                <input type="text" id="interest" class="modal-input" readonly>
-            </div>
-
-            <div class="form-group">
-                <label>Opis / Specyfikacja PC<span>*</span></label>
-                <textarea id="details" class="modal-textarea" placeholder="Wpisz szczegóły zamówienia..."></textarea>
-            </div>
-
-            <div class="form-group">
-                <label>Metoda Płatności<span>*</span></label>
-                <select id="payment" class="modal-select">
-                    <option value="" disabled selected>Wybierz metodę...</option>
-                    <option value="BLIK (poprzez numer telefonu)">BLIK (poprzez numer telefonu)</option>
-                    <option value="PSC">PaySafeCard (PSC)</option>
-                </select>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeModal()">Anuluj</button>
+                <button class="btn-submit" onclick="sendOrder()">Wyślij</button>
             </div>
         </div>
 
-        <div class="modal-footer">
-            <button class="btn-cancel" onclick="closeModal()">Anuluj</button>
-            <button class="btn-submit" onclick="sendOrder()">Wyślij</button>
+        <!-- SUCCESS VIEW (DODANE) -->
+        <div id="success-state">
+            <i class="fas fa-check-circle"></i>
+            <h3>Zgłoszenie wysłane!</h3>
+            <p>ZAPRASZAMY CIEBIE NA NASZ SERWER DISCORD NA TICKET!</p>
+            <a href="https://discord.gg/pH5yNGd22k" target="_blank" class="success-link-btn">OTWÓRZ TICKET 🚀</a>
         </div>
     </div>
 </div>
 
 <script>
-    // --- KONFIGURACJA BOT / TICKETY ---
     const discordInvite = "https://discord.gg/pH5yNGd22k";
-    const ticketChannelURL = "https://discord.com/channels/YOUR_SERVER_ID/TICKET_CHANNEL_ID"; // Link do ticketa/kanału
-    // ----------------------------------
 
     window.onscroll = function() {
         const box = document.getElementById('social-box');
@@ -283,6 +299,9 @@
     };
 
     function openModal(service) {
+        // Reset modal state
+        document.getElementById('form-state').style.display = 'block';
+        document.getElementById('success-state').style.display = 'none';
         document.getElementById('interest').value = service;
         document.getElementById('orderModal').style.display = 'flex';
     }
@@ -304,37 +323,28 @@
 
         const data = {
             klient: nick,
-            produkt: interest,
-            wiadomosc: details,
-            metoda: payment
+            gra: interest,
+            szczegoly: details,
+            platnosc: payment
         };
 
         try {
-            // Wysyłanie do Twojego bota
             const response = await fetch('https://api.zenboost-tweak.pl/api/nowe-zamowienie', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
             });
 
-            if (response.ok) {
-                // Nowy komunikat zgodnie z prośbą
-                alert("🚀 ZAPRASZAMY CIEBIE NA NASZ SERWER DISCORD NA TICKET!\n\nLink do serwera: " + discordInvite);
-                closeModal();
-                // Czyścimy formularz
-                document.getElementById('nickDiscord').value = '';
-                document.getElementById('details').value = '';
-                document.getElementById('payment').selectedIndex = 0;
-            } else {
-                // Fallback jeśli bot nie odpowie OK, ale dane wyszły
-                alert("🚀 ZAPRASZAMY CIEBIE NA NASZ SERWER DISCORD NA TICKET!\n\nLink: " + discordInvite);
-                closeModal();
-            }
+            // Pokaż ekran sukcesu niezależnie od odpowiedzi API (aby klient zawsze mógł wejść na ticket)
+            showSuccess();
         } catch(e) {
-            // Success alert nawet przy błędzie fetch (jeśli bot odbiera ale nie zwraca CORS)
-            alert("🚀 ZAPRASZAMY CIEBIE NA NASZ SERWER DISCORD NA TICKET!\n\nLink: " + discordInvite);
-            closeModal();
+            showSuccess();
         }
+    }
+
+    function showSuccess() {
+        document.getElementById('form-state').style.display = 'none';
+        document.getElementById('success-state').style.display = 'block';
     }
 </script>
 </body>
