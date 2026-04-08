@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ZenBoost Tweak | Professional Gaming Services 🌿</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { 
@@ -13,20 +13,20 @@
             --p-glow: rgba(168, 85, 247, 0.4); 
             --bg: #0b0f1a; 
             --card: #161b2c; 
-            --text: #e2e8f0; /* Delikatniejszy kolor, nie razi w oczy */
+            --text-main: #d1d5db; /* Delikatny szary, nie razi w oczy */
             --t-slow: 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
             --t: 0.3s ease; 
         }
         
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: var(--bg); background-image: radial-gradient(circle at top center, #1a1033 0%, #0b0f1a 100%); color: var(--text); font-family: 'Poppins', sans-serif; overflow-x: hidden; }
+        body { background: var(--bg); background-image: radial-gradient(circle at top center, #1a1033 0%, #0b0f1a 100%); color: var(--text-main); font-family: 'Montserrat', sans-serif; overflow-x: hidden; }
 
         header { height: 60vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; }
-        header h1 { font-size: clamp(3rem, 8vw, 5rem); font-weight: 900; letter-spacing: -2px; color: #fff; }
+        header h1 { font-size: clamp(3rem, 8vw, 5rem); font-weight: 900; color: #fff; }
         header h1 span { color: var(--p); text-shadow: 0 0 30px var(--p); }
 
         .header-socials { text-align: center; margin-bottom: 50px; }
-        .header-socials p { font-weight: 600; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px; color: var(--p); }
+        .header-socials p { font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px; color: var(--p); font-size: 0.8rem; }
         .social-wrapper { display: flex; justify-content: center; gap: 20px; transition: var(--t-slow); }
         .social-wrapper.scrolled { position: fixed; right: 20px; top: 50%; transform: translateY(-50%); flex-direction: column; z-index: 1000; }
         
@@ -35,46 +35,47 @@
 
         .container { max-width: 1200px; margin: auto; padding: 0 20px 50px; }
 
+        /* TABELA DLACZEGO WARTO */
         .why-table-section { max-width: 850px; margin: 0 auto 80px; padding: 40px; background: rgba(22, 27, 44, 0.6); border-radius: 30px; border: 1px solid rgba(168, 85, 247, 0.3); backdrop-filter: blur(10px); box-shadow: 0 0 30px var(--p-glow); }
         .why-row { display: flex; align-items: center; gap: 20px; padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .why-check { color: var(--p); font-size: 1.4rem; }
+        .why-row h4 { color: #fff; font-weight: 700; }
 
-        .category-title { text-align: center; margin: 80px 0 40px; font-size: 2.5rem; font-weight: 900; text-transform: uppercase; color: #fff; }
+        .category-title { text-align: center; margin: 80px 0 40px; font-size: 2.5rem; font-weight: 900; text-transform: uppercase; color: #fff; letter-spacing: 3px; }
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px; margin-bottom: 60px; }
         
         .price-card { background: var(--card); border-radius: 30px; padding: 40px; border: 1px solid rgba(255,255,255,0.03); transition: var(--t); position: relative; display: flex; flex-direction: column; }
-        .price-card:hover { border-color: var(--p); transform: translateY(-10px); box-shadow: 0 0 30px var(--p-glow); }
-        .badge-recommended { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: var(--p); color: white; padding: 6px 20px; border-radius: 50px; font-weight: 900; font-size: 0.8rem; text-transform: uppercase; box-shadow: 0 0 15px var(--p); }
+        .price-card:hover { border-color: var(--p); transform: translateY(-10px); box-shadow: 0 0 35px var(--p-glow); }
+        .badge-recommended { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: var(--p); color: white; padding: 6px 20px; border-radius: 50px; font-weight: 900; font-size: 0.7rem; text-transform: uppercase; box-shadow: 0 0 15px var(--p); }
 
         .price-tag { font-size: 2.8rem; font-weight: 900; margin: 20px 0; color: var(--blue); text-shadow: 0 0 15px rgba(59, 130, 246, 0.3); text-align: center; display: flex; justify-content: center; align-items: baseline; }
         .price-tag span { margin-left: 10px; font-size: 2rem; }
 
         ul { list-style: none; margin-bottom: 30px; flex-grow: 1; }
-        ul li { margin: 12px 0; color: var(--text); display: flex; align-items: center; font-size: 0.9rem; }
-        ul li i { color: var(--p); margin-right: 12px; font-size: 1rem; }
+        ul li { margin: 10px 0; color: var(--text-main); display: flex; align-items: center; font-size: 0.85rem; line-height: 1.4; }
+        ul li i { color: var(--p); margin-right: 12px; font-size: 0.9rem; }
 
         button { width: 100%; background: linear-gradient(45deg, var(--p), #7c3aed); color: white; border: none; padding: 18px; border-radius: 15px; font-weight: 800; cursor: pointer; transition: var(--t); text-transform: uppercase; }
-        button:hover { transform: scale(1.03); box-shadow: 0 0 20px var(--p); }
+        button:hover { transform: scale(1.03); box-shadow: 0 0 25px var(--p); }
 
-        /* SEKCJA OWNERÓW - ULEPSZONA */
-        .owner-section { text-align: center; padding: 80px 20px; background: rgba(0,0,0,0.2); border-top: 1px solid rgba(255,255,255,0.05); }
+        /* SEKCJA OWNERZY */
+        .owner-section { text-align: center; padding: 80px 20px; background: rgba(0,0,0,0.3); border-top: 1px solid rgba(255,255,255,0.05); }
         .owner-grid { display: flex; justify-content: center; gap: 60px; flex-wrap: wrap; }
         
-        .owner-card { text-align: center; cursor: pointer; }
+        .owner-card { text-align: center; cursor: pointer; transition: var(--t); }
         .avatar-frame { width: 150px; height: 150px; border-radius: 50%; border: 3px solid var(--p); padding: 5px; box-shadow: 0 0 15px var(--p-glow); overflow: hidden; margin: 0 auto 15px; transition: var(--t); }
         .avatar-frame img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
         
-        .owner-nick { font-size: 1.4rem; font-weight: 900; color: #fff; text-transform: uppercase; letter-spacing: 1px; transition: var(--t); }
+        .owner-nick { font-size: 1.4rem; font-weight: 900; color: #fff; text-transform: uppercase; letter-spacing: 2px; transition: var(--t); }
 
-        /* EFEKT NAJECHANIA NA OWNERA */
+        /* PODŚWIETLENIE PO NAJECHANIU */
         .owner-card:hover .avatar-frame { transform: scale(1.1); box-shadow: 0 0 40px var(--p); border-color: #fff; }
-        .owner-card:hover .owner-nick { color: var(--p); text-shadow: 0 0 15px var(--p); }
+        .owner-card:hover .owner-nick { color: var(--p); text-shadow: 0 0 15px var(--p); transform: translateY(-5px); }
 
         footer { text-align: center; padding: 40px 20px; }
         .creator-box { display: flex; flex-direction: column; align-items: center; gap: 10px; }
         .creator-avatar { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--p); padding: 3px; overflow: hidden; transition: var(--t); }
         .creator-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
-        .creator-box:hover .creator-avatar { transform: scale(1.2); }
+        .creator-box:hover .creator-avatar { transform: scale(1.2) rotate(10deg); }
     </style>
 </head>
 <body>
@@ -93,16 +94,16 @@
 <div class="container">
     
     <div class="why-table-section">
-        <h2>Dlaczego warto nas wybrać?</h2>
+        <h2 style="text-align:center; color:#fff; margin-bottom:30px; text-transform:uppercase;">Dlaczego warto nas wybrać?</h2>
         <div class="why-row">
             <div class="why-check"><i class="fas fa-check-circle"></i></div>
-            <div class="why-emoji">🛡️</div>
-            <div class="why-content"><h4>Bezpieczeństwo AnyDesk</h4><p>Pełna kontrola nad sesją. Klient widzi każdy ruch i czuje się bezpiecznie.</p></div>
+            <div style="font-size:2rem;">🛡️</div>
+            <div class="why-content"><h4>Bezpieczeństwo AnyDesk</h4><p>Masz 100% kontroli. Widzisz każdy ruch na swoim ekranie. Bezpieczeństwo to priorytet.</p></div>
         </div>
         <div class="why-row">
             <div class="why-check"><i class="fas fa-check-circle"></i></div>
-            <div class="why-emoji">🌿</div>
-            <div class="why-content"><h4>Autorskie Skrypty</h4><p>Czysty kod, zero gotowców z sieci. Optymalizacja szyta na miarę.</p></div>
+            <div style="font-size:2rem;">🌿</div>
+            <div class="why-content"><h4>Autorskie Skrypty</h4><p>Nasze optymalizacje to autorska robota, a nie śmieciowe paczki z internetu.</p></div>
         </div>
     </div>
 
@@ -155,30 +156,81 @@
             <ul>
                 <li><i class="fas fa-check-circle"></i> Systemy Administracji</li>
                 <li><i class="fas fa-check-circle"></i> Zaawansowane Logi</li>
+                <li><i class="fas fa-check-circle"></i> Auto-Moderacja</li>
                 <li><i class="fas fa-check-circle"></i> System powitalny Embed</li>
+                <li><i class="fas fa-check-circle"></i> Komendy Info (User/Server)</li>
             </ul>
-            <button onclick="openModal('Bot 200')">Zamów teraz</button>
+            <button onclick="openModal('Bot 200')">Wybierz</button>
         </div>
         <div class="price-card">
             <div class="badge-recommended">POLECANE!</div>
             <h3>Ekonomiczny Plus</h3>
             <div class="price-tag">500<span>PLN</span></div>
             <ul>
-                <li><i class="fas fa-check-circle"></i> Pełna Ekonomia & Sklep</li>
-                <li><i class="fas fa-check-circle"></i> System Levelowania</li>
-                <li><i class="fas fa-check-circle"></i> Integracja API</li>
+                <li><i class="fas fa-check-circle"></i> Pełny System Ekonomii & Sklep</li>
+                <li><i class="fas fa-check-circle"></i> Bazy Danych SQL (Szybkość)</li>
+                <li><i class="fas fa-check-circle"></i> System Levelowania (XP)</li>
+                <li><i class="fas fa-check-circle"></i> Integracja API (Twitch/YT)</li>
+                <li><i class="fas fa-check-circle"></i> System Ticketów w Bocie</li>
+                <li><i class="fas fa-check-circle"></i> Autorskie Minigry</li>
             </ul>
-            <button onclick="openModal('Bot 500')">Zamów teraz</button>
+            <button onclick="openModal('Bot 500')">Wybierz</button>
         </div>
         <div class="price-card">
             <h3>Mega Custom Bot</h3>
             <div class="price-tag">1000<span>PLN</span></div>
             <ul>
-                <li><i class="fas fa-check-circle"></i> Dashboard WWW</li>
-                <li><i class="fas fa-check-circle"></i> Systemy Płatności</li>
-                <li><i class="fas fa-check-circle"></i> Pełny hosting</li>
+                <li><i class="fas fa-check-circle"></i> Dashboard WWW (Panel Sterowania)</li>
+                <li><i class="fas fa-check-circle"></i> Weryfikacja OAuth2</li>
+                <li><i class="fas fa-check-circle"></i> Zaawansowane Systemy Płatności</li>
+                <li><i class="fas fa-check-circle"></i> Unikalne Funkcje na Życzenie</li>
+                <li><i class="fas fa-check-circle"></i> Pełne wsparcie techniczne</li>
+                <li><i class="fas fa-check-circle"></i> Optymalizacja pod duży ruch</li>
             </ul>
-            <button onclick="openModal('Bot 1000')">Zamów teraz</button>
+            <button onclick="openModal('Bot 1000')">Wybierz</button>
+        </div>
+    </div>
+
+    <h2 class="category-title">🌐 Strony WWW</h2>
+    <div class="grid">
+        <div class="price-card">
+            <h3>Prosty Landing</h3>
+            <div class="price-tag">300<span>PLN</span></div>
+            <ul>
+                <li><i class="fas fa-check-circle"></i> Modern One-Page Design</li>
+                <li><i class="fas fa-check-circle"></i> Pełna Responsywność (Mobile)</li>
+                <li><i class="fas fa-check-circle"></i> Optymalizacja Szybkości</li>
+                <li><i class="fas fa-check-circle"></i> Podpięcie Domeny</li>
+                <li><i class="fas fa-check-circle"></i> Formularz Kontaktowy</li>
+            </ul>
+            <button onclick="openModal('WWW 300')">Wybierz</button>
+        </div>
+        <div class="price-card">
+            <div class="badge-recommended">POLECANE!</div>
+            <h3>Strona Gamingowa</h3>
+            <div class="price-tag">600<span>PLN</span></div>
+            <ul>
+                <li><i class="fas fa-check-circle"></i> Design Premium (Glow/Parallax)</li>
+                <li><i class="fas fa-check-circle"></i> Animacje Framer/JS</li>
+                <li><i class="fas fa-check-circle"></i> Galeria & System Newsów</li>
+                <li><i class="fas fa-check-circle"></i> Panel Zarządzania Treścią</li>
+                <li><i class="fas fa-check-circle"></i> Widgety Discord (Live)</li>
+                <li><i class="fas fa-check-circle"></i> Optymalizacja SEO</li>
+            </ul>
+            <button onclick="openModal('WWW 600')">Wybierz</button>
+        </div>
+        <div class="price-card">
+            <h3>Sklep / Dashboard</h3>
+            <div class="price-tag">1000<span>PLN</span></div>
+            <ul>
+                <li><i class="fas fa-check-circle"></i> Logowanie Discord (OAuth2)</li>
+                <li><i class="fas fa-check-circle"></i> Sklep z Koszykiem</li>
+                <li><i class="fas fa-check-circle"></i> Integracja Płatności (BLIK/Stripe)</li>
+                <li><i class="fas fa-check-circle"></i> Zaawansowany Dashboard</li>
+                <li><i class="fas fa-check-circle"></i> Pełna Integracja z Botem</li>
+                <li><i class="fas fa-check-circle"></i> System Statystyk Online</li>
+            </ul>
+            <button onclick="openModal('WWW 1000')">Wybierz</button>
         </div>
     </div>
 </div>
@@ -187,11 +239,11 @@
     <h2 class="category-title">Ownerzy Serwera</h2>
     <div class="owner-grid">
         <div class="owner-card">
-            <div class="avatar-frame"><img src="z.png"></div>
+            <div class="avatar-frame"><img src="z.png" alt="ZenBoost"></div>
             <div class="owner-nick">ZenBoost</div>
         </div>
         <div class="owner-card">
-            <div class="avatar-frame"><img src="s.jpg"></div>
+            <div class="avatar-frame"><img src="s.jpg" alt="Seyven"></div>
             <div class="owner-nick">Seyven</div>
         </div>
     </div>
@@ -199,7 +251,7 @@
 
 <footer>
     <div class="creator-box">
-        <p>Stworzył:</p>
+        <p style="opacity:0.5; font-size:0.7rem;">Stronę stworzył:</p>
         <div class="creator-avatar"><img src="s.jpg"></div>
         <div class="creator-nick">Seyven</div>
     </div>
@@ -208,8 +260,8 @@
 <div id="orderModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); align-items:center; justify-content:center; z-index:9999; backdrop-filter:blur(10px);">
     <div style="background:var(--card); padding:40px; border-radius:30px; width:90%; max-width:400px; border:1px solid var(--p); text-align:center;">
         <h2 id="mTitle" style="color:#fff; margin-bottom:20px;">Zamówienie</h2>
-        <input type="text" placeholder="Twoja nazwa na Discord" style="width:100%; padding:14px; margin-bottom:20px; border-radius:10px; border:none; background:#0b0f1a; color:white;">
-        <button onclick="document.getElementById('orderModal').style.display='none'" style="background:var(--p); color:white; border:none; padding:12px 30px; border-radius:10px; cursor:pointer;">Wróć</button>
+        <input type="text" placeholder="Twój Discord" style="width:100%; padding:14px; margin-bottom:20px; border-radius:10px; border:none; background:#0b0f1a; color:white;">
+        <button onclick="document.getElementById('orderModal').style.display='none'" style="background:var(--p); color:white; border:none; padding:12px 30px; border-radius:10px; cursor:pointer; font-weight:800;">WRÓĆ</button>
     </div>
 </div>
 
