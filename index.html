@@ -102,9 +102,25 @@
         .form-group label { display: block; color: #b5bac1; font-size: 12px; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; }
         .form-group label span { color: #f23f42; margin-left: 4px; }
         
-        .modal-input, .modal-select { width: 100%; background: #1e1f22; border: none; border-radius: 3px; padding: 10px; color: #dbdee1; font-family: inherit; font-size: 16px; outline: none; }
-        .modal-textarea { width: 100%; background: #1e1f22; border: none; border-radius: 3px; padding: 10px; color: #dbdee1; font-family: inherit; font-size: 16px; resize: none; min-height: 80px; outline: none; }
+        /* EYE-CARE FORM STYLE: Stonowany kolor tekstu */
+        .modal-input, .modal-select { width: 100%; background: #1e1f22; border: none; border-radius: 3px; padding: 10px; color: var(--text-soft); font-family: inherit; font-size: 16px; outline: none; }
+        .modal-textarea { width: 100%; background: #1e1f22; border: none; border-radius: 3px; padding: 10px; color: var(--text-soft); font-family: inherit; font-size: 16px; resize: none; min-height: 80px; outline: none; }
         
+        /* Autofill Eye-Care: Zapobieganie białemu tłu przeglądarki */
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover, 
+        input:-webkit-autofill:focus,
+        textarea:-webkit-autofill,
+        textarea:-webkit-autofill:hover,
+        textarea:-webkit-autofill:focus,
+        select:-webkit-autofill,
+        select:-webkit-autofill:hover,
+        select:-webkit-autofill:focus {
+            -webkit-text-fill-color: var(--text-soft);
+            -webkit-box-shadow: 0 0 0px 1000px #1e1f22 inset;
+            transition: background-color 5000s ease-in-out 0s;
+        }
+
         .modal-footer { background: #2b2d31; padding: 16px; display: flex; justify-content: flex-end; gap: 20px; align-items: center; }
         .btn-cancel { background: transparent; border: none; color: #fff; cursor: pointer; font-size: 14px; font-weight: 500; }
         .btn-cancel:hover { text-decoration: underline; }
@@ -279,7 +295,7 @@
             </div>
         </div>
 
-        <!-- SUCCESS VIEW (DODANE) -->
+        <!-- SUCCESS VIEW -->
         <div id="success-state">
             <i class="fas fa-check-circle"></i>
             <h3>Zgłoszenie wysłane!</h3>
