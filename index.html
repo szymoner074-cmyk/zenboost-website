@@ -20,8 +20,8 @@
         .feat-card { background: var(--card); padding: 30px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); }
         .feat-card h3 { color: var(--p); margin-bottom: 10px; }
 
-        .category-title { text-align: center; margin: 80px 0 40px; font-size: 2.5rem; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px; }
+        .category-title { text-align: center; margin: 80px 0 40px; font-size: 2.5rem; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; color: var(--p); }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px; margin-bottom: 40px; }
 
         .price-card { background: var(--card); border-radius: 30px; padding: 40px; border: 1px solid rgba(255,255,255,0.03); transition: var(--t); display: flex; flex-direction: column; }
         .price-card:hover { border-color: var(--p); transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
@@ -36,50 +36,49 @@
         button { background: var(--p); color: white; border: none; padding: 18px; border-radius: 15px; font-weight: 800; cursor: pointer; transition: var(--t); text-transform: uppercase; }
         button:hover { transform: scale(1.03); box-shadow: 0 0 20px var(--p-glow); }
 
-        /* MISTRZOWSKA SEKCJA OWNERÓW */
-        .owner-section { text-align: center; padding: 100px 20px; background: #0b0f1a; }
-        .owner-title { font-size: 2.5rem; font-weight: 900; color: white; margin-bottom: 60px; letter-spacing: 3px; text-transform: uppercase; }
+        /* SEKCJA OWNERÓW - MNIEJSZA I Z NAPISAMI */
+        .owner-section { text-align: center; padding: 100px 20px; background: #0b0f1a; border-top: 1px solid rgba(255,255,255,0.05); }
+        .owner-title { font-size: 2rem; font-weight: 900; color: white; margin-bottom: 60px; letter-spacing: 3px; text-transform: uppercase; }
         .owner-grid { display: flex; justify-content: center; gap: 80px; flex-wrap: wrap; }
         
         .owner-card { text-align: center; transition: var(--t); }
         
-        /* Stylistyka samych awatarów z neonowym obramowaniem */
         .avatar-frame {
-            width: 220px;
-            height: 220px;
+            width: 160px; /* ZMNIEJSZONE */
+            height: 160px; /* ZMNIEJSZONE */
             border-radius: 50%;
-            border: 4px solid var(--p);
+            border: 3px solid var(--p);
             padding: 5px;
-            background: transparent;
             box-shadow: 0 0 15px var(--p-glow);
             transition: var(--t);
             overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            margin: 0 auto 15px;
         }
 
-        .avatar-frame img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 50%;
+        .avatar-frame img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+
+        .owner-card:hover .avatar-frame {
+            transform: scale(1.15); /* LEPSZA ANIMACJA POWIĘKSZENIA */
+            box-shadow: 0 0 40px var(--p);
+            border-color: #d8b4fe;
+        }
+
+        .owner-nick { 
+            font-size: 1.5rem; 
+            font-weight: 900; 
+            color: white; 
+            text-transform: uppercase; 
+            letter-spacing: 1px;
             transition: var(--t);
         }
-
-        /* 💥 REAKCJA NA NAJECHANIE MYSZKĄ */
-        .owner-card:hover .avatar-frame {
-            transform: scale(1.1);
-            box-shadow: 0 0 35px var(--p); /* Mocniejszy blask fioletowy */
-            border-color: #d8b4fe; /* Jaśniejszy neon */
-        }
+        .owner-card:hover .owner-nick { color: var(--p); text-shadow: 0 0 10px var(--p-glow); }
 
         /* Modal */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 8, 18, 0.98); align-items: center; justify-content: center; z-index: 9999; backdrop-filter: blur(15px); }
         .modal-content { background: var(--card); padding: 40px; border-radius: 30px; width: 90%; max-width: 500px; border: 1px solid var(--p); text-align: center; }
         input, select { width: 100%; padding: 15px; margin: 10px 0; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: #0b0f1a; color: white; font-family: inherit; }
 
-        footer { text-align: center; padding: 40px; opacity: 0.5; font-size: 0.8rem; border-top: 1px solid rgba(255,255,255,0.05); }
+        footer { text-align: center; padding: 40px; opacity: 0.5; font-size: 0.8rem; }
     </style>
 </head>
 <body>
@@ -105,25 +104,50 @@
         </div>
     </div>
 
-    <h2 class="category-title">⚡ Nasza Oferta</h2>
+    <h2 class="category-title">⚡ Optymalizacje PC</h2>
     <div class="grid">
         <div class="price-card">
-            <h3>Full System Tweak</h3>
-            <div class="price-tag">20-50<span> PLN</span></div>
+            <h3>Standard Tweak</h3>
+            <div class="price-tag">30-50<span> PLN</span></div>
             <ul>
-                <li>System Tweaking + BIOS Setup</li>
-                <li>Czyszczenie zbędnych usług</li>
+                <li>System Optimization</li>
+                <li>BIOS Setup</li>
+                <li>Debloat Windows</li>
             </ul>
-            <button onclick="openModal('Full Tweak PC')">Złóż zamówienie</button>
+            <button onclick="openModal('Standard Tweak')">Zamów teraz</button>
         </div>
-        <div class="price-card" style="border-color: var(--p); box-shadow: 0 0 30px var(--p-glow);">
+        <div class="price-card" style="border-color: var(--p); box-shadow: 0 0 20px var(--p-glow);">
             <h3>Extreme Performance</h3>
             <div class="price-tag">120-150<span> PLN</span></div>
             <ul>
-                <li>Overclocking + Router Settings</li>
-                <li>Minimalizacja Input Lagu</li>
+                <li>Overclocking CPU/GPU</li>
+                <li>Low Latency Router</li>
+                <li>Monitor & Mouse Tweak</li>
             </ul>
-            <button onclick="openModal('Extreme Pack PC')">Złóż zamówienie</button>
+            <button onclick="openModal('Extreme Performance')">Zamów teraz</button>
+        </div>
+    </div>
+
+    <h2 class="category-title">🤖 Boty Discord</h2>
+    <div class="grid">
+        <div class="price-card">
+            <h3>Basic Bot</h3>
+            <div class="price-tag">100-140<span> PLN</span></div>
+            <ul>
+                <li>Administracja & Logi</li>
+                <li>System powitań</li>
+            </ul>
+            <button onclick="openModal('Basic Bot')">Zamów teraz</button>
+        </div>
+        <div class="price-card">
+            <h3>Advanced Bot</h3>
+            <div class="price-tag">200-300<span> PLN</span></div>
+            <ul>
+                <li>System Ekonomii</li>
+                <li>Integracje API</li>
+                <li>Dashboard (opcja)</li>
+            </ul>
+            <button onclick="openModal('Advanced Bot')">Zamów teraz</button>
         </div>
     </div>
 </div>
@@ -135,11 +159,13 @@
             <div class="avatar-frame">
                 <img src="z.png" alt="ZenBoost">
             </div>
+            <div class="owner-nick">ZenBoost</div>
         </div>
         <div class="owner-card">
             <div class="avatar-frame">
                 <img src="s.jpg" alt="Seyven">
             </div>
+            <div class="owner-nick">Seyven</div>
         </div>
     </div>
 </section>
@@ -152,7 +178,7 @@
     <div class="modal-content">
         <h2 id="mTitle" style="color: var(--p); margin-bottom: 20px;">Zamówienie</h2>
         <input type="text" id="nick" placeholder="Twoja nazwa na Discord">
-        <input type="text" id="specs" placeholder="Podaj szczegóły (np. specyfikacja PC)">
+        <input type="text" id="specs" placeholder="Szczegóły (np. specyfikacja PC)">
         <select id="pay">
             <option value="BLIK">BLIK (Przelew na telefon)</option>
             <option value="PSC">PaySafeCard</option>
@@ -166,23 +192,11 @@
     let currentItem = "";
     function openModal(i) { currentItem = i; document.getElementById('mTitle').innerText = i; document.getElementById('orderModal').style.display = 'flex'; }
     function closeModal() { document.getElementById('orderModal').style.display = 'none'; }
-
     async function sendToBot() {
-        const data = {
-            klient: document.getElementById('nick').value,
-            gra: currentItem,
-            specs: document.getElementById('specs').value,
-            platnosc: document.getElementById('pay').value
-        };
-
+        const data = { klient: document.getElementById('nick').value, gra: currentItem, specs: document.getElementById('specs').value, platnosc: document.getElementById('pay').value };
         if(!data.klient || !data.specs) return alert("Wypełnij wszystkie pola!");
-
         try {
-           const response = await fetch('https://api.zenboost-tweak.pl/api/nowe-zamowienie', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
+           const response = await fetch('https://api.zenboost-tweak.pl/api/nowe-zamowienie', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
             if(response.ok) { alert("🚀 Wysłano! Sprawdź Discorda."); closeModal(); }
             else { alert("Błąd serwera."); }
         } catch(e) { alert("❌ Brak połączenia."); }
