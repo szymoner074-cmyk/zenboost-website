@@ -39,13 +39,15 @@
 
         /* SEKCJA OWNERÓW - SEYVEN & ZENBOOST */
         .owner-section { text-align: center; padding: 100px 20px; background: linear-gradient(to bottom, var(--bg), #05080f); }
-        .owner-title { font-size: 2.2rem; font-weight: 900; color: white; margin-bottom: 50px; letter-spacing: 3px; }
+        .owner-title { font-size: 2.5rem; font-weight: 900; color: white; margin-bottom: 60px; letter-spacing: 3px; text-transform: uppercase; }
         .owner-grid { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; }
-        .owner-card { background: var(--card); border: 2px solid var(--p); border-radius: 25px; padding: 30px; width: 300px; transition: var(--t); box-shadow: 0 0 20px rgba(168, 85, 247, 0.1); }
-        .owner-card:hover { transform: translateY(-10px); box-shadow: 0 0 35px var(--p-glow); }
-        .avatar { width: 160px; height: 160px; border-radius: 50%; margin-bottom: 20px; border: 3px solid var(--p); object-fit: cover; background: #0b0f1a; }
-        .owner-card h4 { font-size: 1.6rem; text-transform: uppercase; margin-bottom: 5px; letter-spacing: 1px; }
-        .owner-card p { color: var(--p); font-weight: 600; font-size: 1rem; text-transform: uppercase; }
+        .owner-card { background: var(--card); border-radius: 25px; padding: 30px; width: 320px; transition: var(--t); }
+        .owner-card:hover { transform: translateY(-10px); }
+        /* Cienka neonowa obramówka wokół kaczki i postaci, bezpośrednio na krawędzi koła */
+        .avatar { width: 170px; height: 170px; border-radius: 50%; border: 3px solid var(--p); margin-bottom: 25px; object-fit: cover; background: #0b0f1a; box-shadow: 0 0 15px var(--p-glow); }
+        .owner-card h4 { font-size: 1.8rem; text-transform: uppercase; margin-bottom: 5px; color: white; }
+        /* Napisy Owner – stylizacja na fioletowe ramki z blaskiem */
+        .status-badge { display: inline-block; background-color: rgba(168, 85, 247, 0.1); border: 2px solid var(--p); border-radius: 20px; padding: 5px 15px; color: #a29bfe; font-weight: bold; font-size: 1rem; text-transform: uppercase; box-shadow: 0 0 10px rgba(168, 85, 247, 0.3); }
 
         /* MODAL */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 8, 18, 0.98); align-items: center; justify-content: center; z-index: 9999; backdrop-filter: blur(15px); }
@@ -70,11 +72,11 @@
         </div>
         <div class="feat-card" style="border-color: #4ade8055;">
             <h3 style="color: #4ade80;">AnyDesk Safety</h3>
-            <p>Pełna kontrola nad sesją. Widzisz każdy nasz ruch.</p>
+            <p>Pełna kontrola nad sesją. Widzisz każdy nasz ruch. Bezpieczeństwo Twoich danych to priorytet.</p>
         </div>
         <div class="feat-card" style="border-color: #facc1555;">
             <h3 style="color: #facc15;">Płatności</h3>
-            <p>Akceptujemy <strong>BLIK</strong> oraz <strong>PSC</strong>.</p>
+            <p>Akceptujemy <strong>BLIK</strong> oraz <strong>PSC</strong>. Szybko i bez zbędnych formalności.</p>
         </div>
     </div>
 
@@ -85,21 +87,31 @@
             <div class="price-tag">100-150<span> PLN</span></div>
             <button onclick="openModal('Podstawowy Bot')">Złóż zamówienie</button>
         </div>
+        <div class="price-card" style="border-color: var(--p);">
+            <h3>Średniozaawansowany</h3>
+            <div class="price-tag">180-230<span> PLN</span></div>
+            <button onclick="openModal('Średni Bot')">Złóż zamówienie</button>
         </div>
+        <div class="price-card">
+            <h3>Bardzo Zaawansowany</h3>
+            <div class="price-tag">250-300<span> PLN</span></div>
+            <button onclick="openModal('Zaawansowany Bot')">Złóż zamówienie</button>
+        </div>
+    </div>
 </div>
 
 <section class="owner-section">
     <h2 class="owner-title">OWNERZY SERWERA</h2>
     <div class="owner-grid">
         <div class="owner-card">
-            <img src="logo_zenboost.png" alt="ZenBoost" class="avatar">
+            <img src="avatar_na_strone.png" alt="ZenBoost Owner" class="avatar">
             <h4>ZenBoost</h4>
-            <p>OWNER</p>
+            <div class="status-badge">Owner</div>
         </div>
         <div class="owner-card">
-            <img src="seyven_kaczka.png" alt="Seyven" class="avatar">
+            <img src="9iax30sarym51.png" alt="Seyven Owner" class="avatar">
             <h4>Seyven</h4>
-            <p>OWNER</p>
+            <div class="status-badge">Owner</div>
         </div>
     </div>
 </section>
@@ -126,6 +138,7 @@
     let currentItem = "";
     function openModal(i) { currentItem = i; document.getElementById('mTitle').innerText = i; document.getElementById('orderModal').style.display = 'flex'; }
     function closeModal() { document.getElementById('orderModal').style.display = 'none'; }
+
     async function sendToBot() {
         const data = { klient: document.getElementById('nick').value, gra: currentItem, specs: document.getElementById('specs').value, platnosc: document.getElementById('pay').value };
         if(!data.klient || !data.specs) return alert("Wypełnij wszystkie pola!");
@@ -136,6 +149,5 @@
         } catch(e) { alert("❌ Brak połączenia."); }
     }
 </script>
-
 </body>
 </html>
