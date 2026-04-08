@@ -7,89 +7,77 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --p: #a855f7; --blue: #3b82f6; --p-glow: rgba(168, 85, 247, 0.4); --bg: #0b0f1a; --card: #161b2c; --t: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        :root { --p: #a855f7; --blue: #3b82f6; --p-glow: rgba(168, 85, 247, 0.4); --bg: #0b0f1a; --card: #161b2c; --t-slow: 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); --t: 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        body { 
-            background: var(--bg);
-            background-image: radial-gradient(circle at top center, #1a1033 0%, #0b0f1a 100%);
-            color: white; 
-            font-family: 'Poppins', sans-serif; 
-            overflow-x: hidden;
-            min-height: 100vh;
-        }
+        body { background: var(--bg); color: white; font-family: 'Poppins', sans-serif; overflow-x: hidden; }
 
-        header { height: 40vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; }
+        header { height: 60vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: radial-gradient(circle at center, var(--p-glow) 0%, var(--bg) 70%); text-align: center; padding: 20px; }
         header h1 { font-size: clamp(3rem, 8vw, 5rem); font-weight: 900; letter-spacing: -2px; }
         header h1 span { color: var(--p); text-shadow: 0 0 30px var(--p); }
 
-        /* SEKCJA SOCIAL MEDIA NA GÓRZE */
         .header-socials { text-align: center; margin-bottom: 50px; }
         .header-socials p { font-weight: 600; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px; font-size: 0.9rem; color: var(--p); }
-        
-        .social-wrapper { display: flex; justify-content: center; gap: 20px; transition: var(--t); }
+        .social-wrapper { display: flex; justify-content: center; gap: 20px; transition: var(--t-slow); }
 
-        /* ANIMACJA PRZESUWANIA (DYNAMICZNA KLASA) */
-        .social-wrapper.scrolled {
-            position: fixed;
-            right: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            flex-direction: column;
-            z-index: 1000;
-        }
-
-        .social-btn { 
-            width: 60px; height: 60px; border-radius: 50%; 
-            display: flex; align-items: center; justify-content: center; 
-            font-size: 1.8rem; color: white; text-decoration: none; 
-            background: var(--card); border: 2px solid var(--p); 
-            transition: var(--t); box-shadow: 0 0 15px var(--p-glow);
-        }
+        /* ANIMACJA SOCIAL MEDIA (DOWOLNIE WOLNIEJSZA - 0.8s) */
+        .social-wrapper.scrolled { position: fixed; right: 20px; top: 50%; transform: translateY(-50%); flex-direction: column; z-index: 1000; }
+        .social-btn { width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; color: white; text-decoration: none; background: var(--card); border: 2px solid var(--p); transition: var(--t-slow); box-shadow: 0 0 15px var(--p-glow); }
         .social-btn.discord:hover { background: #5865F2; box-shadow: 0 0 25px #5865F2; }
         .social-btn.tiktok:hover { background: #000; border-color: #ff0050; box-shadow: 0 0 25px #ff0050; }
 
         .container { max-width: 1200px; margin: auto; padding: 0 20px 50px; }
 
-        /* TABELA DLACZEGO WARTO */
-        .why-table-section { max-width: 850px; margin: 0 auto 80px; padding: 40px; background: rgba(22, 27, 44, 0.6); border-radius: 30px; border: 1px solid rgba(168, 85, 247, 0.2); backdrop-filter: blur(10px); }
+        /* MISTRZOWSKIE "DLACZEGO WARTO" Z FIOLETOWYM BLASKIEM */
+        .why-table-section { max-width: 850px; margin: 0 auto 80px; padding: 40px; background: rgba(22, 27, 44, 0.6); border-radius: 30px; border: 1px solid rgba(168, 85, 247, 0.2); backdrop-filter: blur(10px); box-shadow: 0 0 30px var(--p-glow); }
         .why-row { display: flex; align-items: center; gap: 20px; padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .why-check { color: var(--p); font-size: 1.4rem; }
         .why-emoji { font-size: 1.8rem; min-width: 45px; text-align: center; }
+        .why-content h4 { font-size: 1.1rem; color: white; margin-bottom: 3px; font-weight: 600; }
+        .why-content p { font-size: 0.85rem; opacity: 0.7; }
 
-        /* CENNIKI */
-        .category-title { text-align: center; margin: 80px 0 40px; font-size: 2.5rem; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; }
+        /* CENNIKI Z CENAMI PREMIUM */
+        .category-title { text-align: center; margin: 80px 0 40px; font-size: 2.5rem; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; color: var(--p); }
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px; margin-bottom: 60px; }
         
-        .price-card { background: var(--card); border-radius: 30px; padding: 40px; border: 1px solid rgba(255,255,255,0.03); transition: 0.3s; position: relative; }
+        .price-card { background: var(--card); border-radius: 30px; padding: 40px; border: 1px solid rgba(255,255,255,0.03); transition: var(--t); position: relative; display: flex; flex-direction: column; }
         .price-card:hover { border-color: var(--p); transform: translateY(-10px); box-shadow: 0 0 30px var(--p-glow); }
-        
         .badge-recommended { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: var(--p); color: white; padding: 6px 20px; border-radius: 50px; font-weight: 900; font-size: 0.8rem; text-transform: uppercase; }
 
-        /* CENY NIEBIESKIE BEZ MYŚLNIKÓW */
-        .price-tag { font-size: 2.8rem; font-weight: 900; margin: 20px 0; color: var(--blue); text-shadow: 0 0 15px rgba(59, 130, 246, 0.3); text-align: center; }
-        .price-tag span { margin-left: 10px; }
+        /* CENY NIEBIESKIE PREMIUM BEZ MYŚLNIKÓW */
+        .price-tag { font-size: 2.8rem; font-weight: 900; margin: 20px 0; color: var(--blue); text-shadow: 0 0 15px rgba(59, 130, 246, 0.3); text-align: center; display: flex; justify-content: center; align-items: baseline; }
+        .price-tag span { margin-left: 10px; font-size: 2.2rem; }
 
-        ul { list-style: none; margin-bottom: 30px; }
-        ul li { margin: 12px 0; opacity: 0.85; display: flex; align-items: center; font-size: 0.9rem; }
-        ul li i { color: var(--p); margin-right: 12px; font-size: 1.1rem; }
+        ul { list-style: none; margin-bottom: 30px; flex-grow: 1; }
+        ul li { margin: 12px 0; opacity: 0.85; display: flex; align-items: center; font-size: 0.85rem; }
+        ul li i { color: var(--p); margin-right: 12px; font-size: 1rem; }
 
-        button { width: 100%; background: var(--p); color: white; border: none; padding: 18px; border-radius: 15px; font-weight: 800; cursor: pointer; transition: 0.3s; text-transform: uppercase; }
+        button { width: 100%; background: var(--p); color: white; border: none; padding: 18px; border-radius: 15px; font-weight: 800; cursor: pointer; transition: var(--t); text-transform: uppercase; }
         button:hover { transform: scale(1.03); box-shadow: 0 0 20px var(--p); }
 
         /* OWNERZY */
-        .owner-section { text-align: center; padding: 80px 20px; background: rgba(0,0,0,0.2); }
-        .owner-grid { display: flex; justify-content: center; gap: 60px; flex-wrap: wrap; }
-        .avatar-frame { width: 150px; height: 150px; border-radius: 50%; border: 3px solid var(--p); padding: 5px; box-shadow: 0 0 15px var(--p-glow); overflow: hidden; margin: 0 auto 15px; transition: 0.3s; }
+        .owner-section { text-align: center; padding: 80px 20px; background: rgba(0,0,0,0.2); border-top: 1px solid rgba(255,255,255,0.05); }
+        .owner-grid { display: flex; justify-content: center; gap: 60px; flex-wrap: wrap; margin-bottom: 40px; }
+        .owner-card { text-align: center; transition: var(--t); }
+        .avatar-frame { width: 150px; height: 150px; border-radius: 50%; border: 3px solid var(--p); padding: 5px; box-shadow: 0 0 15px var(--p-glow); overflow: hidden; margin: 0 auto 15px; transition: var(--t); }
         .avatar-frame img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
-        .owner-card:hover .avatar-frame { transform: scale(1.1); box-shadow: 0 0 40px var(--p); }
+        .owner-card:hover .avatar-frame { transform: scale(1.1); box-shadow: 0 0 40px var(--p); border-color: #d8b4fe; }
+        .owner-nick { font-size: 1.4rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
 
+        /* STOPKA Z TWÓRCĄ I MINI AVATAREM */
+        footer { text-align: center; padding: 40px 20px; border-top: 1px solid rgba(255,255,255,0.05); }
+        footer p { opacity: 0.5; font-size: 0.8rem; margin-bottom: 15px; }
+        .creator-box { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; opacity: 0.9; }
+        .creator-box p { font-size: 0.9rem; opacity: 0.7; }
+        
+        .creator-avatar { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--p); padding: 3px; box-shadow: 0 0 10px var(--p-glow); transition: var(--t); overflow: hidden; margin: 0 auto 5px; }
+        .creator-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+        .creator-box:hover .creator-avatar { transform: scale(1.1); box-shadow: 0 0 20px var(--p); border-color: #d8b4fe; }
+        .creator-nick { font-size: 1.1rem; font-weight: 800; color: white; text-transform: uppercase; letter-spacing: 1px; }
+        
         /* Modal */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); align-items: center; justify-content: center; z-index: 9999; backdrop-filter: blur(10px); }
         .modal-content { background: var(--card); padding: 40px; border-radius: 30px; width: 90%; max-width: 450px; border: 1px solid var(--p); text-align: center; }
-        input { width: 100%; padding: 14px; margin: 10px 0; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); background: #0b0f1a; color: white; }
-
-        footer { text-align: center; padding: 30px; opacity: 0.5; font-size: 0.8rem; }
+        input { width: 100%; padding: 14px; margin: 10px 0; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); background: #0b0f1a; color: white; font-family: inherit; }
     </style>
 </head>
 <body>
@@ -108,6 +96,7 @@
 <div class="container">
     
     <div class="why-table-section">
+        <h2>Dlaczego warto nas wybrać?</h2>
         <div class="why-row">
             <div class="why-check"><i class="fas fa-check-circle"></i></div>
             <div class="why-emoji">🔥</div>
@@ -116,7 +105,12 @@
         <div class="why-row">
             <div class="why-check"><i class="fas fa-check-circle"></i></div>
             <div class="why-emoji">🌿</div>
-            <div class="why-content"><h4>Pełna Profesjonalność</h4><p>Korzystamy z autorskich rozwiązań ZenBoost.</p></div>
+            <div class="why-content"><h4>Pełna Profesjonalność</h4><p>Korzystamy z autorskich skryptów ZenBoost. Zero gotowców.</p></div>
+        </div>
+        <div class="why-row">
+            <div class="why-check"><i class="fas fa-check-circle"></i></div>
+            <div class="why-emoji">🛡️</div>
+            <div class="why-content"><h4>Bezpieczeństwo AnyDesk</h4><p>Pełna kontrola nad sesją. Bezpieczne i audytowalne działanie.</p></div>
         </div>
     </div>
 
@@ -125,20 +119,20 @@
         <div class="price-card">
             <h3>Full System Tweak</h3>
             <div class="price-tag">50<span>PLN</span></div>
-            <ul><li><i class="fas fa-check-circle"></i> Optymalizacja Windows</li><li><i class="fas fa-check-circle"></i> BIOS Setup</li></ul>
+            <ul><li><i class="fas fa-check-circle"></i> System Windows + BIOS</li><li><i class="fas fa-check-circle"></i> Czyszczenie usług</li></ul>
             <button onclick="openModal('Full System Tweak')">Zamów teraz</button>
         </div>
         <div class="price-card">
             <div class="badge-recommended">POLECANE!</div>
             <h3>Pro Gaming Pack</h3>
             <div class="price-tag">100<span>PLN</span></div>
-            <ul><li><i class="fas fa-check-circle"></i> Latency Optimization</li><li><i class="fas fa-check-circle"></i> Monitor Tweaks</li></ul>
+            <ul><li><i class="fas fa-check-circle"></i> Latency Optimization</li><li><i class="fas fa-check-circle"></i> Monitor Tweaks</li><li><i class="fas fa-check-circle"></i> Wszystko z Full</li></ul>
             <button onclick="openModal('Pro Gaming Pack')">Zamów teraz</button>
         </div>
         <div class="price-card">
             <h3>Extreme Performance</h3>
             <div class="price-tag">150<span>PLN</span></div>
-            <ul><li><i class="fas fa-check-circle"></i> Overclocking CPU/GPU</li><li><i class="fas fa-check-circle"></i> Router Optimization</li></ul>
+            <ul><li><i class="fas fa-check-circle"></i> CPU/GPU Overclocking</li><li><i class="fas fa-check-circle"></i> Router Tweak</li><li><i class="fas fa-check-circle"></i> Pełny Extreme</li></ul>
             <button onclick="openModal('Extreme Performance')">Zamów teraz</button>
         </div>
     </div>
@@ -147,22 +141,22 @@
     <div class="grid">
         <div class="price-card">
             <h3>Startowy Bot</h3>
-            <div class="price-tag">50<span>PLN</span></div>
-            <ul><li><i class="fas fa-check-circle"></i> Podstawowa moderacja</li><li><i class="fas fa-check-circle"></i> System powitań</li></ul>
-            <button onclick="openModal('Bot 50')">Zamów teraz</button>
+            <div class="price-tag">200<span>PLN</span></div>
+            <ul><li><i class="fas fa-check-circle"></i> Administracja</li><li><i class="fas fa-check-circle"></i> Powitania & Logi</li></ul>
+            <button onclick="openModal('Bot 200')">Zamów teraz</button>
         </div>
         <div class="price-card">
             <div class="badge-recommended">POLECANE!</div>
             <h3>Ekonomiczny Plus</h3>
-            <div class="price-tag">100<span>PLN</span></div>
-            <ul><li><i class="fas fa-check-circle"></i> System Ekonomii</li><li><i class="fas fa-check-circle"></i> Logi administracyjne</li></ul>
-            <button onclick="openModal('Bot 100')">Zamów teraz</button>
+            <div class="price-tag">500<span>PLN</span></div>
+            <ul><li><i class="fas fa-check-circle"></i> System Ekonomii</li><li><i class="fas fa-check-circle"></i> Integracje API</li><li><i class="fas fa-check-circle"></i> Bazy danych SQL</li></ul>
+            <button onclick="openModal('Bot 500')">Zamów teraz</button>
         </div>
         <div class="price-card">
             <h3>Mega Custom Bot</h3>
-            <div class="price-tag">150<span>PLN</span></div>
-            <ul><li><i class="fas fa-check-circle"></i> Bazy danych SQL</li><li><i class="fas fa-check-circle"></i> Integracje API</li></ul>
-            <button onclick="openModal('Bot 150')">Zamów teraz</button>
+            <div class="price-tag">1000<span>PLN</span></div>
+            <ul><li><i class="fas fa-check-circle"></i> Skalowalne API</li><li><i class="fas fa-check-circle"></i> Dashboard WWW</li><li><i class="fas fa-check-circle"></i> Pełna customizacja</li></ul>
+            <button onclick="openModal('Bot 1000')">Zamów teraz</button>
         </div>
     </div>
 
@@ -170,22 +164,22 @@
     <div class="grid">
         <div class="price-card">
             <h3>Prosty Landing</h3>
-            <div class="price-tag">50<span>PLN</span></div>
+            <div class="price-tag">300<span>PLN</span></div>
             <ul><li><i class="fas fa-check-circle"></i> Nowoczesna wizytówka</li><li><i class="fas fa-check-circle"></i> Responsywność</li></ul>
-            <button onclick="openModal('WWW 50')">Zamów teraz</button>
+            <button onclick="openModal('WWW 300')">Zamów teraz</button>
         </div>
         <div class="price-card">
             <div class="badge-recommended">POLECANE!</div>
             <h3>Strona Gamingowa</h3>
-            <div class="price-tag">100<span>PLN</span></div>
+            <div class="price-tag">600<span>PLN</span></div>
             <ul><li><i class="fas fa-check-circle"></i> Unikalny Design</li><li><i class="fas fa-check-circle"></i> Animacje Premium</li></ul>
-            <button onclick="openModal('WWW 100')">Zamów teraz</button>
+            <button onclick="openModal('WWW 600')">Zamów teraz</button>
         </div>
         <div class="price-card">
             <h3>Sklep / Dashboard</h3>
-            <div class="price-tag">150<span>PLN</span></div>
-            <ul><li><i class="fas fa-check-circle"></i> System logowania</li><li><i class="fas fa-check-circle"></i> Panel zarządzania</li></ul>
-            <button onclick="openModal('WWW 150')">Zamów teraz</button>
+            <div class="price-tag">1000<span>PLN</span></div>
+            <ul><li><i class="fas fa-check-circle"></i> System logowania</li><li><i class="fas fa-check-circle"></i> Panel zarządzania</li><li><i class="fas fa-check-circle"></i> Płatności Online</li></ul>
+            <button onclick="openModal('WWW 1000')">Zamów teraz</button>
         </div>
     </div>
 </div>
@@ -203,27 +197,32 @@
     </div>
 </section>
 
-<footer>zenboost-tweak.pl | discord: szymon896</footer>
+<footer>
+    <p>zenboost-tweak.pl | Wszelkie prawa zastrzeżone | discord: szymon896</p>
+    <div class="creator-box">
+        <p>Stworzył:</p>
+        <div class="creator-avatar">
+            <img src="s.jpg" alt="Seyven">
+        </div>
+        <div class="creator-nick">Seyven</div>
+    </div>
+</footer>
 
 <div id="orderModal" class="modal">
     <div class="modal-content">
         <h2 id="mTitle" style="color: var(--p); margin-bottom: 20px;">Zamówienie</h2>
-        <input type="text" id="nick" placeholder="Nick na Discord">
+        <input type="text" id="nick" placeholder="Twoja nazwa na Discord">
         <button onclick="closeModal()">Wróć</button>
     </div>
 </div>
 
 <script>
-    // SKRYPT ANIMACJI SOCIAL MEDIA
+    // SKRYPT ANIMACJI SOCIAL MEDIA (WOLNIEJSZA - 0.8s w CSS)
     window.onscroll = function() {
         const socialBox = document.getElementById('social-box');
-        if (window.pageYOffset > 100) {
-            socialBox.classList.add('scrolled');
-        } else {
-            socialBox.classList.remove('scrolled');
-        }
+        if (window.pageYOffset > 100) { socialBox.classList.add('scrolled'); } 
+        else { socialBox.classList.remove('scrolled'); }
     };
-
     function openModal(i) { document.getElementById('mTitle').innerText = i; document.getElementById('orderModal').style.display = 'flex'; }
     function closeModal() { document.getElementById('orderModal').style.display = 'none'; }
 </script>
