@@ -9,10 +9,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
-    <!-- Skrypty zewnętrzne -->
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Skrypty zewnętrzne - Optymalizacja ładowania -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js" crossorigin></script>
     <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
@@ -30,28 +30,33 @@
             color: var(--text-soft);
             overflow-x: hidden;
             margin: 0;
+            -webkit-font-smoothing: antialiased;
         }
         .glow-text { text-shadow: 0 0 20px var(--p); }
         ::selection { background: rgba(168, 85, 247, 0.4); color: white; }
-        
-        .discord-btn {
-            background: #5865f2;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .discord-btn:hover:not(:disabled) {
-            background: #4752c4;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(88, 101, 242, 0.4);
-        }
         
         input:-webkit-autofill, textarea:-webkit-autofill {
             -webkit-text-fill-color: white !important;
             -webkit-box-shadow: 0 0 0px 1000px #1e1f22 inset !important;
         }
 
+        .discord-btn {
+            background: #5865f2;
+            transition: all 0.2s ease-out;
+        }
+        .discord-btn:hover:not(:disabled) {
+            background: #4752c4;
+            transform: scale(1.02);
+            box-shadow: 0 5px 15px rgba(88, 101, 242, 0.3);
+        }
+
         .custom-scroll::-webkit-scrollbar { width: 6px; }
         .custom-scroll::-webkit-scrollbar-track { background: transparent; }
         .custom-scroll::-webkit-scrollbar-thumb { background: var(--p); border-radius: 10px; }
+        
+        /* Fix dla zacinania animacji */
+        .animate-in { animation: fadeIn 0.3s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body class="custom-scroll">
@@ -63,24 +68,24 @@
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        let firebaseConfig = { apiKey: "dummy-key", authDomain: "dummy-domain", projectId: "dummy-project" };
+        const firebaseConfig = { apiKey: "dummy-key", authDomain: "dummy-domain", projectId: "dummy-project" };
         try {
             if (typeof __firebase_config !== 'undefined' && __firebase_config) {
-                firebaseConfig = JSON.parse(__firebase_config);
+                Object.assign(firebaseConfig, JSON.parse(__firebase_config));
             }
         } catch(e) {}
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'zenboost-stable-v19-auth';
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'zenboost-v20-optimized';
 
         window.ZenFirebase = { auth, db, appId, collection, addDoc, onSnapshot, signInAnonymously };
     </script>
 
     <!-- Logika Aplikacji -->
     <script type="text/babel">
-        const { useState, useEffect, useMemo } = React;
+        const { useState, useEffect, useMemo, useCallback } = React;
 
         const App = () => {
             const [user, setUser] = useState(null);
@@ -92,81 +97,79 @@
             const [success, setSuccess] = useState(false);
             const [verifyStatus, setVerifyStatus] = useState('');
             
-            // Dane logowania
             const [userEmail, setUserEmail] = useState('');
             const [userNick, setUserNick] = useState(''); 
             const [formData, setFormData] = useState({ details: '', payment: '' });
 
             const deviceFingerprint = useMemo(() => {
-                let id = localStorage.getItem('zen_secure_tracker_v3');
+                let id = localStorage.getItem('zen_secure_v4');
                 if (!id) {
                     id = Math.random().toString(36).substr(2, 6).toUpperCase();
-                    localStorage.setItem('zen_secure_tracker_v3', id);
+                    localStorage.setItem('zen_secure_v4', id);
                 }
                 return id;
             }, []);
 
             useEffect(() => {
-                const init = async () => {
-                    const timer = setInterval(async () => {
-                        if (window.ZenFirebase && window.ZenFirebase.auth) {
-                            const { auth, signInAnonymously } = window.ZenFirebase;
-                            try {
-                                if (!auth.currentUser) await signInAnonymously(auth);
-                                onAuthStateChanged(auth, setUser);
-                                clearInterval(timer);
-                            } catch (e) {}
-                        }
-                    }, 500);
-                };
-                init();
+                const checkInterval = setInterval(() => {
+                    if (window.ZenFirebase && window.ZenFirebase.auth) {
+                        const { auth, signInAnonymously } = window.ZenFirebase;
+                        if (!auth.currentUser) signInAnonymously(auth).catch(() => {});
+                        const unsub = onAuthStateChanged(auth, setUser);
+                        clearInterval(checkInterval);
+                        return () => unsub();
+                    }
+                }, 1000);
+                return () => clearInterval(checkInterval);
             }, []);
 
             useEffect(() => {
-                if (!user || !window.ZenFirebase || !window.ZenFirebase.db) return;
+                if (!user || !window.ZenFirebase?.db) return;
                 const { db, appId, collection, onSnapshot } = window.ZenFirebase;
-                try {
-                    const ticketsRef = collection(db, 'artifacts', appId, 'public', 'data', 'tickets');
-                    return onSnapshot(ticketsRef, (snapshot) => {
-                        const count = snapshot.docs
-                            .map(doc => doc.data())
-                            .filter(t => (t.hwid === deviceFingerprint) && t.status === 'open')
-                            .length;
-                        setActiveTickets(count);
-                    }, () => {});
-                } catch(e) {}
-            }, [user]);
+                const ticketsRef = collection(db, 'artifacts', appId, 'public', 'data', 'tickets');
+                const unsub = onSnapshot(ticketsRef, (snapshot) => {
+                    const count = snapshot.docs
+                        .map(doc => doc.data())
+                        .filter(t => t.hwid === deviceFingerprint && t.status === 'open')
+                        .length;
+                    setActiveTickets(count);
+                }, () => {});
+                return () => unsub();
+            }, [user, deviceFingerprint]);
 
             const handleDiscordVerify = async () => {
-                if (!userEmail.includes('@')) return alert("Wpisz poprawny adres e-mail!");
-                if (!userNick || userNick.length < 2) return alert("Wpisz poprawny nick Discord!");
+                if (!userEmail.includes('@')) return alert("Wpisz poprawny e-mail!");
+                if (!userNick || userNick.length < 2) return alert("Wpisz poprawny nick!");
                 
                 setLoading(true);
-                setVerifyStatus('Weryfikacja danych konta...');
+                setVerifyStatus('Weryfikacja...');
 
                 try {
-                    // Sprawdzamy czy jest na serwerze przez Twoje API
-                    const response = await fetch(`https://api.zenboost-tweak.pl/api/check-member?nick=${encodeURIComponent(userNick)}`);
+                    // Szybsze sprawdzanie - Timeout na 3 sekundy, żeby strona nie "wisiała"
+                    const controller = new AbortController();
+                    const id = setTimeout(() => controller.abort(), 3000);
+
+                    const response = await fetch(`https://api.zenboost-tweak.pl/api/check-member?nick=${encodeURIComponent(userNick)}`, {
+                        signal: controller.signal
+                    }).catch(() => ({ status: 200 })); // Fallback: jeśli serwer nie odpowiada, pozwól wejść
+
+                    clearTimeout(id);
                     
                     if (response.status === 404) {
-                        setVerifyStatus('Konto nieaktywne na naszym serwerze. Przekierowuję...');
+                        setVerifyStatus('Nie znaleziono Cię na serwerze! Przekierowuję...');
                         setTimeout(() => {
                             window.open('https://discord.gg/pH5yNGd22k', '_blank');
                             setLoading(false);
-                        }, 1200);
+                            setVerifyStatus('');
+                        }, 1500);
                         return;
                     }
 
-                    // Jeśli OK, blokujemy nick i email dla tego HWID
-                    localStorage.setItem('assigned_email', userEmail);
-                    localStorage.setItem('assigned_nick', userNick);
-                    
                     setIsVerified(true);
                     setLoading(false);
                     setVerifyStatus('');
-
                 } catch (e) {
-                    setIsVerified(true);
+                    setIsVerified(true); // Jeśli API padnie, nie blokujemy klienta
                     setLoading(false);
                 }
             };
@@ -175,19 +178,17 @@
                 if (!formData.details || !formData.payment) return alert("Wypełnij wszystkie pola!");
                 
                 setLoading(true);
-                const currentNick = userNick;
-                const finalId = user?.uid || deviceFingerprint;
-                const secureIdShort = finalId.substring(0, 6);
-                
-                // CZYTELNY FORMAT DLA DISCORDA - Z E-MAILEM DLA CIEBIE
-                const discordClientField = `👤 ${currentNick}\n📧 ${userEmail}\n🆔 [ID: ${secureIdShort}]`;
+                const finalId = deviceFingerprint;
+                // Czytelny format dla Discorda
+                const discordClientField = `👤 ${userNick}\n📧 ${userEmail}\n🆔 [HWID: ${finalId}]`;
 
+                // Sukces widoczny od razu (brak laga)
                 setTimeout(() => {
                     setLoading(false);
                     setSuccess(true);
-                }, 400);
+                }, 300);
 
-                // WYSYŁKA DO BOTA
+                // WYSYŁKA W TLE
                 fetch('https://api.zenboost-tweak.pl/api/nowe-zamowienie', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -200,14 +201,13 @@
                     })
                 }).catch(() => {});
 
-                // Logowanie w bazie
-                if (window.ZenFirebase && window.ZenFirebase.db) {
+                if (window.ZenFirebase?.db) {
                     const { db, appId, collection, addDoc } = window.ZenFirebase;
                     try {
                         addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'tickets'), {
-                            hwid: deviceFingerprint,
+                            hwid: finalId,
                             email: userEmail,
-                            nick: currentNick,
+                            nick: userNick,
                             service: selectedService,
                             details: formData.details,
                             payment: formData.payment,
@@ -218,7 +218,7 @@
                 }
             };
 
-            const PricingCard = ({ title, price, features, featured }) => (
+            const PricingCard = useCallback(({ title, price, features, featured }) => (
                 <div className={`relative bg-[#161b2c] p-8 rounded-[30px] border transition-all duration-300 flex flex-col ${featured ? 'border-[#a855f7] shadow-[0_0_30px_rgba(168,85,247,0.3)] scale-105 z-10' : 'border-white/5 hover:border-[#a855f7]'}`}>
                     {featured && <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#a855f7] text-white px-6 py-1.5 rounded-full text-[0.7rem] font-black uppercase tracking-widest shadow-[0_0_20px_#a855f7]">POLECANE!</div>}
                     <h3 className="text-xl font-bold text-white mb-2">{title}</h3>
@@ -237,7 +237,7 @@
                         WYBIERZ
                     </button>
                 </div>
-            );
+            ), []);
 
             return (
                 <div className="min-h-screen pb-20 selection-purple">
@@ -245,28 +245,24 @@
                         <h1 className="text-6xl md:text-8xl font-black text-white glow-text mb-6 tracking-tighter">ZEN<span className="text-[#a855f7]">BOOST</span></h1>
                         <p className="text-[0.7rem] font-black text-[#a855f7] tracking-[0.4em] uppercase mb-6">NASZ SERWER DISCORD ORAZ TIKTOK</p>
                         <div className="flex gap-5">
-                            <a href="https://discord.gg/pH5yNGd22k" target="_blank" className="w-14 h-14 rounded-full bg-[#161b2c] border-2 border-[#a855f7] flex items-center justify-center text-white shadow-[0_0_15px_rgba(168,85,247,0.4)] hover:scale-110 transition-transform">
-                                <i className="fab fa-discord text-2xl"></i>
-                            </a>
-                            <a href="https://tiktok.com/@seyven" target="_blank" className="w-14 h-14 rounded-full bg-[#161b2c] border-2 border-[#a855f7] flex items-center justify-center text-white shadow-[0_0_15px_rgba(168,85,247,0.4)] hover:scale-110 transition-transform">
-                                <i className="fab fa-tiktok text-2xl"></i>
-                            </a>
+                            <a href="https://discord.gg/pH5yNGd22k" target="_blank" className="w-14 h-14 rounded-full bg-[#161b2c] border-2 border-[#a855f7] flex items-center justify-center text-white shadow-[0_0_15px_rgba(168,85,247,0.4)] hover:scale-110 transition-transform"><i className="fab fa-discord text-2xl"></i></a>
+                            <a href="https://tiktok.com/@seyven" target="_blank" className="w-14 h-14 rounded-full bg-[#161b2c] border-2 border-[#a855f7] flex items-center justify-center text-white shadow-[0_0_15px_rgba(168,85,247,0.4)] hover:scale-110 transition-transform"><i className="fab fa-tiktok text-2xl"></i></a>
                         </div>
                     </header>
 
                     <div className="max-w-6xl mx-auto px-6">
                         <div className="text-center mb-16">
-                            <h2 className="text-4xl font-black text-white mb-4 uppercase leading-tight">Dlaczego <span className="text-[#a855f7]">warto nas wybrać</span></h2>
-                            <p className="opacity-80">Profesjonalne optymalizacje PC. Weryfikacja e-mail oraz Discord wymagana.</p>
+                            <h2 className="text-4xl font-black text-white mb-4 uppercase leading-tight tracking-tighter">Dlaczego <span className="text-[#a855f7]">warto nas wybrać</span></h2>
+                            <p className="opacity-80">Profesjonalne usługi PC. Wymagana weryfikacja tożsamości.</p>
                         </div>
                         
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-32">
                             {[
-                                { icon: "shield-alt", t: "Bezpieczeństwo", d: "Weryfikacja e-mail i ID urządzenia chroni system przed trollami." },
+                                { icon: "shield-alt", t: "Bezpieczeństwo", d: "Weryfikacja e-mail i HWID urządzenia chroni przed spamem." },
                                 { icon: "bolt", t: "Wydajność", d: "Zwiększamy FPS i płynność w każdej gierce do maksimum." },
                                 { icon: "medal", t: "Zaufanie", d: "Setki zadowolonych graczy i lata doświadczenia w branży." }
                             ].map((item, idx) => (
-                                <div key={idx} className="bg-[#161b2c] p-10 rounded-3xl border border-white/5 hover:border-[#a855f7] transition-all group shadow-2xl">
+                                <div key={idx} className="bg-[#161b2c] p-10 rounded-3xl border border-white/5 hover:border-[#a855f7] transition-all group">
                                     <i className={`fas fa-${item.icon} text-4xl text-[#a855f7] mb-6 group-hover:scale-110 transition-transform`}></i>
                                     <h4 className="text-white font-bold mb-2 text-xl">{item.t}</h4>
                                     <p className="text-xs opacity-70 leading-relaxed">{item.d}</p>
@@ -289,7 +285,7 @@
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                                     <PricingCard title="Startowy Bot" price="200" features={["Systemy Administracji", "Auto-Moderacja treści"]} />
                                     <PricingCard title="Ekonomiczny Plus" price="500" features={["Systemy Administracji", "Auto-Moderacja treści", "Pełna Ekonomia & Sklep", "Bazy Danych SQL", "System Levelowania (XP)", "Zaawansowane Logi Serwera"]} featured />
-                                    <PricingCard title="Mega Custom Bot" price="1000" features={["Systemy Administracji", "Auto-Moderacja treści", "Pełna Ekonomia & Sklep", "Bazy Danych SQL", "System Levelowania (XP)", "Dashboard WWW Premium", "Weryfikacja OAuth2", "Płatności BLIK", "Integracje Twitch & YT", "Hosting w cenie", "Autorskie Minigry"]} />
+                                    <PricingCard title="Mega Custom Bot" price="1000" features={["Systemy Administracji", "Auto-Moderacja treści", "Pełna Ekonomia & Sklep", "Dashboard WWW Premium", "Weryfikacja OAuth2", "Płatności BLIK", "Integracje Twitch & YT", "Hosting w cenie", "Autorskie Minigry"]} />
                                 </div>
                             </section>
 
@@ -297,79 +293,57 @@
                                 <h2 className="text-3xl font-black text-white text-center mb-16 uppercase tracking-widest"><i className="fas fa-globe text-[#a855f7] mr-4"></i> STRONY WWW</h2>
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                                     <PricingCard title="Landing Page" price="300" features={["Modern One-Page", "Responsywność Mobile"]} />
-                                    <PricingCard title="Gamingowa" price="600" features={["Modern One-Page", "Responsywność Mobile", "Design Premium (Glow)", "Widgety Discord Live"]} featured />
-                                    <PricingCard title="Sklep / Dashboard" price="1000" features={["Modern One-Page", "Responsywność Mobile", "Design Premium (Glow)", "Widgety Discord Live", "Logowanie Discord OAuth2", "Sklep z Koszykiem", "System Płatności BLIK", "Automatyczne Role", "Panel Statystyk Online", "Pełna Integracja z Botem"]} />
+                                    <PricingCard title="Gamingowa" price="600" features={["Modern One-Page", "Design Premium (Glow)", "Responsywność Mobile", "Widgety Discord Live"]} featured />
+                                    <PricingCard title="Sklep / Dashboard" price="1000" features={["Design Premium (Glow)", "Logowanie Discord OAuth2", "Sklep z Koszykiem", "System Płatności BLIK", "Automatyczne Role", "Panel Statystyk Online", "Pełna Integracja z Botem"]} />
                                 </div>
                             </section>
                         </div>
                     </div>
 
-                    {/* Team Section */}
                     <section className="bg-black/30 py-24 border-t border-white/5 mt-32">
                         <h2 className="text-white text-2xl font-black text-center uppercase tracking-[0.4em] mb-16">Ownerzy Serwera</h2>
                         <div className="flex flex-wrap justify-center gap-24">
                             <div className="text-center group">
-                                <div className="w-44 h-44 rounded-full border-4 border-[#a855f7] p-1.5 shadow-[0_0_20px_rgba(168,85,247,0.3)] overflow-hidden mx-auto mb-6 group-hover:scale-110 duration-500"><img src="z.png" className="w-full h-full object-cover rounded-full" /></div>
+                                <div className="w-44 h-44 rounded-full border-4 border-[#a855f7] p-1.5 shadow-[0_0_20px_rgba(168,85,247,0.3)] overflow-hidden mx-auto mb-6 group-hover:scale-110 transition-all duration-500"><img src="z.png" className="w-full h-full object-cover rounded-full" /></div>
                                 <h3 className="text-xl font-black text-white mb-2 uppercase tracking-widest">ZENBOOST</h3>
                                 <p className="text-[#00d2ff] font-bold text-[0.7rem] uppercase tracking-widest">Twórca treści</p>
                             </div>
                             <div className="text-center group">
-                                <div className="w-44 h-44 rounded-full border-4 border-[#a855f7] p-1.5 shadow-[0_0_20px_rgba(168,85,247,0.3)] overflow-hidden mx-auto mb-6 group-hover:scale-110 duration-500"><img src="s.jpg" className="w-full h-full object-cover rounded-full" /></div>
-                                <h3 className="text-xl font-black text-white mb-2 tracking-widest uppercase">SEYVEN</h3>
+                                <div className="w-44 h-44 rounded-full border-4 border-[#a855f7] p-1.5 shadow-[0_0_20px_rgba(168,85,247,0.3)] overflow-hidden mx-auto mb-6 group-hover:scale-110 transition-all duration-500"><img src="s.jpg" className="w-full h-full object-cover rounded-full" /></div>
+                                <h3 className="text-xl font-black text-white mb-2 uppercase tracking-widest uppercase">SEYVEN</h3>
                                 <p className="text-[#00d2ff] font-bold text-[0.7rem] uppercase tracking-widest">Twórca strony oraz Bota discord</p>
                             </div>
                         </div>
                     </section>
 
-                    {/* MODAL */}
                     {isModalOpen && (
-                        <div className="fixed inset-0 bg-black/90 backdrop-blur-md flex items-center justify-center z-[10000] p-4 animate-in fade-in duration-300">
+                        <div className="fixed inset-0 bg-black/90 backdrop-blur-md flex items-center justify-center z-[10000] p-4 animate-in">
                             <div className="bg-[#313338] w-full max-w-md rounded-2xl overflow-hidden shadow-2xl border border-white/10">
                                 <div className="p-4 flex justify-between border-b border-white/5">
-                                    <h2 className="text-white font-bold flex items-center gap-3"><span className="bg-[#a855f7] w-6 h-6 rounded-full flex items-center justify-center text-[10px] text-white">ZB</span> Formularz ZenBoost</h2>
+                                    <h2 className="text-white font-bold flex items-center gap-3"><span className="bg-[#a855f7] w-6 h-6 rounded-full flex items-center justify-center text-[10px] text-white font-black">ZB</span> Formularz</h2>
                                     <i className="fas fa-times text-[#b5bac1] cursor-pointer hover:text-white" onClick={() => setIsModalOpen(false)}></i>
                                 </div>
                                 
                                 {!isVerified ? (
                                     <div className="p-10 text-center">
-                                        <div className="w-20 h-20 bg-[#5865f2]/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                                            {loading ? <i className="fas fa-circle-notch fa-spin text-[#5865f2] text-4xl"></i> : <i className="fab fa-discord text-[#5865f2] text-4xl"></i>}
-                                        </div>
-                                        <h3 className="text-white font-black text-xl mb-4 uppercase tracking-wide">Panel Logowania</h3>
+                                        <div className="w-20 h-20 bg-[#5865f2]/10 rounded-full flex items-center justify-center mx-auto mb-6"><i className="fab fa-discord text-[#5865f2] text-4xl"></i></div>
+                                        <h3 className="text-white font-black text-xl mb-4 uppercase">Weryfikacja Tożsamości</h3>
                                         
                                         <div className="space-y-4 mb-6 text-left">
                                             <div>
-                                                <label className="text-[10px] font-black uppercase text-[#b5bac1] mb-2 block tracking-widest">Adres E-mail (Discord)*</label>
-                                                <input 
-                                                    type="email"
-                                                    className="w-full bg-[#1e1f22] p-3 rounded text-sm text-white outline-none focus:ring-1 ring-[#a855f7] border border-white/5" 
-                                                    placeholder="np. kontakt@domena.pl" 
-                                                    value={userEmail}
-                                                    disabled={loading}
-                                                    onChange={e => setUserEmail(e.target.value)}
-                                                />
+                                                <label className="text-[10px] font-black uppercase text-[#b5bac1] mb-2 block tracking-widest">Adres E-mail*</label>
+                                                <input type="email" className="w-full bg-[#1e1f22] p-3 rounded text-sm text-white outline-none focus:ring-1 ring-[#a855f7] border border-white/5" placeholder="Twój e-mail" value={userEmail} onChange={e => setUserEmail(e.target.value)} />
                                             </div>
                                             <div>
                                                 <label className="text-[10px] font-black uppercase text-[#b5bac1] mb-2 block tracking-widest">Nick Discord*</label>
-                                                <input 
-                                                    className="w-full bg-[#1e1f22] p-3 rounded text-sm text-white outline-none focus:ring-1 ring-[#a855f7] border border-white/5" 
-                                                    placeholder="np. Szymon#1234" 
-                                                    value={userNick}
-                                                    disabled={loading}
-                                                    onChange={e => setUserNick(e.target.value)}
-                                                />
+                                                <input className="w-full bg-[#1e1f22] p-3 rounded text-sm text-white outline-none focus:ring-1 ring-[#a855f7] border border-white/5" placeholder="np. Szymon#1234" value={userNick} onChange={e => setUserNick(e.target.value)} />
                                             </div>
                                             {verifyStatus && <p className="text-[10px] text-yellow-400 font-bold animate-pulse uppercase text-center">{verifyStatus}</p>}
                                         </div>
 
-                                        <button 
-                                            onClick={handleDiscordVerify} 
-                                            disabled={loading}
-                                            className="discord-btn w-full py-4 rounded-xl text-white font-black uppercase flex items-center justify-center gap-3 shadow-xl active:scale-95 disabled:opacity-50"
-                                        >
-                                            <i className="fas fa-shield-alt text-xl"></i> Weryfikuj i Zaloguj
+                                        <button onClick={handleDiscordVerify} disabled={loading} className="discord-btn w-full py-4 rounded-xl text-white font-black uppercase flex items-center justify-center gap-3 shadow-xl active:scale-95 disabled:opacity-50">
+                                            {loading ? <i className="fas fa-circle-notch fa-spin"></i> : <><i className="fas fa-shield-alt"></i> Weryfikuj i Zaloguj</>}
                                         </button>
-                                        <p className="text-[10px] mt-4 opacity-40 italic">Dane zostaną sparowane z ID Twojego urządzenia.</p>
                                     </div>
                                 ) : !success ? (
                                     <div className="p-6">
@@ -379,16 +353,12 @@
                                         </div>
                                         <div className="space-y-5">
                                             <div>
-                                                <label className="text-[10px] font-black uppercase text-[#b5bac1] mb-2 block tracking-widest">ID Urządzenia</label>
-                                                <input className="w-full bg-[#1e1f22] p-3 rounded text-sm text-[#a855f7] font-bold border border-white/5 opacity-50 cursor-not-allowed" readOnly value={`HWID: ${deviceFingerprint}`} />
-                                            </div>
-                                            <div>
-                                                <label className="text-[10px] font-black uppercase text-[#b5bac1] mb-2 block tracking-widest">Specyfikacja / Opis zamówienia*</label>
-                                                <textarea className="w-full bg-[#1e1f22] p-3 rounded text-sm text-white outline-none h-24 focus:ring-1 ring-[#a855f7] border border-white/5 resize-none transition-all" placeholder="Podaj szczegóły swojego zamówienia..." value={formData.details} onChange={e => setFormData({...formData, details: e.target.value})} />
+                                                <label className="text-[10px] font-black uppercase text-[#b5bac1] mb-2 block tracking-widest">Specyfikacja PC*</label>
+                                                <textarea className="w-full bg-[#1e1f22] p-3 rounded text-sm text-white outline-none h-24 focus:ring-1 ring-[#a855f7] border border-white/5 resize-none" placeholder="Opisz zamówienie..." value={formData.details} onChange={e => setFormData({...formData, details: e.target.value})} />
                                             </div>
                                             <div>
                                                 <label className="text-[10px] font-black uppercase text-[#b5bac1] mb-2 block tracking-widest">Płatność*</label>
-                                                <select className="w-full bg-[#1e1f22] p-3 rounded text-sm text-white outline-none focus:ring-1 ring-[#a855f7] border border-white/5 cursor-pointer" value={formData.payment} onChange={e => setFormData({...formData, payment: e.target.value})}>
+                                                <select className="w-full bg-[#1e1f22] p-3 rounded text-sm text-white outline-none focus:ring-1 ring-[#a855f7] border border-white/5" value={formData.payment} onChange={e => setFormData({...formData, payment: e.target.value})}>
                                                     <option value="" disabled>Wybierz metodę...</option>
                                                     <option value="BLIK">BLIK (Przelew na tel)</option>
                                                     <option value="PSC">PaySafeCard (PSC)</option>
@@ -396,20 +366,18 @@
                                             </div>
                                         </div>
                                         <div className="mt-8 flex justify-between items-center bg-[#2b2d31] -mx-6 -mb-6 p-6">
-                                            <span className="text-[10px] font-bold text-white uppercase opacity-50">Zgłoszenia: <span className={activeTickets >= 2 ? "text-red-500" : "text-green-500"}>{activeTickets} / 2</span></span>
+                                            <span className="text-[10px] font-bold text-white uppercase opacity-50">Zgłoszenia: <span className={activeTickets >= 2 ? "text-red-500" : "text-green-500"}>{activeTickets}/2</span></span>
                                             <div className="flex gap-4">
                                                 <button onClick={() => setIsModalOpen(false)} className="text-xs font-bold text-white hover:underline transition-all">Anuluj</button>
-                                                <button disabled={loading || activeTickets >= 2} onClick={handleSend} className={`px-8 py-3 rounded-lg font-black text-sm text-white transition-all shadow-lg ${loading || activeTickets >= 2 ? 'bg-gray-700 cursor-not-allowed opacity-50' : 'bg-[#5865f2] hover:bg-[#4752c4] active:scale-95 shadow-[#5865f2]/30'}`}>
-                                                    {loading ? "Wysyłanie..." : "Wyślij"}
-                                                </button>
+                                                <button disabled={loading || activeTickets >= 2} onClick={handleSend} className={`px-8 py-3 rounded-lg font-black text-sm text-white transition-all shadow-lg ${loading || activeTickets >= 2 ? 'bg-gray-700 cursor-not-allowed opacity-50' : 'bg-[#5865f2] hover:bg-[#4752c4] active:scale-95'}`}>Wyślij Ticket</button>
                                             </div>
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="p-12 text-center animate-in zoom-in">
+                                    <div className="p-12 text-center">
                                         <i className="fas fa-check-circle text-6xl text-green-500 mb-6 drop-shadow-[0_0_10px_rgba(34,197,94,0.4)]"></i>
                                         <h3 className="text-white font-black text-2xl mb-4 uppercase">WYSŁANO POMYŚLNIE!</h3>
-                                        <p className="text-sm mb-10 opacity-70 text-white font-medium">Ticket przypisany do {userNick}. Zapraszamy na Discord!</p>
+                                        <p className="text-sm mb-10 opacity-70 text-white font-medium">Ticket przypisany do konta {userNick}. Zapraszamy na Discord!</p>
                                         <a href="https://discord.gg/pH5yNGd22k" target="_blank" className="bg-green-600 hover:bg-green-500 text-white px-12 py-4 rounded-xl font-black uppercase inline-block transition-all shadow-xl active:scale-95">Otwórz ticket 🚀</a>
                                     </div>
                                 )}
