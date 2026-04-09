@@ -22,34 +22,63 @@
         .glow-text { text-shadow: 0 0 15px var(--p); }
         .glass { background: rgba(17, 21, 34, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.05); }
         
-        /* Animacje Avatarów */
+        /* Animacje Avatarów - Profile */
         .avatar-glow {
-            box-shadow: 0 0 0 rgba(168, 85, 247, 0);
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
             border: 4px solid transparent;
+            cursor: pointer;
         }
         .avatar-glow:hover {
-            transform: scale(1.1) translateY(-10px);
-            box-shadow: 0 0 30px rgba(168, 85, 247, 0.6);
+            transform: scale(1.1) translateY(-15px) rotate(3deg);
+            box-shadow: 0 0 40px rgba(168, 85, 247, 0.7);
             border-color: var(--p);
         }
 
-        /* Social Side Buttons */
-        .social-fixed { position: fixed; right: 20px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 15px; z-index: 1000; }
-        .social-icon { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #161b2c; border: 1px solid rgba(255,255,255,0.1); color: white; transition: 0.3s; }
-        .social-icon:hover { background: var(--p); transform: translateX(-5px); box-shadow: 0 0 20px var(--p); }
+        /* Social Side Buttons (Prawa Strona) */
+        .social-fixed { 
+            position: fixed; 
+            right: 25px; 
+            top: 50%; 
+            transform: translateY(-50%); 
+            display: flex; 
+            flex-direction: column; 
+            gap: 15px; 
+            z-index: 1000; 
+        }
+        .social-icon { 
+            width: 55px; 
+            height: 55px; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            background: rgba(22, 27, 44, 0.8); 
+            border: 1px solid rgba(168, 85, 247, 0.3); 
+            color: white; 
+            transition: all 0.3s ease; 
+            backdrop-filter: blur(5px);
+        }
+        .social-icon:hover { 
+            background: var(--p); 
+            transform: scale(1.1) translateX(-10px); 
+            box-shadow: 0 0 25px var(--p); 
+            border-color: white;
+        }
 
         .service-card { background: var(--card); transition: 0.4s; border: 1px solid rgba(255,255,255,0.03); display: flex; flex-direction: column; }
         .service-card:hover { transform: translateY(-10px); border-color: var(--p); box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
         
-        .feature-box { background: #0f131f; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; }
-        .feature-box:hover { border-color: var(--accent); background: #141a2b; }
+        .feature-box { background: #0f131f; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; height: 100%; }
+        .feature-box:hover { border-color: var(--p); background: #141a2b; transform: scale(1.02); }
 
         .custom-scroll::-webkit-scrollbar { width: 6px; }
         .custom-scroll::-webkit-scrollbar-thumb { background: var(--p); border-radius: 10px; }
 
         .animate-spin-slow { animation: spin 3s linear infinite; }
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        .fade-in-section { animation: fadeIn 1s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body class="custom-scroll overflow-x-hidden">
@@ -147,10 +176,10 @@
 
             if (!user) {
                 return (
-                    <div className="h-screen flex flex-col items-center justify-center text-center p-6">
-                        <h1 className="text-7xl md:text-9xl font-black text-white glow-text mb-6 tracking-tighter">ZEN<span className="text-[#a855f7]">BOOST</span></h1>
+                    <div className="h-screen flex flex-col items-center justify-center text-center p-6 bg-radial-gradient from-[#130d24] to-[#0b0f1a]">
+                        <h1 className="text-7xl md:text-9xl font-black text-white glow-text mb-6 tracking-tighter uppercase">ZEN<span className="text-[#a855f7]">BOOST</span></h1>
                         <p className="text-xl opacity-60 max-w-lg mb-12">Zaloguj się kontem Discord, aby uzyskać dostęp do strefy Premium.</p>
-                        <a href={DISCORD_AUTH_URL} className="discord-btn px-12 py-6 rounded-2xl text-white font-black uppercase flex items-center gap-4 text-xl transition-all active:scale-95 shadow-2xl">
+                        <a href={DISCORD_AUTH_URL} className="bg-[#5865f2] hover:bg-[#4752c4] px-12 py-6 rounded-2xl text-white font-black uppercase flex items-center gap-4 text-xl transition-all active:scale-95 shadow-[0_10px_30px_rgba(88,101,242,0.4)]">
                             {loading ? <i className="fas fa-circle-notch fa-spin"></i> : <><i className="fab fa-discord text-3xl"></i> Zaloguj przez Discord</>}
                         </a>
                     </div>
@@ -159,10 +188,10 @@
 
             return (
                 <div className="min-h-screen">
-                    {/* Socials Fixed */}
+                    {/* Socials Fixed (Na prawej stronie) */}
                     <div className="social-fixed">
-                        <a href="https://discord.gg/pH5yNGd22k" target="_blank" className="social-icon"><i className="fab fa-discord text-xl"></i></a>
-                        <a href="https://www.tiktok.com/@dexboost1" target="_blank" className="social-icon"><i className="fab fa-tiktok text-xl"></i></a>
+                        <a href="https://discord.gg/pH5yNGd22k" target="_blank" className="social-icon" title="Dołącz do Discorda"><i className="fab fa-discord text-2xl"></i></a>
+                        <a href="https://www.tiktok.com/@dexboost1" target="_blank" className="social-icon" title="Obserwuj na TikTok"><i className="fab fa-tiktok text-2xl"></i></a>
                     </div>
 
                     <nav className="p-8 flex justify-between items-center glass sticky top-0 z-50">
@@ -174,25 +203,45 @@
                     </nav>
 
                     <main className="max-w-7xl mx-auto px-6 pt-20">
-                        {/* Why Us Hero */}
-                        <div className="text-center mb-32">
+                        {/* Why Us Hero Section */}
+                        <div className="text-center mb-32 fade-in-section">
                             <h1 className="text-6xl md:text-8xl font-black text-white glow-text uppercase mb-4 tracking-tighter">Dlaczego <span className="text-[#a855f7]">warto nas wybrać</span></h1>
                             <p className="text-xl md:text-2xl opacity-80 font-medium">Poczuj różnicę dzięki naszej zaawansowanej technologii optymalizacji komputera.</p>
                         </div>
 
-                        {/* Feature Boxes */}
+                        {/* Feature Boxes Set 1 (Zaufanie/Security) */}
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                            {[
+                                { i: "shield-alt", t: "Bezpieczeństwo", d: "Dzięki AnyDesk/RustDesk masz pełny podgląd sesji. Widzisz każdy nasz ruch." },
+                                { i: "bolt", t: "Wydajność", d: "Gwarantujemy najwyższe FPS i najniższe opóźnienia na Twoim sprzęcie." },
+                                { i: "user-check", t: "Zaufanie", d: "Setki zadowolonych klientów i tysiące godzin spędzonych na optymalizacji." },
+                                { i: "microchip", t: "Autorskie Metody", d: "Korzystamy z własnych skryptów bezpiecznych dla Twojego hardware." },
+                                { i: "lock", t: "Bezpieczeństwo sesji", d: "Wszystkie działania wykonujemy przy użyciu sprawdzonych i bezpiecznych sesji AnyDesk/RustDesk." },
+                                { i: "medal", t: "Profesjonalizm", d: "Każdy detal systemu przygotowujemy z najwyższą starannością i pasją." }
+                            ].map((f, i) => (
+                                <div key={i} className="feature-box p-10 rounded-[35px] group">
+                                    <div className="w-14 h-14 bg-[#a855f7]/10 rounded-2xl flex items-center justify-center mb-8 border border-[#a855f7]/20 group-hover:bg-[#a855f7] transition-all">
+                                        <i className={`fas fa-${f.i} text-2xl text-[#a855f7] group-hover:text-white`}></i>
+                                    </div>
+                                    <h4 className="text-white font-bold text-xl mb-4 leading-tight">{f.t}</h4>
+                                    <p className="text-sm opacity-50 leading-relaxed">{f.d}</p>
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* Feature Boxes Set 2 (Gaming Specifics) */}
                         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-40">
                             {[
                                 { i: "tachometer-alt", t: "Zwiększ liczbę klatek na sekundę", d: "Zwiększ liczbę klatek na sekundę dzięki odpowiedniemu systemowi operacyjnemu, sterownikom i dostrojeniu gry." },
                                 { i: "project-diagram", t: "Zmniejsz ping", d: "Mniejsze opóźnienia sieciowe dzięki inteligentnemu routingowi, DNS i regułom QoS." },
                                 { i: "stopwatch", t: "Zmniejsz opóźnienie", d: "Zmniejsz opóźnienie wejściowe poprzez udoskonalenie timerów, buforów i harmonogramu." },
-                                { i: "target", t: "Wzmocnij celowanie", d: "Zwiększ precyzję dzięki stabilniejszym ramkom i spójności danych wejściowych." }
+                                { i: "bullseye", t: "Wzmocnij celowanie", d: "Zwiększ precyzję dzięki stabilniejszym ramkom i spójności danych wejściowych." }
                             ].map((f, i) => (
-                                <div key={i} className="feature-box p-10 rounded-[40px] text-center group">
-                                    <div className="w-16 h-16 bg-[#a855f7]/10 rounded-2xl flex items-center justify-center mx-auto mb-8 border border-[#a855f7]/20 group-hover:bg-[#a855f7] transition-all">
-                                        <i className={`fas fa-${f.i} text-2xl text-[#a855f7] group-hover:text-white`}></i>
+                                <div key={i} className="feature-box p-8 rounded-[35px] text-center group border-white/5">
+                                    <div className="w-16 h-16 bg-[#00d2ff]/10 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-[#00d2ff]/20 group-hover:bg-[#00d2ff] transition-all">
+                                        <i className={`fas fa-${f.i} text-2xl text-[#00d2ff] group-hover:text-white`}></i>
                                     </div>
-                                    <h4 className="text-white font-bold text-lg mb-4 leading-tight">{f.t}</h4>
+                                    <h4 className="text-white font-bold text-lg mb-3 leading-tight">{f.t}</h4>
                                     <p className="text-xs opacity-50 leading-relaxed">{f.d}</p>
                                 </div>
                             ))}
@@ -231,20 +280,20 @@
                             </section>
                         </div>
 
-                        {/* Owners Section */}
+                        {/* Owners Section (Z Animacją) */}
                         <section className="py-40 text-center border-t border-white/5">
                             <h2 className="text-3xl font-black text-white uppercase tracking-[0.5em] mb-24 opacity-80">Ownerzy Serwera</h2>
                             <div className="flex flex-wrap justify-center gap-32">
                                 <div className="flex flex-col items-center group">
-                                    <div className="w-48 h-48 rounded-full avatar-glow overflow-hidden mb-8">
-                                        <img src="z.png" className="w-full h-full object-cover" alt="ZenBoost Owner" />
+                                    <div className="w-52 h-52 rounded-full avatar-glow overflow-hidden mb-8">
+                                        <img src="z.png" className="w-full h-full object-cover" alt="ZenBoost" />
                                     </div>
                                     <h3 className="text-3xl font-black text-white uppercase tracking-tighter">ZenBoost</h3>
                                     <p className="text-[#00d2ff] font-bold text-xs uppercase tracking-widest mt-2">Twórca Treści</p>
                                 </div>
                                 <div className="flex flex-col items-center group">
-                                    <div className="w-48 h-48 rounded-full avatar-glow overflow-hidden mb-8">
-                                        <img src="s.jpg" className="w-full h-full object-cover" alt="Seyven Owner" />
+                                    <div className="w-52 h-52 rounded-full avatar-glow overflow-hidden mb-8">
+                                        <img src="s.jpg" className="w-full h-full object-cover" alt="Seyven" />
                                     </div>
                                     <h3 className="text-3xl font-black text-[#a855f7] glow-text uppercase tracking-tighter">Seyven</h3>
                                     <p className="text-[#00d2ff] font-bold text-xs uppercase tracking-widest mt-2">Twórca Strony & Bota</p>
@@ -253,7 +302,7 @@
                         </section>
                     </main>
 
-                    {/* MODAL */}
+                    {/* MODAL SYSTEMU TICKETOWEGO */}
                     {isModalOpen && (
                         <div className="fixed inset-0 bg-black/95 backdrop-blur-xl flex items-center justify-center p-4 z-[2000] animate-in fade-in duration-300">
                             <div className="bg-[#121625] w-full max-w-lg rounded-[40px] overflow-hidden border border-white/10 shadow-2xl">
