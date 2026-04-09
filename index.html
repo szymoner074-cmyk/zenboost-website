@@ -16,33 +16,31 @@
     <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
-        :root { --p: #a855f7; --accent: #00d2ff; --bg: #0b0f1a; --card: #111522; }
+        :root { --p: #a855f7; --accent: #00d2ff; --bg: #0b0f1a; --card: #111522; --gaming: #22d3ee; }
         body { background: var(--bg); color: #b2bac2; font-family: 'Montserrat', sans-serif; margin: 0; }
         
         .glow-text { text-shadow: 0 0 15px var(--p); }
         .glass { background: rgba(17, 21, 34, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.05); }
         
-        /* Animacje Avatarów - Profile */
+        /* Animacje Avatarów i Nicków - Profile */
         .avatar-glow {
             transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
             border: 4px solid transparent;
             cursor: pointer;
         }
-        .avatar-glow:hover {
+        .group:hover .avatar-glow {
             transform: scale(1.1) translateY(-15px) rotate(3deg);
             box-shadow: 0 0 40px rgba(168, 85, 247, 0.7);
             border-color: var(--p);
         }
-
-        /* Hover na nickach ownerów */
+        
         .owner-name {
-            transition: all 0.3s ease;
-            cursor: pointer;
+            transition: all 0.4s ease;
         }
-        .owner-name:hover {
+        .group:hover .owner-name {
             color: #fff;
             text-shadow: 0 0 20px var(--p), 0 0 40px var(--p);
-            transform: scale(1.05);
+            transform: translateY(-5px);
         }
 
         /* Social Side Buttons (Prawa Strona) */
@@ -55,7 +53,6 @@
             flex-direction: column; 
             gap: 15px; 
             z-index: 1000; 
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .social-icon { 
             width: 55px; 
@@ -82,6 +79,8 @@
         
         .feature-box { background: #0f131f; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; height: 100%; }
         .feature-box:hover { border-color: var(--p); background: #141a2b; transform: scale(1.02); }
+        
+        .gaming-box:hover { border-color: var(--gaming); box-shadow: 0 0 20px rgba(34, 211, 238, 0.2); }
 
         .custom-scroll::-webkit-scrollbar { width: 6px; }
         .custom-scroll::-webkit-scrollbar-thumb { background: var(--p); border-radius: 10px; }
@@ -92,25 +91,14 @@
         .fade-in-section { animation: fadeIn 1s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Dynamiczny Header Logic */
-        .zen-logo {
-            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        .nav-login-btn {
+            background: #5865f2;
+            transition: all 0.3s ease;
         }
-        .zen-logo.scrolled {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            font-size: 1.5rem !important;
-            z-index: 1100;
-        }
-
-        .hero-socials {
-            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .hero-socials.scrolled {
-            opacity: 0;
-            pointer-events: none;
-            transform: translateY(20px);
+        .nav-login-btn:hover {
+            background: #4752c4;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(88, 101, 242, 0.4);
         }
     </style>
 </head>
@@ -128,22 +116,12 @@
 
         const App = () => {
             const [user, setUser] = useState(null);
-            const [isScrolled, setIsScrolled] = useState(false);
             const [isModalOpen, setIsModalOpen] = useState(false);
             const [selectedService, setSelectedService] = useState('');
             const [formData, setFormData] = useState({ specs: '', payment: '' });
             const [success, setSuccess] = useState(false);
             const [loading, setLoading] = useState(false);
             const [refreshing, setRefreshing] = useState(false);
-
-            useEffect(() => {
-                const handleScroll = () => {
-                    if (window.scrollY > 100) setIsScrolled(true);
-                    else setIsScrolled(false);
-                };
-                window.addEventListener('scroll', handleScroll);
-                return () => window.removeEventListener('scroll', handleScroll);
-            }, []);
 
             useEffect(() => {
                 const urlParams = new URLSearchParams(window.location.search);
@@ -200,7 +178,7 @@
                 <div className={`service-card p-10 rounded-[45px] text-center ${featured ? 'border-[#a855f7] shadow-[0_0_30px_rgba(168,85,247,0.2)] scale-105 z-10' : ''}`}>
                     {featured && <div className="bg-[#a855f7] text-white text-[10px] font-black uppercase px-4 py-1 rounded-full self-center mb-4 tracking-widest">Polecane</div>}
                     <h3 className="text-2xl font-bold text-white mb-2">{title}</h3>
-                    <div className="text-5xl font-black text-[#00d2ff] my-8">{price} PLN</div>
+                    <div className="text-5xl font-black text-[#gaming] my-8">{price} PLN</div>
                     <ul className="text-left space-y-4 mb-10 opacity-70 flex-grow">
                         {features.map((f, i) => (
                             <li key={i} className="text-sm flex items-start gap-3">
@@ -217,52 +195,31 @@
                 </div>
             );
 
-            if (!user) {
-                return (
-                    <div className="h-screen flex flex-col items-center justify-center text-center p-6 bg-[#0b0f1a]">
-                        <h1 className="text-7xl md:text-9xl font-black text-white glow-text mb-6 tracking-tighter uppercase">ZEN<span className="text-[#a855f7]">BOOST</span></h1>
-                        <p className="text-xl opacity-60 max-w-lg mb-12">Zaloguj się kontem Discord, aby uzyskać dostęp do strefy Premium.</p>
-                        <a href={DISCORD_AUTH_URL} className="bg-[#5865f2] hover:bg-[#4752c4] px-12 py-6 rounded-2xl text-white font-black uppercase flex items-center gap-4 text-xl transition-all active:scale-95 shadow-[0_10px_30px_rgba(88,101,242,0.4)]">
-                            {loading ? <i className="fas fa-circle-notch fa-spin"></i> : <><i className="fab fa-discord text-3xl"></i> Zaloguj przez Discord</>}
-                        </a>
-                    </div>
-                );
-            }
-
             return (
                 <div className="min-h-screen">
-                    {/* Socials Fixed (Pojawia się na prawej stronie po scrollu lub zostaje tam na stałe) */}
-                    <div className={`social-fixed ${isScrolled ? 'opacity-100' : 'opacity-0 md:opacity-100 md:translate-x-0'}`}>
+                    {/* Socials Fixed (Na prawej stronie) */}
+                    <div className="social-fixed">
                         <a href="https://discord.gg/pH5yNGd22k" target="_blank" className="social-icon" title="Dołącz do Discorda"><i className="fab fa-discord text-2xl"></i></a>
                         <a href="https://www.tiktok.com/@dexboost1" target="_blank" className="social-icon" title="Obserwuj na TikTok"><i className="fab fa-tiktok text-2xl"></i></a>
                     </div>
 
-                    {/* Nawigacja użytkownika */}
-                    <nav className={`p-8 flex justify-end items-center fixed top-0 left-0 w-full z-[1000] transition-all ${isScrolled ? 'bg-black/40 backdrop-blur-md' : ''}`}>
-                        <div className="flex items-center gap-4 bg-black/40 p-1.5 pr-6 rounded-full border border-white/5">
-                            <img src={user.avatar} className="w-10 h-10 rounded-full border-2 border-[#a855f7]" alt="User Avatar" />
-                            <span className="text-white font-bold text-sm">{user.username}</span>
-                        </div>
+                    {/* Stała Nawigacja z Logowaniem */}
+                    <nav className="p-6 flex justify-between items-center glass sticky top-0 z-[1100]">
+                        <h2 className="text-3xl font-black text-white tracking-tighter uppercase">ZEN<span className="text-[#a855f7]">BOOST</span></h2>
+                        
+                        {user ? (
+                            <div className="flex items-center gap-4 bg-black/40 p-1.5 pr-6 rounded-full border border-white/5">
+                                <img src={user.avatar} className="w-10 h-10 rounded-full border-2 border-[#a855f7]" alt="User Avatar" />
+                                <span className="text-white font-bold text-sm">{user.username}</span>
+                            </div>
+                        ) : (
+                            <a href={DISCORD_AUTH_URL} className="nav-login-btn px-6 py-3 rounded-xl text-white font-black uppercase text-xs flex items-center gap-3">
+                                <i className="fab fa-discord text-lg"></i> Zaloguj się
+                            </a>
+                        )}
                     </nav>
 
-                    {/* Banner Section (image_bb321e.jpg) */}
-                    <section className="relative w-full h-[60vh] overflow-hidden flex flex-col items-center justify-center text-center px-4">
-                        <img src="image_bb321e.jpg" className="absolute inset-0 w-full h-full object-cover opacity-60 -z-10" alt="Banner" />
-                        
-                        <h1 className={`zen-logo text-7xl md:text-9xl font-black text-white glow-text uppercase tracking-tighter ${isScrolled ? 'scrolled' : ''}`}>
-                            ZEN<span className="text-[#a855f7]">BOOST</span>
-                        </h1>
-                        
-                        <div className={`hero-socials mt-10 space-y-4 ${isScrolled ? 'scrolled' : ''}`}>
-                            <p className="text-[#a855f7] font-black uppercase tracking-[0.4em] text-xs">Nasz serwer discord oraz tiktok</p>
-                            <div className="flex justify-center gap-6">
-                                <a href="https://discord.gg/pH5yNGd22k" target="_blank" className="w-12 h-12 rounded-full border-2 border-white/20 flex items-center justify-center hover:bg-[#5865f2] hover:border-[#5865f2] transition-all"><i className="fab fa-discord text-xl"></i></a>
-                                <a href="https://www.tiktok.com/@dexboost1" target="_blank" className="w-12 h-12 rounded-full border-2 border-white/20 flex items-center justify-center hover:bg-black hover:border-white transition-all"><i className="fab fa-tiktok text-xl"></i></a>
-                            </div>
-                        </div>
-                    </section>
-
-                    <main className="max-w-7xl mx-auto px-6 pt-32">
+                    <main className="max-w-7xl mx-auto px-6 pt-20">
                         {/* Why Us Hero Section */}
                         <div className="text-center mb-32 fade-in-section">
                             <h1 className="text-6xl md:text-8xl font-black text-white glow-text uppercase mb-4 tracking-tighter">Dlaczego <span className="text-[#a855f7]">warto nas wybrać</span></h1>
@@ -289,19 +246,19 @@
                             ))}
                         </div>
 
-                        {/* Feature Boxes Set 2 (Gaming Specifics) */}
+                        {/* Feature Boxes Set 2 (Gaming Specifics - Nowe Emoji i Kolory) */}
                         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-40">
                             {[
-                                { i: "tachometer-alt", t: "Zwiększ liczbę klatek na sekundę", d: "Zwiększ liczbę klatek na sekundę dzięki odpowiedniemu systemowi operacyjnemu, sterownikom i dostrojeniu gry." },
-                                { i: "project-diagram", t: "Zmniejsz ping", d: "Mniejsze opóźnienia sieciowe dzięki inteligentnemu routingowi, DNS i regułom QoS." },
-                                { i: "stopwatch", t: "Zmniejsz opóźnienie", d: "Zmniejsz opóźnienie wejściowe poprzez udoskonalenie timerów, buforów i harmonogramu." },
-                                { i: "bullseye", t: "Wzmocnij celowanie", d: "Zwiększ precyzję dzięki stabilniejszym ramkom i spójności danych wejściowych." }
+                                { i: "gauge-high", t: "Zwiększ klatki", d: "Wyciskamy z Twojego procesora i karty graficznej każdy brakujący FPS.", c: "#22d3ee" },
+                                { i: "wifi", t: "Zredukuj ping", d: "Optymalizacja sieci i DNS dla najbardziej stabilnego połączenia.", c: "#22d3ee" },
+                                { i: "clock-rotate-left", t: "Mniejszy Delay", d: "Zredukuj Input Lag do absolutnego minimum. Bądź szybszy od wrogów.", c: "#22d3ee" },
+                                { i: "crosshairs", t: "Idealny Aim", d: "Stabilność obrazu sprawi, że Twoje celowanie będzie precyzyjne jak nigdy.", c: "#22d3ee" }
                             ].map((f, i) => (
-                                <div key={i} className="feature-box p-8 rounded-[35px] text-center group border-white/5">
-                                    <div className="w-16 h-16 bg-[#00d2ff]/10 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-[#00d2ff]/20 group-hover:bg-[#00d2ff] transition-all">
-                                        <i className={`fas fa-${f.i} text-2xl text-[#00d2ff] group-hover:text-white`}></i>
+                                <div key={i} className="feature-box gaming-box p-8 rounded-[35px] text-center group border-white/5">
+                                    <div className="w-16 h-16 bg-[#22d3ee]/10 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-[#22d3ee]/20 group-hover:bg-[#22d3ee] transition-all">
+                                        <i className={`fas fa-${f.i} text-2xl text-[#22d3ee] group-hover:text-white`}></i>
                                     </div>
-                                    <h4 className="text-white font-bold text-lg mb-3 leading-tight">{f.t}</h4>
+                                    <h4 className="text-white font-bold text-lg mb-3 leading-tight uppercase tracking-tighter">{f.t}</h4>
                                     <p className="text-xs opacity-50 leading-relaxed">{f.d}</p>
                                 </div>
                             ))}
@@ -309,7 +266,6 @@
 
                         {/* PRICING SECTIONS */}
                         <div className="space-y-40 mb-40">
-                            {/* Section 1: PC */}
                             <section>
                                 <h2 className="text-4xl font-black text-white mb-16 uppercase text-center tracking-widest"><i className="fas fa-bolt text-[#a855f7] mr-4"></i> Optymalizacje PC</h2>
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
@@ -319,7 +275,6 @@
                                 </div>
                             </section>
 
-                            {/* Section 2: BOTS */}
                             <section>
                                 <h2 className="text-4xl font-black text-white mb-16 uppercase text-center tracking-widest"><i className="fas fa-robot text-[#a855f7] mr-4"></i> Boty Discord</h2>
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
@@ -329,7 +284,6 @@
                                 </div>
                             </section>
 
-                            {/* Section 3: WWW */}
                             <section>
                                 <h2 className="text-4xl font-black text-white mb-16 uppercase text-center tracking-widest"><i className="fas fa-globe text-[#a855f7] mr-4"></i> Strony WWW</h2>
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
@@ -340,23 +294,23 @@
                             </section>
                         </div>
 
-                        {/* Owners Section (Z Animacją i Hoverem) */}
+                        {/* Owners Section (Z Animacją Avatarów i Nicków) */}
                         <section className="py-40 text-center border-t border-white/5">
-                            <h2 className="text-3xl font-black text-white uppercase tracking-[0.5em] mb-24 opacity-80">Ownerzy Serwera</h2>
+                            <h2 className="text-3xl font-black text-white uppercase tracking-[0.5em] mb-24 opacity-80 text-sm">Ownerzy Serwera</h2>
                             <div className="flex flex-wrap justify-center gap-32">
                                 <div className="flex flex-col items-center group">
-                                    <div className="w-52 h-52 rounded-full avatar-glow overflow-hidden mb-8">
+                                    <div className="w-52 h-52 rounded-full avatar-glow overflow-hidden mb-8 shadow-2xl">
                                         <img src="z.png" className="w-full h-full object-cover" alt="ZenBoost" />
                                     </div>
                                     <h3 className="owner-name text-3xl font-black text-white uppercase tracking-tighter">ZenBoost</h3>
-                                    <p className="text-[#00d2ff] font-bold text-xs uppercase tracking-widest mt-2">Twórca Treści</p>
+                                    <p className="text-[#gaming] font-bold text-xs uppercase tracking-widest mt-2">Twórca Treści</p>
                                 </div>
                                 <div className="flex flex-col items-center group">
-                                    <div className="w-52 h-52 rounded-full avatar-glow overflow-hidden mb-8">
+                                    <div className="w-52 h-52 rounded-full avatar-glow overflow-hidden mb-8 shadow-2xl">
                                         <img src="s.jpg" className="w-full h-full object-cover" alt="Seyven" />
                                     </div>
                                     <h3 className="owner-name text-3xl font-black text-white uppercase tracking-tighter">Seyven</h3>
-                                    <p className="text-[#00d2ff] font-bold text-xs uppercase tracking-widest mt-2">Twórca Strony & Bota</p>
+                                    <p className="text-[#gaming] font-bold text-xs uppercase tracking-widest mt-2">Twórca Strony & Bota</p>
                                 </div>
                             </div>
                         </section>
@@ -367,15 +321,27 @@
                         <div className="fixed inset-0 bg-black/95 backdrop-blur-xl flex items-center justify-center p-4 z-[2000] animate-in fade-in duration-300">
                             <div className="bg-[#121625] w-full max-w-lg rounded-[40px] overflow-hidden border border-white/10 shadow-2xl">
                                 <div className="p-8 border-b border-white/5 flex justify-between items-center">
-                                    <h3 className="text-white font-black uppercase text-sm tracking-widest">Konfiguracja Zamówienia</h3>
+                                    <h3 className="text-white font-black uppercase text-sm tracking-widest">Weryfikacja Zamówienia</h3>
                                     <button onClick={() => setIsModalOpen(false)} className="text-white/40 hover:text-white transition-colors"><i className="fas fa-times text-2xl"></i></button>
                                 </div>
                                 
-                                {!user.onServer ? (
+                                {!user ? (
+                                    /* WIDOK DLA NIEZALOGOWANYCH PRZY FORMULARZU */
+                                    <div className="p-12 text-center">
+                                        <div className="w-20 h-20 bg-[#5865f2]/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                                            <i className="fab fa-discord text-4xl text-[#5865f2]"></i>
+                                        </div>
+                                        <h2 className="text-white text-2xl font-black mb-4 uppercase">Wymagane Logowanie</h2>
+                                        <p className="opacity-60 mb-8 leading-relaxed text-sm">Aby wypełnić formularz i zintegrować zgłoszenie z botem, musisz najpierw zalogować się przez Discord.</p>
+                                        <a href={DISCORD_AUTH_URL} className="bg-[#5865f2] block py-5 rounded-2xl text-white font-black uppercase shadow-xl hover:brightness-110 transition-all flex items-center justify-center gap-3">
+                                            <i className="fab fa-discord text-2xl"></i> ZALOGUJ SIĘ I KONTYNUUJ
+                                        </a>
+                                    </div>
+                                ) : !user.onServer ? (
                                     <div className="p-12 text-center">
                                         <div className="w-20 h-20 bg-yellow-500/10 rounded-full flex items-center justify-center mx-auto mb-6"><i className="fas fa-exclamation-triangle text-3xl text-yellow-500"></i></div>
-                                        <h2 className="text-white text-2xl font-black mb-4 uppercase">Wymagany Discord!</h2>
-                                        <p className="opacity-60 mb-8 leading-relaxed text-sm">Aby złożyć zamówienie, musisz być członkiem naszego serwera Discord. Dołącz teraz i wróć tutaj.</p>
+                                        <h2 className="text-white text-2xl font-black mb-4 uppercase">Wymagany Serwer!</h2>
+                                        <p className="opacity-60 mb-8 leading-relaxed text-sm">Jesteś zalogowany, ale brakuje Cię na naszym serwerze. Dołącz do nas, aby bot mógł otworzyć kanał.</p>
                                         <a href="https://discord.gg/pH5yNGd22k" target="_blank" className="bg-[#5865f2] block py-5 rounded-2xl text-white font-black uppercase shadow-xl hover:brightness-110 mb-4 transition-all">Dołącz do Serwera 🚀</a>
                                         <button 
                                             onClick={checkMembership} 
@@ -383,22 +349,23 @@
                                             className="text-[#a855f7] font-bold text-sm hover:underline flex items-center justify-center gap-3 mx-auto"
                                         >
                                             <i className={`fas fa-sync-alt ${refreshing ? 'animate-spin' : ''}`}></i>
-                                            {refreshing ? 'Sprawdzanie...' : 'Zrobiłem to, sprawdź status'}
+                                            {refreshing ? 'Sprawdzanie...' : 'Już dołączyłem, sprawdź status'}
                                         </button>
                                     </div>
                                 ) : !success ? (
+                                    /* WŁAŚCIWY FORMULARZ */
                                     <div className="p-8 space-y-6">
                                         <div className="p-4 bg-black/30 rounded-3xl flex items-center gap-4 border border-white/5">
                                             <img src={user.avatar} className="w-12 h-12 rounded-full border-2 border-[#a855f7]" />
                                             <div>
-                                                <div className="text-[10px] uppercase font-black text-[#a855f7] tracking-widest mb-1">Tożsamość Zweryfikowana</div>
-                                                <div className="text-white font-bold text-sm">{user.username} <span className="text-[10px] opacity-30">({user.email})</span></div>
+                                                <div className="text-[10px] uppercase font-black text-[#a855f7] tracking-widest mb-1">Tożsamość Potwierdzona</div>
+                                                <div className="text-white font-bold text-sm">{user.username}</div>
                                             </div>
                                         </div>
                                         <div className="space-y-4">
                                             <div>
                                                 <label className="text-[10px] font-black uppercase opacity-40 block mb-2 tracking-widest">Wybrany Pakiet</label>
-                                                <div className="w-full bg-[#1a1f33] p-4 rounded-2xl text-white font-bold border border-white/5">{selectedService}</div>
+                                                <div className="w-full bg-[#1a1f33] p-4 rounded-2xl text-[#gaming] font-bold border border-white/5">{selectedService}</div>
                                             </div>
                                             <div>
                                                 <label className="text-[10px] font-black uppercase opacity-40 block mb-2 tracking-widest">Specyfikacja PC / Opis*</label>
@@ -432,7 +399,7 @@
                                     <div className="p-12 text-center animate-in zoom-in duration-300">
                                         <div className="w-24 h-24 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-8"><i className="fas fa-check text-4xl text-green-500"></i></div>
                                         <h2 className="text-white text-3xl font-black mb-4 uppercase tracking-tighter">Sukces!</h2>
-                                        <p className="opacity-60 mb-10 leading-relaxed text-sm">Twój bilet został utworzony pomyślnie. Wejdź na nasz serwer Discord, aby sfinalizować zamówienie z administratorem.</p>
+                                        <p className="opacity-60 mb-10 leading-relaxed text-sm">Zgłoszenie wysłane. Bot otworzył ticket pod Twoim nickiem na Discordzie.</p>
                                         <a href="https://discord.gg/pH5yNGd22k" target="_blank" className="bg-green-600 block py-6 rounded-2xl text-white font-black uppercase shadow-xl hover:bg-green-700 transition-all">Otwórz Discorda 🚀</a>
                                     </div>
                                 )}
