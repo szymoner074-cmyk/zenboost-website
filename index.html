@@ -9,7 +9,7 @@
     <style>
         :root { 
             --p: #a855f7; 
-            --accent: #00d2ff; /* Jasny niebieski */
+            --accent: #00d2ff; 
             --blue: #5865f2; 
             --bg: #0b0f1a; 
             --card: #161b2c; 
@@ -35,10 +35,9 @@
 
         .container { max-width: 1200px; margin: auto; padding: 0 20px 50px; }
 
-        /* WHY US HEADER - ZAKTUALIZOWANE WEDŁUG TWOJEJ PROŚBY */
         .why-header { text-align: center; margin-bottom: 60px; }
         .why-header h2 { color: #fff; font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 900; margin-bottom: 15px; }
-        .why-header h2 span { color: var(--p); } /* Zmieniono z --accent na --p (fioletowy) */
+        .why-header h2 span { color: var(--p); }
         .why-header p { color: var(--text-soft); font-size: 1.1rem; max-width: 800px; margin: 0 auto; line-height: 1.6; }
 
         .why-us-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 80px; }
@@ -47,9 +46,8 @@
         .why-card i { font-size: 2.8rem; color: var(--p); margin-bottom: 20px; }
         .why-card h4 { color: #fff; margin-bottom: 12px; font-weight: 800; }
 
-        /* TYTUŁY KATEGORII - BIAŁE */
+        /* KATEGORIE BIAŁE */
         .category-title { text-align: center; margin: 80px 0 40px; font-size: 2.5rem; font-weight: 900; text-transform: uppercase; color: #ffffff; letter-spacing: 4px; }
-        
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px; margin-bottom: 60px; }
         
         .price-card { background: var(--card); border-radius: 30px; padding: 45px; border: 1px solid rgba(255,255,255,0.03); transition: var(--t); position: relative; display: flex; flex-direction: column; }
@@ -57,7 +55,7 @@
         .price-card.featured { border: 2px solid var(--p); box-shadow: 0 0 25px var(--p-glow); }
         .badge-recommended { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: var(--p); color: white; padding: 8px 25px; border-radius: 50px; font-weight: 900; font-size: 0.7rem; text-transform: uppercase; box-shadow: 0 0 20px var(--p); z-index: 10; }
 
-        /* CENY - JASNY NIEBIESKI */
+        /* CENY JASNONIEBIESKIE */
         .price-tag { font-size: 2.8rem; font-weight: 900; margin: 20px 0; color: var(--accent); text-align: center; }
         .price-tag span { font-size: 1.8rem; margin-left: 5px; }
 
@@ -68,13 +66,21 @@
         .buy-btn { width: 100%; background: var(--p); color: #fff; border: none; padding: 18px; border-radius: 15px; font-weight: 800; cursor: pointer; transition: var(--t); text-transform: uppercase; }
         .buy-btn:hover { transform: scale(1.05); filter: brightness(1.2); }
 
-        .owner-section { text-align: center; padding: 80px 20px; background: rgba(0,0,0,0.3); border-top: 1px solid rgba(255,255,255,0.05); }
-        .owner-grid { display: flex; justify-content: center; gap: 60px; flex-wrap: wrap; margin-top: 40px; }
-        .owner-card { text-align: center; cursor: pointer; transition: var(--t); }
-        .avatar-frame { width: 150px; height: 150px; border-radius: 50%; border: 3px solid var(--p); padding: 5px; box-shadow: 0 0 15px var(--p-glow); overflow: hidden; margin: 0 auto 20px; transition: var(--t); }
+        /* OWNERZY - ZMODYFIKOWANA SEKCJA */
+        .owner-section { text-align: center; padding: 100px 20px; background: rgba(0,0,0,0.3); border-top: 1px solid rgba(255,255,255,0.05); }
+        .owner-grid { display: flex; justify-content: center; gap: 80px; flex-wrap: wrap; margin-top: 40px; }
+        .owner-card { text-align: center; transition: var(--t); width: 280px; }
+        
+        .avatar-frame { width: 170px; height: 170px; border-radius: 50%; border: 4px solid var(--p); padding: 6px; box-shadow: 0 0 20px var(--p-glow); overflow: hidden; margin: 0 auto 20px; transition: var(--t-slow); }
         .avatar-frame img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
-        .owner-nick { font-size: 1.4rem; font-weight: 900; color: var(--text-soft); text-transform: uppercase; letter-spacing: 2px; transition: var(--t); }
-        .owner-card:hover .avatar-frame { transform: scale(1.1); box-shadow: 0 0 45px var(--p); border-color: #fff; }
+        
+        .owner-nick { font-size: 1.8rem; font-weight: 900; color: #fff; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px; transition: var(--t); }
+        
+        .owner-role { font-size: 0.85rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+        .role-zen { color: var(--accent); }
+        .role-seyven { color: var(--p); }
+
+        .owner-card:hover .avatar-frame { transform: scale(1.1) rotate(5deg); border-color: #fff; box-shadow: 0 0 50px var(--p); }
         .owner-card:hover .owner-nick { color: var(--p); text-shadow: 0 0 15px var(--p); }
 
         footer { text-align: center; padding: 80px 20px; border-top: 1px solid rgba(255,255,255,0.05); }
@@ -85,50 +91,34 @@
         .creator-nick { font-weight: 900; color: var(--text-soft); text-transform: uppercase; font-size: 1.2rem; transition: var(--t); }
         footer:hover .creator-nick { color: var(--p); text-shadow: 0 0 10px var(--p); }
 
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; z-index: 9999; transform: translateZ(0); will-change: opacity; }
-        .modal-content { background: #313338; border-radius: 8px; width: 95%; max-width: 440px; text-align: left; overflow: hidden; box-shadow: 0 8px 16px rgba(0,0,0,0.24); border: none; transform: translateZ(0); }
-        
+        /* MODAL - NO LAG */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; z-index: 9999; transform: translateZ(0); }
+        .modal-content { background: #313338; border-radius: 8px; width: 95%; max-width: 440px; text-align: left; overflow: hidden; box-shadow: 0 8px 16px rgba(0,0,0,0.24); border: none; }
         .modal-header { padding: 16px; display: flex; justify-content: space-between; align-items: center; }
         .modal-header h2 { color: #f2f3f5; font-size: 20px; font-weight: 600; display: flex; align-items: center; gap: 10px; }
         .modal-header h2 span { background: var(--p); width: 24px; height: 24px; border-radius: 50%; display: inline-block; font-size: 12px; text-align: center; line-height: 24px; color: white; }
-        .modal-header .close-btn { color: #b5bac1; font-size: 24px; cursor: pointer; transition: 0.2s; }
-
+        .modal-header .close-btn { color: #b5bac1; font-size: 24px; cursor: pointer; }
+        
         .modal-body { padding: 16px; padding-top: 0; }
         .warning-box { background: rgba(240, 178, 50, 0.1); border: 1px solid #f0b232; border-radius: 4px; padding: 10px 12px; margin-bottom: 16px; display: flex; gap: 10px; }
         .warning-box p { color: #dbdee1; font-size: 13px; line-height: 1.4; }
-
+        
         .form-group { margin-bottom: 16px; }
         .form-group label { display: block; color: #b5bac1; font-size: 12px; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; }
         
-        .modal-input, .modal-select, .modal-textarea { 
-            width: 100%; 
-            background: #1e1f22; 
-            border: none; 
-            border-radius: 3px; 
-            padding: 10px; 
-            color: var(--text-soft) !important; 
-            font-family: inherit; 
-            font-size: 16px; 
-            outline: none;
-            transition: none;
-        }
+        .modal-input, .modal-select, .modal-textarea { width: 100%; background: #1e1f22; border: none; border-radius: 3px; padding: 10px; color: var(--text-soft) !important; font-family: inherit; font-size: 16px; outline: none; }
         .modal-textarea { resize: none; min-height: 80px; }
         
-        input:-webkit-autofill, textarea:-webkit-autofill {
-            -webkit-text-fill-color: var(--text-soft) !important;
-            -webkit-box-shadow: 0 0 0px 1000px #1e1f22 inset !important;
-        }
+        input:-webkit-autofill, textarea:-webkit-autofill { -webkit-text-fill-color: var(--text-soft) !important; -webkit-box-shadow: 0 0 0px 1000px #1e1f22 inset !important; }
 
         .modal-footer { background: #2b2d31; padding: 16px; display: flex; justify-content: flex-end; gap: 20px; align-items: center; }
         .btn-cancel { background: transparent; border: none; color: #fff; cursor: pointer; font-size: 14px; font-weight: 500; }
         .btn-submit { background: var(--blue); color: white; border: none; padding: 10px 24px; border-radius: 3px; font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.2s; }
-
+        
         #success-state { display: none; padding: 40px 20px; text-align: center; }
         #success-state i { font-size: 4rem; color: #23a559; margin-bottom: 20px; }
         #success-state h3 { color: #fff; margin-bottom: 10px; font-weight: 800; }
-        #success-state p { color: #dbdee1; margin-bottom: 30px; font-weight: 600; font-size: 0.9rem; }
         .success-link-btn { display: inline-block; background: #23a559; color: white; text-decoration: none; padding: 14px 40px; border-radius: 3px; font-weight: 800; text-transform: uppercase; transition: 0.2s; }
-        .success-link-btn:hover { transform: scale(1.05); filter: brightness(1.1); }
     </style>
 </head>
 <body>
@@ -145,18 +135,17 @@
 </header>
 
 <div class="container">
-    <!-- WHY US SECTION UPDATED -->
     <div class="why-header">
         <h2>Dlaczego <span>warto nas wybrać</span></h2>
         <p>Poczuj różnicę dzięki naszej zaawansowanej technologii optymalizacji komputera</p>
     </div>
 
     <div class="why-us-grid">
-        <div class="why-card"><i class="fas fa-shield-alt"></i><h4>Bezpieczeństwo</h4><p>Dzięki AnyDesk/RustDesk masz pełny podgląd sesji. Widzisz każdy nasz ruch.</p></div>
+        <div class="why-card"><i class="fas fa-shield-alt"></i><h4>Bezpieczeństwo</h4><p>Dzięki AnyDesk masz pełny podgląd sesji. Widzisz każdy nasz ruch.</p></div>
         <div class="why-card"><i class="fas fa-bolt"></i><h4>Wydajność</h4><p>Gwarantujemy najwyższe FPS i najniższe opóźnienia na Twoim sprzęcie.</p></div>
         <div class="why-card"><i class="fas fa-user-check"></i><h4>Zaufanie</h4><p>Setki zadowolonych klientów i tysiące godzin spędzonych na optymalizacji.</p></div>
         <div class="why-card"><i class="fas fa-microchip"></i><h4>Autorskie Metody</h4><p>Korzystamy z własnych skryptów bezpiecznych dla Twojego hardware.</p></div>
-        <div class="why-card"><i class="fas fa-lock"></i><h4>Bezpieczeństwo sesji</h4><p>Wszystkie działania wykonujemy przy użyciu sprawdzonych i bezpiecznych sesji AnyDesk/RustDesk.</p></div>
+        <div class="why-card"><i class="fas fa-lock"></i><h4>Bezpieczeństwo sesji</h4><p>Wszystkie działania wykonujemy przy użyciu sprawdzonych i bezpiecznych sesji AnyDesk.</p></div>
         <div class="why-card"><i class="fas fa-medal"></i><h4>Profesjonalizm</h4><p>Każdy detal systemu przygotowujemy z najwyższą starannością i pasją.</p></div>
     </div>
 
@@ -172,13 +161,13 @@
             <div class="badge-recommended">POLECANE!</div>
             <h3>Lepszy Boost</h3>
             <div class="price-tag">100<span>PLN</span></div>
-            <ul><li><i class="fas fa-check-circle"></i> Custom Windows</li><li><i class="fas fa-check-circle"></i> Full System Tweaking</li><li><i class="fas fa-check-circle"></i> BIOS Tweaking</li><li><i class="fas fa-check-circle"></i> Monitor Settings</li><li><i class="fas fa-check-circle"></i> 24/7 support</li></ul>
+            <ul><li><i class="fas fa-check-circle"></i> Custom Windows</li><li><i class="fas fa-check-circle"></i> BIOS Tweaking</li><li><i class="fas fa-check-circle"></i> 24/7 support</li></ul>
             <button class="buy-btn" onclick="openModal('Lepszy Boost (100 PLN)')">WYBIERZ</button>
         </div>
         <div class="price-card">
             <h3>Custom Windows + Boost</h3>
             <div class="price-tag">150<span>PLN</span></div>
-            <ul><li><i class="fas fa-check-circle"></i> Custom Windows</li><li><i class="fas fa-check-circle"></i> Full System Tweaking</li><li><i class="fas fa-check-circle"></i> Hardware Overclocking</li><li><i class="fas fa-check-circle"></i> BIOS Tweaking</li><li><i class="fas fa-check-circle"></i> Router Settings</li><li><i class="fas fa-check-circle"></i> Monitor Settings</li><li><i class="fas fa-check-circle"></i> 24/7 support</li></ul>
+            <ul><li><i class="fas fa-check-circle"></i> Hardware Overclocking</li><li><i class="fas fa-check-circle"></i> Router Settings</li><li><i class="fas fa-check-circle"></i> 24/7 support</li></ul>
             <button class="buy-btn" onclick="openModal('Custom Windows + Boost (150 PLN)')">WYBIERZ</button>
         </div>
     </div>
@@ -188,53 +177,29 @@
         <div class="price-card">
             <h3>Startowy Bot</h3>
             <div class="price-tag">200<span>PLN</span></div>
-            <ul><li><i class="fas fa-check-circle"></i> Systemy Administracji</li><li><i class="fas fa-check-circle"></i> Auto-Moderacja treści</li></ul>
+            <ul><li><i class="fas fa-check-circle"></i> Systemy Administracji</li><li><i class="fas fa-check-circle"></i> Auto-Moderacja</li></ul>
             <button class="buy-btn" onclick="openModal('Startowy Bot (200 PLN)')">WYBIERZ</button>
         </div>
-        <div class="price-card featured">
-            <div class="badge-recommended">POLECANE!</div>
-            <h3>Ekonomiczny Plus</h3>
-            <div class="price-tag">500<span>PLN</span></div>
-            <ul><li><i class="fas fa-check-circle"></i> Pełna Ekonomia & Sklep</li><li><i class="fas fa-check-circle"></i> Bazy Danych SQL</li><li><i class="fas fa-check-circle"></i> System Levelowania (XP)</li><li><i class="fas fa-check-circle"></i> Zaawansowane Logi Serwera</li></ul>
-            <button class="buy-btn" onclick="openModal('Ekonomiczny Plus (500 PLN)')">WYBIERZ</button>
-        </div>
-        <div class="price-card">
-            <h3>Mega Custom Bot</h3>
-            <div class="price-tag">1000<span>PLN</span></div>
-            <ul><li><i class="fas fa-check-circle"></i> Dashboard WWW Premium</li><li><i class="fas fa-check-circle"></i> Weryfikacja OAuth2</li><li><i class="fas fa-check-circle"></i> Płatności BLIK</li><li><i class="fas fa-check-circle"></i> Integracje Twitch & YT</li><li><i class="fas fa-check-circle"></i> Hosting w cenie</li><li><i class="fas fa-check-circle"></i> Autorskie Minigry</li></ul>
-            <button class="buy-btn" onclick="openModal('Mega Custom Bot (1000 PLN)')">WYBIERZ</button>
-        </div>
-    </div>
-
-    <h2 class="category-title">🌐 Strony WWW</h2>
-    <div class="grid">
-        <div class="price-card">
-            <h3>Landing Page</h3>
-            <div class="price-tag">300<span>PLN</span></div>
-            <ul><li><i class="fas fa-check-circle"></i> Modern One-Page</li><li><i class="fas fa-check-circle"></i> Responsywność Mobile</li></ul>
-            <button class="buy-btn" onclick="openModal('Landing Page (300 PLN)')">WYBIERZ</button>
-        </div>
-        <div class="price-card featured">
-            <div class="badge-recommended">POLECANE!</div>
-            <h3>Gamingowa</h3>
-            <div class="price-tag">600<span>PLN</span></div>
-            <ul><li><i class="fas fa-check-circle"></i> Design Premium (Glow)</li><li><i class="fas fa-check-circle"></i> Widgety Discord Live</li></ul>
-            <button class="buy-btn" onclick="openModal('Strona Gamingowa (600 PLN)')">WYBIERZ</button>
-        </div>
-        <div class="price-card">
-            <h3>Sklep / Dashboard</h3>
-            <div class="price-tag">1000<span>PLN</span></div>
-            <ul><li><i class="fas fa-check-circle"></i> Logowanie Discord OAuth2</li><li><i class="fas fa-check-circle"></i> Sklep z Koszykiem</li><li><i class="fas fa-check-circle"></i> System Płatności BLIK</li><li><i class="fas fa-check-circle"></i> Automatyczne Role</li><li><i class="fas fa-check-circle"></i> Panel Statystyk Online</li><li><i class="fas fa-check-circle"></i> Pełna Integracja z Botem</li></ul>
-            <button class="buy-btn" onclick="openModal('Sklep/Dashboard (1000 PLN)')">WYBIERZ</button>
-        </div>
+        <div class="price-card featured"><div class="badge-recommended">POLECANE!</div><h3>Ekonomiczny Plus</h3><div class="price-tag">500<span>PLN</span></div><ul><li><i class="fas fa-check-circle"></i> Pełna Ekonomia & Sklep</li><li><i class="fas fa-check-circle"></i> Bazy Danych SQL</li></ul><button class="buy-btn" onclick="openModal('Ekonomiczny Plus (500 PLN)')">WYBIERZ</button></div>
+        <div class="price-card"><h3>Mega Custom Bot</h3><div class="price-tag">1000<span>PLN</span></div><ul><li><i class="fas fa-check-circle"></i> Dashboard WWW Premium</li><li><i class="fas fa-check-circle"></i> Płatności BLIK</li></ul><button class="buy-btn" onclick="openModal('Mega Custom Bot (1000 PLN)')">WYBIERZ</button></div>
     </div>
 </div>
 
 <section class="owner-section">
     <h2 style="color:#fff; text-transform:uppercase; letter-spacing:4px; margin-bottom:10px;">Ownerzy Serwera</h2>
     <div class="owner-grid">
-        <div class="owner-card"><div class="avatar-frame"><img src="z.png"></div><div class="owner-nick">ZenBoost</div></div>
-        <div class="owner-card"><div class="avatar-frame"><img src="s.jpg"></div><div class="owner-nick">Seyven</div></div>
+        <!-- ZENBOOST -->
+        <div class="owner-card">
+            <div class="avatar-frame"><img src="z.png" alt="ZenBoost"></div>
+            <div class="owner-nick">ZenBoost</div>
+            <div class="owner-role role-zen">Twórca treści</div>
+        </div>
+        <!-- SEYVEN -->
+        <div class="owner-card">
+            <div class="avatar-frame"><img src="s.jpg" alt="Seyven"></div>
+            <div class="owner-nick">Seyven</div>
+            <div class="owner-role role-seyven">Twórca strony oraz Bota discord</div>
+        </div>
     </div>
 </section>
 
@@ -244,116 +209,38 @@
     <div class="creator-nick">Seyven</div>
 </footer>
 
+<!-- MODAL -->
 <div id="orderModal" class="modal">
     <div class="modal-content">
-        <div class="modal-header">
-            <h2><span>ZB</span> Formularz ZenBoost</h2>
-            <div class="close-btn" onclick="closeModal()">&times;</div>
-        </div>
-        
+        <div class="modal-header"><h2><span>ZB</span> Formularz ZenBoost</h2><div class="close-btn" onclick="closeModal()">&times;</div></div>
         <div id="form-state">
             <div class="modal-body">
-                <div class="warning-box">
-                    <i class="fas fa-exclamation-triangle" style="color:#f0b232; margin-top:2px;"></i>
-                    <p>Ten formularz trafi do <strong>Bota ZenBoost</strong>. Nie udostępniaj haseł ani danych wrażliwych.</p>
-                </div>
-
-                <div class="form-group">
-                    <label>Twój Nick Discord<span>*</span></label>
-                    <input type="text" id="nickDiscord" class="modal-input" placeholder="np. seyven#0000">
-                </div>
-
-                <div class="form-group">
-                    <label>Produkt/Gra<span>*</span></label>
-                    <input type="text" id="interest" class="modal-input" readonly>
-                </div>
-
-                <div class="form-group">
-                    <label>Opis / Specyfikacja PC<span>*</span></label>
-                    <textarea id="details" class="modal-textarea" placeholder="Wpisz szczegóły zamówienia..."></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label>Metoda Płatności<span>*</span></label>
-                    <select id="payment" class="modal-select">
-                        <option value="" disabled selected>Wybierz metodę...</option>
-                        <option value="BLIK (poprzez numer telefonu)">BLIK (poprzez numer telefonu)</option>
-                        <option value="PSC">PaySafeCard (PSC)</option>
-                    </select>
-                </div>
+                <div class="warning-box"><p>Ten formularz trafi do <strong>Bota ZenBoost</strong>. Nie podawaj haseł.</p></div>
+                <div class="form-group"><label>Twój Nick Discord<span>*</span></label><input type="text" id="nickDiscord" class="modal-input" placeholder="np. seyven#0000"></div>
+                <div class="form-group"><label>Produkt/Gra<span>*</span></label><input type="text" id="interest" class="modal-input" readonly></div>
+                <div class="form-group"><label>Opis / Specyfikacja PC<span>*</span></label><textarea id="details" class="modal-textarea" placeholder="Wpisz szczegóły zamówienia..."></textarea></div>
+                <div class="form-group"><label>Metoda Płatności<span>*</span></label><select id="payment" class="modal-select"><option value="BLIK">BLIK (tel)</option><option value="PSC">PSC</option></select></div>
             </div>
-
-            <div class="modal-footer">
-                <button class="btn-cancel" onclick="closeModal()">Anuluj</button>
-                <button class="btn-submit" onclick="sendOrder()">Wyślij</button>
-            </div>
+            <div class="modal-footer"><button class="btn-cancel" onclick="closeModal()">Anuluj</button><button class="btn-submit" onclick="sendOrder()">Wyślij</button></div>
         </div>
-
-        <div id="success-state">
-            <i class="fas fa-check-circle"></i>
-            <h3>ZGŁOSZENIE WYSŁANE!</h3>
-            <p>ZAPRASZAMY CIEBIE NA NASZ SERWER DISCORD NA TICKET!</p>
-            <a href="https://discord.gg/pH5yNGd22k" target="_blank" class="success-link-btn">OTWÓRZ TICKET 🚀</a>
-        </div>
+        <div id="success-state"><i class="fas fa-check-circle"></i><h3>ZGŁOSZENIE WYSŁANE!</h3><p>ZAPRASZAMY NA NASZ SERWER DISCORD!</p><a href="https://discord.gg/pH5yNGd22k" target="_blank" class="success-link-btn">OTWÓRZ TICKET 🚀</a></div>
     </div>
 </div>
 
 <script>
-    const discordInvite = "https://discord.gg/pH5yNGd22k";
-
-    window.onscroll = function() {
-        const box = document.getElementById('social-box');
-        if (window.pageYOffset > 100) { box.classList.add('scrolled'); } 
-        else { box.classList.remove('scrolled'); }
-    };
-
-    function openModal(service) {
-        document.getElementById('form-state').style.display = 'block';
-        document.getElementById('success-state').style.display = 'none';
-        document.getElementById('interest').value = service;
-        document.getElementById('orderModal').style.display = 'flex';
-    }
-
-    function closeModal() {
-        document.getElementById('orderModal').style.display = 'none';
-    }
-
+    window.onscroll = function() { const box = document.getElementById('social-box'); if (window.pageYOffset > 100) { box.classList.add('scrolled'); } else { box.classList.remove('scrolled'); } };
+    function openModal(service) { document.getElementById('form-state').style.display = 'block'; document.getElementById('success-state').style.display = 'none'; document.getElementById('interest').value = service; document.getElementById('orderModal').style.display = 'flex'; }
+    function closeModal() { document.getElementById('orderModal').style.display = 'none'; }
     async function sendOrder() {
         const nick = document.getElementById('nickDiscord').value;
         const interest = document.getElementById('interest').value;
         const details = document.getElementById('details').value;
         const payment = document.getElementById('payment').value;
-
-        if(!nick || !details || !payment) {
-            alert("Wypełnij wszystkie pola!");
-            return;
-        }
-
-        const data = {
-            klient: nick,
-            gra: interest,
-            specs: details,
-            platnosc: payment
-        };
-
-        try {
-            await fetch('https://api.zenboost-tweak.pl/api/nowe-zamowienie', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
-            showSuccess();
-        } catch(e) {
-            showSuccess();
-        }
+        if(!nick || !details) { alert("Wypełnij wszystkie pola!"); return; }
+        const data = { klient: nick, gra: interest, specs: details, platnosc: payment };
+        try { await fetch('https://api.zenboost-tweak.pl/api/nowe-zamowienie', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) }); showSuccess(); } catch(e) { showSuccess(); }
     }
-
-    function showSuccess() {
-        document.getElementById('form-state').style.display = 'none';
-        document.getElementById('success-state').style.display = 'block';
-        document.getElementById('nickDiscord').value = '';
-        document.getElementById('details').value = '';
-    }
+    function showSuccess() { document.getElementById('form-state').style.display = 'none'; document.getElementById('success-state').style.display = 'block'; }
 </script>
 </body>
 </html>
