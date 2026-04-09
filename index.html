@@ -46,7 +46,6 @@
         .why-card i { font-size: 2.8rem; color: var(--p); margin-bottom: 20px; }
         .why-card h4 { color: #fff; margin-bottom: 12px; font-weight: 800; }
 
-        /* KATEGORIE WEDŁUG ZDJĘĆ */
         .category-title { text-align: center; margin: 100px 0 40px; font-size: clamp(1.8rem, 4vw, 2.5rem); font-weight: 900; text-transform: uppercase; color: #ffffff; letter-spacing: 4px; display: flex; align-items: center; justify-content: center; gap: 15px; }
         .category-title i { color: var(--p); font-size: 0.9em; }
 
@@ -61,7 +60,7 @@
         .price-tag span { font-size: 1.8rem; margin-left: 5px; }
 
         ul { list-style: none; margin-bottom: 30px; flex-grow: 1; }
-        ul li { margin: 15px 0; color: var(--text-soft); display: flex; align-items: center; font-size: 0.9rem; font-weight: 600; }
+        ul li { margin: 12px 0; color: var(--text-soft); display: flex; align-items: center; font-size: 0.9rem; font-weight: 600; }
         ul li i { color: var(--p); margin-right: 15px; font-size: 1.1rem; }
 
         .buy-btn { width: 100%; background: var(--p); color: #fff; border: none; padding: 18px; border-radius: 15px; font-weight: 800; cursor: pointer; transition: var(--t); text-transform: uppercase; }
@@ -76,8 +75,6 @@
         .avatar-frame img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
         
         .owner-nick { font-size: 1.8rem; font-weight: 900; color: #fff; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; transition: var(--t); }
-        
-        /* ROLE OBU OWNERÓW NA NIEBIESKO */
         .owner-role { font-size: 0.85rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); transition: var(--t); }
 
         .owner-card:hover .avatar-frame { transform: scale(1.1) rotate(5deg); border-color: #fff; box-shadow: 0 0 50px var(--p); }
@@ -91,23 +88,17 @@
         .modal-header h2 { color: #f2f3f5; font-size: 20px; font-weight: 600; display: flex; align-items: center; gap: 10px; }
         .modal-header h2 span { background: var(--p); width: 24px; height: 24px; border-radius: 50%; display: inline-block; font-size: 12px; text-align: center; line-height: 24px; color: white; }
         .modal-header .close-btn { color: #b5bac1; font-size: 24px; cursor: pointer; }
-        
         .modal-body { padding: 16px; padding-top: 0; }
         .warning-box { background: rgba(240, 178, 50, 0.1); border: 1px solid #f0b232; border-radius: 4px; padding: 10px 12px; margin-bottom: 16px; display: flex; gap: 10px; }
         .warning-box p { color: #dbdee1; font-size: 13px; line-height: 1.4; }
-        
         .form-group { margin-bottom: 16px; }
         .form-group label { display: block; color: #b5bac1; font-size: 12px; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; }
-        
         .modal-input, .modal-select, .modal-textarea { width: 100%; background: #1e1f22; border: none; border-radius: 3px; padding: 10px; color: var(--text-soft) !important; font-family: inherit; font-size: 16px; outline: none; transition: none; }
         .modal-textarea { resize: none; min-height: 80px; }
-        
         input:-webkit-autofill, textarea:-webkit-autofill { -webkit-text-fill-color: var(--text-soft) !important; -webkit-box-shadow: 0 0 0px 1000px #1e1f22 inset !important; }
-
         .modal-footer { background: #2b2d31; padding: 16px; display: flex; justify-content: flex-end; gap: 20px; align-items: center; }
         .btn-cancel { background: transparent; border: none; color: #fff; cursor: pointer; font-size: 14px; font-weight: 500; }
         .btn-submit { background: var(--blue); color: white; border: none; padding: 10px 24px; border-radius: 3px; font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.2s; }
-        
         #success-state { display: none; padding: 40px 20px; text-align: center; }
         #success-state i { font-size: 4rem; color: #23a559; margin-bottom: 20px; }
         #success-state h3 { color: #fff; margin-bottom: 10px; font-weight: 800; }
@@ -148,20 +139,38 @@
         <div class="price-card">
             <h3>Zwykły Boost</h3>
             <div class="price-tag">50<span>PLN</span></div>
-            <ul><li><i class="fas fa-check-circle"></i> Full System Tweaking</li><li><i class="fas fa-check-circle"></i> BIOS Tweaking</li><li><i class="fas fa-check-circle"></i> 24/7 support</li></ul>
+            <ul>
+                <li><i class="fas fa-check-circle"></i> Full System Tweaking</li>
+                <li><i class="fas fa-check-circle"></i> BIOS Tweaking</li>
+                <li><i class="fas fa-check-circle"></i> 24/7 support</li>
+            </ul>
             <button class="buy-btn" onclick="openModal('Zwykły Boost (50 PLN)')">WYBIERZ</button>
         </div>
         <div class="price-card featured">
             <div class="badge-recommended">POLECANE!</div>
             <h3>Lepszy Boost</h3>
             <div class="price-tag">100<span>PLN</span></div>
-            <ul><li><i class="fas fa-check-circle"></i> Custom Windows</li><li><i class="fas fa-check-circle"></i> BIOS Tweaking</li><li><i class="fas fa-check-circle"></i> 24/7 support</li></ul>
+            <ul>
+                <li><i class="fas fa-check-circle"></i> Custom Windows</li>
+                <li><i class="fas fa-check-circle"></i> Full System Tweaking</li>
+                <li><i class="fas fa-check-circle"></i> BIOS Tweaking</li>
+                <li><i class="fas fa-check-circle"></i> Monitor Settings</li>
+                <li><i class="fas fa-check-circle"></i> 24/7 support</li>
+            </ul>
             <button class="buy-btn" onclick="openModal('Lepszy Boost (100 PLN)')">WYBIERZ</button>
         </div>
         <div class="price-card">
             <h3>Custom Windows + Boost</h3>
             <div class="price-tag">150<span>PLN</span></div>
-            <ul><li><i class="fas fa-check-circle"></i> Hardware Overclocking</li><li><i class="fas fa-check-circle"></i> Router Settings</li><li><i class="fas fa-check-circle"></i> 24/7 support</li></ul>
+            <ul>
+                <li><i class="fas fa-check-circle"></i> Custom Windows</li>
+                <li><i class="fas fa-check-circle"></i> Full System Tweaking</li>
+                <li><i class="fas fa-check-circle"></i> Hardware Overclocking</li>
+                <li><i class="fas fa-check-circle"></i> BIOS Tweaking</li>
+                <li><i class="fas fa-check-circle"></i> Router Settings</li>
+                <li><i class="fas fa-check-circle"></i> Monitor Settings</li>
+                <li><i class="fas fa-check-circle"></i> 24/7 support</li>
+            </ul>
             <button class="buy-btn" onclick="openModal('Custom Windows + Boost (150 PLN)')">WYBIERZ</button>
         </div>
     </div>
@@ -172,11 +181,37 @@
         <div class="price-card">
             <h3>Startowy Bot</h3>
             <div class="price-tag">200<span>PLN</span></div>
-            <ul><li><i class="fas fa-check-circle"></i> Systemy Administracji</li><li><i class="fas fa-check-circle"></i> Auto-Moderacja</li></ul>
+            <ul>
+                <li><i class="fas fa-check-circle"></i> Systemy Administracji</li>
+                <li><i class="fas fa-check-circle"></i> Auto-Moderacja treści</li>
+            </ul>
             <button class="buy-btn" onclick="openModal('Startowy Bot (200 PLN)')">WYBIERZ</button>
         </div>
-        <div class="price-card featured"><div class="badge-recommended">POLECANE!</div><h3>Ekonomiczny Plus</h3><div class="price-tag">500<span>PLN</span></div><ul><li><i class="fas fa-check-circle"></i> Pełna Ekonomia & Sklep</li><li><i class="fas fa-check-circle"></i> Bazy Danych SQL</li></ul><button class="buy-btn" onclick="openModal('Ekonomiczny Plus (500 PLN)')">WYBIERZ</button></div>
-        <div class="price-card"><h3>Mega Custom Bot</h3><div class="price-tag">1000<span>PLN</span></div><ul><li><i class="fas fa-check-circle"></i> Dashboard WWW Premium</li><li><i class="fas fa-check-circle"></i> Płatności BLIK</li></ul><button class="buy-btn" onclick="openModal('Mega Custom Bot (1000 PLN)')">WYBIERZ</button></div>
+        <div class="price-card featured">
+            <div class="badge-recommended">POLECANE!</div>
+            <h3>Ekonomiczny Plus</h3>
+            <div class="price-tag">500<span>PLN</span></div>
+            <ul>
+                <li><i class="fas fa-check-circle"></i> Pełna Ekonomia & Sklep</li>
+                <li><i class="fas fa-check-circle"></i> Bazy Danych SQL</li>
+                <li><i class="fas fa-check-circle"></i> System Levelowania (XP)</li>
+                <li><i class="fas fa-check-circle"></i> Zaawansowane Logi Serwera</li>
+            </ul>
+            <button class="buy-btn" onclick="openModal('Ekonomiczny Plus (500 PLN)')">WYBIERZ</button>
+        </div>
+        <div class="price-card">
+            <h3>Mega Custom Bot</h3>
+            <div class="price-tag">1000<span>PLN</span></div>
+            <ul>
+                <li><i class="fas fa-check-circle"></i> Dashboard WWW Premium</li>
+                <li><i class="fas fa-check-circle"></i> Weryfikacja OAuth2</li>
+                <li><i class="fas fa-check-circle"></i> Płatności BLIK</li>
+                <li><i class="fas fa-check-circle"></i> Integracje Twitch & YT</li>
+                <li><i class="fas fa-check-circle"></i> Hosting w cenie</li>
+                <li><i class="fas fa-check-circle"></i> Autorskie Minigry</li>
+            </ul>
+            <button class="buy-btn" onclick="openModal('Mega Custom Bot (1000 PLN)')">WYBIERZ</button>
+        </div>
     </div>
 
     <!-- STRONY WWW -->
@@ -185,24 +220,46 @@
         <div class="price-card">
             <h3>Landing Page</h3>
             <div class="price-tag">300<span>PLN</span></div>
-            <ul><li><i class="fas fa-check-circle"></i> Modern One-Page</li><li><i class="fas fa-check-circle"></i> Responsywność Mobile</li></ul>
+            <ul>
+                <li><i class="fas fa-check-circle"></i> Modern One-Page</li>
+                <li><i class="fas fa-check-circle"></i> Responsywność Mobile</li>
+            </ul>
             <button class="buy-btn" onclick="openModal('Landing Page (300 PLN)')">WYBIERZ</button>
         </div>
-        <div class="price-card featured"><div class="badge-recommended">POLECANE!</div><h3>Gamingowa</h3><div class="price-tag">600<span>PLN</span></div><ul><li><i class="fas fa-check-circle"></i> Design Premium (Glow)</li><li><i class="fas fa-check-circle"></i> Widgety Discord Live</li></ul><button class="buy-btn" onclick="openModal('Strona Gamingowa (600 PLN)')">WYBIERZ</button></div>
-        <div class="price-card"><h3>Sklep / Dashboard</h3><div class="price-tag">1000<span>PLN</span></div><ul><li><i class="fas fa-check-circle"></i> System Płatności BLIK</li><li><i class="fas fa-check-circle"></i> Pełna Integracja z Botem</li></ul><button class="buy-btn" onclick="openModal('Sklep/Dashboard (1000 PLN)')">WYBIERZ</button></div>
+        <div class="price-card featured">
+            <div class="badge-recommended">POLECANE!</div>
+            <h3>Gamingowa</h3>
+            <div class="price-tag">600<span>PLN</span></div>
+            <ul>
+                <li><i class="fas fa-check-circle"></i> Design Premium (Glow)</li>
+                <li><i class="fas fa-check-circle"></i> Widgety Discord Live</li>
+            </ul>
+            <button class="buy-btn" onclick="openModal('Strona Gamingowa (600 PLN)')">WYBIERZ</button>
+        </div>
+        <div class="price-card">
+            <h3>Sklep / Dashboard</h3>
+            <div class="price-tag">1000<span>PLN</span></div>
+            <ul>
+                <li><i class="fas fa-check-circle"></i> Logowanie Discord OAuth2</li>
+                <li><i class="fas fa-check-circle"></i> Sklep z Koszykiem</li>
+                <li><i class="fas fa-check-circle"></i> System Płatności BLIK</li>
+                <li><i class="fas fa-check-circle"></i> Automatyczne Role</li>
+                <li><i class="fas fa-check-circle"></i> Panel Statystyk Online</li>
+                <li><i class="fas fa-check-circle"></i> Pełna Integracja z Botem</li>
+            </ul>
+            <button class="buy-btn" onclick="openModal('Sklep/Dashboard (1000 PLN)')">WYBIERZ</button>
+        </div>
     </div>
 </div>
 
 <section class="owner-section">
     <h2 style="color:#fff; text-transform:uppercase; letter-spacing:4px; margin-bottom:40px;">Ownerzy Serwera</h2>
     <div class="owner-grid">
-        <!-- ZENBOOST -->
         <div class="owner-card">
             <div class="avatar-frame"><img src="z.png" alt="ZenBoost"></div>
             <div class="owner-nick">ZenBoost</div>
             <div class="owner-role">Twórca treści</div>
         </div>
-        <!-- SEYVEN -->
         <div class="owner-card">
             <div class="avatar-frame"><img src="s.jpg" alt="Seyven"></div>
             <div class="owner-nick">Seyven</div>
