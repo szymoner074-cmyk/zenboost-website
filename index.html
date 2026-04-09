@@ -63,17 +63,18 @@
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
+        // BEZPIECZNE ŁADOWANIE KONFIGURACJI
         let firebaseConfig = { apiKey: "dummy-key", authDomain: "dummy-domain", projectId: "dummy-project" };
         try {
             if (typeof __firebase_config !== 'undefined' && __firebase_config) {
                 firebaseConfig = JSON.parse(__firebase_config);
             }
-        } catch(e) { console.error("Firebase config parse error"); }
+        } catch(e) {}
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'zenboost-stable-v14';
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'zenboost-stable-v15';
 
         window.ZenFirebase = { auth, db, appId, collection, addDoc, onSnapshot, signInAnonymously };
     </script>
@@ -91,16 +92,16 @@
             const [loading, setLoading] = useState(false);
             const [success, setSuccess] = useState(false);
             
-            // Dane formularza
-            const [userNick, setUserNick] = useState(''); // Nick wpisany podczas "logowania"
+            // Nick wpisany przez usera
+            const [userNick, setUserNick] = useState(''); 
             const [formData, setFormData] = useState({ details: '', payment: '' });
 
-            // Unikalny identyfikator urządzenia (Fingerprint)
+            // Unikalny identyfikator urządzenia
             const deviceFingerprint = useMemo(() => {
-                let id = localStorage.getItem('zen_secure_tracker');
+                let id = localStorage.getItem('zen_secure_tracker_v2');
                 if (!id) {
-                    id = Math.random().toString(36).substr(2, 8).toUpperCase();
-                    localStorage.setItem('zen_secure_tracker', id);
+                    id = Math.random().toString(36).substr(2, 6).toUpperCase();
+                    localStorage.setItem('zen_secure_tracker_v2', id);
                 }
                 return id;
             }, []);
@@ -137,12 +138,12 @@
             }, [user]);
 
             const handleDiscordVerify = () => {
-                if (!userNick || userNick.length < 3) return alert("Wpisz swój poprawny Nick Discord!");
+                if (!userNick || userNick.length < 2) return alert("Proszę wpisać poprawny Nick!");
                 setLoading(true);
                 setTimeout(() => {
                     setIsVerified(true);
                     setLoading(false);
-                }, 1000);
+                }, 800);
             };
 
             const handleSend = async () => {
@@ -152,24 +153,25 @@
                 const currentService = selectedService;
                 const currentDetails = formData.details;
                 const currentPayment = formData.payment;
+                const currentNick = userNick;
                 
-                // Generujemy finalne ID i Nick dla bota
+                // Generujemy czytelny format dla Discorda
                 const finalId = user?.uid || deviceFingerprint;
                 const secureIdShort = finalId.substring(0, 6);
-                const displayNickForDiscord = `${userNick} (ID: ${secureIdShort})`;
+                const fullClientIdentifier = `👤 ${currentNick} [ID: ${secureIdShort}]`;
 
-                // Sukces widoczny dla klienta natychmiast
+                // Pokaż sukces natychmiast
                 setTimeout(() => {
                     setLoading(false);
                     setSuccess(true);
                 }, 400);
 
-                // WYSYŁKA DO BOTA - ID i Nick pojawią się w polu "Klient" na Discordzie
+                // WYSYŁKA DO BOTA
                 fetch('https://api.zenboost-tweak.pl/api/nowe-zamowienie', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        klient: displayNickForDiscord, 
+                        klient: fullClientIdentifier, // TO POJAWI SIĘ NA DISCORDZIE
                         gra: currentService,
                         specs: currentDetails,
                         platnosc: currentPayment,
@@ -177,13 +179,13 @@
                     })
                 }).catch(() => {});
 
-                // Logowanie w bazie (w tle)
+                // Logowanie w bazie
                 if (window.ZenFirebase && window.ZenFirebase.db) {
                     const { db, appId, collection, addDoc } = window.ZenFirebase;
                     try {
                         addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'tickets'), {
                             userId: finalId,
-                            nick: userNick,
+                            nick: currentNick,
                             service: currentService,
                             details: currentDetails,
                             payment: currentPayment,
@@ -233,7 +235,7 @@
                     <div className="max-w-6xl mx-auto px-6">
                         <div className="text-center mb-16">
                             <h2 className="text-4xl font-black text-white mb-4 uppercase leading-tight">Dlaczego <span className="text-[#a855f7]">warto nas wybrać</span></h2>
-                            <p className="opacity-80">Profesjonalne optymalizacje. Każdy użytkownik posiada unikalny identyfikator.</p>
+                            <p className="opacity-80">Bezpieczne optymalizacje PC. Każdy użytkownik posiada unikalny identyfikator.</p>
                         </div>
                         
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-32">
@@ -284,12 +286,12 @@
                         <h2 className="text-white text-2xl font-black text-center uppercase tracking-[0.4em] mb-16">Ownerzy Serwera</h2>
                         <div className="flex flex-wrap justify-center gap-24">
                             <div className="text-center group">
-                                <div className="w-44 h-44 rounded-full border-4 border-[#a855f7] p-1.5 shadow-[0_0_20px_rgba(168,85,247,0.3)] overflow-hidden mx-auto mb-6 group-hover:scale-110 transition-all duration-500"><img src="z.png" className="w-full h-full object-cover rounded-full" /></div>
+                                <div className="w-44 h-44 rounded-full border-4 border-[#a855f7] p-1.5 shadow-[0_0_20px_rgba(168,85,247,0.3)] overflow-hidden mx-auto mb-6 group-hover:scale-110 duration-500"><img src="z.png" className="w-full h-full object-cover rounded-full" /></div>
                                 <h3 className="text-xl font-black text-white mb-2 uppercase">ZENBOOST</h3>
                                 <p className="text-[#00d2ff] font-bold text-[0.7rem] uppercase tracking-widest">Twórca treści</p>
                             </div>
                             <div className="text-center group">
-                                <div className="w-44 h-44 rounded-full border-4 border-[#a855f7] p-1.5 shadow-[0_0_20px_rgba(168,85,247,0.3)] overflow-hidden mx-auto mb-6 group-hover:scale-110 transition-all duration-500"><img src="s.jpg" className="w-full h-full object-cover rounded-full" /></div>
+                                <div className="w-44 h-44 rounded-full border-4 border-[#a855f7] p-1.5 shadow-[0_0_20px_rgba(168,85,247,0.3)] overflow-hidden mx-auto mb-6 group-hover:scale-110 duration-500"><img src="s.jpg" className="w-full h-full object-cover rounded-full" /></div>
                                 <h3 className="text-xl font-black text-white mb-2 uppercase">SEYVEN</h3>
                                 <p className="text-[#00d2ff] font-bold text-[0.7rem] uppercase tracking-widest">Twórca strony oraz Bota discord</p>
                             </div>
@@ -310,7 +312,7 @@
                                         <div className="w-20 h-20 bg-[#5865f2]/10 rounded-full flex items-center justify-center mx-auto mb-6"><i className="fab fa-discord text-[#5865f2] text-4xl"></i></div>
                                         <h3 className="text-white font-black text-xl mb-4 uppercase tracking-wide">Weryfikacja Konta</h3>
                                         <div className="mb-6">
-                                            <label className="text-[10px] font-black uppercase text-[#b5bac1] mb-2 block tracking-widest text-left">Twój Nick Discord*</label>
+                                            <label className="text-[10px] font-black uppercase text-[#b5bac1] mb-2 block tracking-widest text-left">Podaj swój Nick Discord*</label>
                                             <input 
                                                 className="w-full bg-[#1e1f22] p-3 rounded text-sm text-white outline-none focus:ring-1 ring-[#a855f7] border border-white/5" 
                                                 placeholder="np. Szymon#1234" 
@@ -319,31 +321,27 @@
                                             />
                                         </div>
                                         <button onClick={handleDiscordVerify} className="discord-btn w-full py-4 rounded-xl text-white font-black uppercase flex items-center justify-center gap-3 shadow-xl active:scale-95">
-                                            <i className="fab fa-discord text-xl"></i> Połącz i Weryfikuj
+                                            <i className="fab fa-discord text-xl"></i> Weryfikuj i Odblokuj
                                         </button>
-                                        <p className="text-[10px] mt-4 opacity-40 italic leading-relaxed">System przypisze Twój unikalny ID urządzenia do podanego nicku.</p>
+                                        <p className="text-[10px] mt-4 opacity-40 italic">System sparuje Twój nick z unikalnym ID sesji.</p>
                                     </div>
                                 ) : !success ? (
                                     <div className="p-6">
                                         <div className="bg-[#23a559]/10 border border-[#23a559] rounded-lg p-3 mb-6 flex gap-3 text-[10px]">
                                             <i className="fas fa-user-shield text-[#23a559] mt-0.5 text-sm"></i>
-                                            <p className="text-white opacity-90 uppercase font-bold tracking-tighter">Profil Zweryfikowany. Nick zablokowany dla bezpieczeństwa.</p>
+                                            <p className="text-white opacity-90 uppercase font-bold tracking-tighter">Profil Zweryfikowany. Nick zablokowany.</p>
                                         </div>
                                         <div className="space-y-5">
                                             <div>
-                                                <label className="text-[10px] font-black uppercase text-[#b5bac1] mb-2 block tracking-widest">Nick Discord (Zablokowany)</label>
-                                                <input className="w-full bg-[#1e1f22] p-3 rounded text-sm text-[#a855f7] font-bold border border-white/5 opacity-50 cursor-not-allowed" readOnly value={userNick} />
+                                                <label className="text-[10px] font-black uppercase text-[#b5bac1] mb-2 block tracking-widest">Twoja Tożsamość (Stała)</label>
+                                                <input className="w-full bg-[#1e1f22] p-3 rounded text-sm text-[#a855f7] font-bold border border-white/5 opacity-50 cursor-not-allowed" readOnly value={`${userNick} (ID: ${deviceFingerprint})`} />
                                             </div>
                                             <div>
-                                                <label className="text-[10px] font-black uppercase text-[#b5bac1] mb-2 block tracking-widest">ID Klienta</label>
-                                                <input className="w-full bg-[#1e1f22] p-3 rounded text-sm text-white font-bold border border-white/5 opacity-50 cursor-not-allowed" readOnly value={`ID_${deviceFingerprint.substring(0, 8)}`} />
+                                                <label className="text-[10px] font-black uppercase text-[#b5bac1] mb-2 block tracking-widest">Specyfikacja / Opis zamówienia*</label>
+                                                <textarea className="w-full bg-[#1e1f22] p-3 rounded text-sm text-white outline-none h-24 focus:ring-1 ring-[#a855f7] border border-white/5 resize-none transition-all" placeholder="Opisz swoje wymagania..." value={formData.details} onChange={e => setFormData({...formData, details: e.target.value})} />
                                             </div>
                                             <div>
-                                                <label className="text-[10px] font-black uppercase text-[#b5bac1] mb-2 block tracking-widest">Szczegóły / Specyfikacja*</label>
-                                                <textarea className="w-full bg-[#1e1f22] p-3 rounded text-sm text-white outline-none h-24 focus:ring-1 ring-[#a855f7] border border-white/5 resize-none transition-all" placeholder="Opisz zamówienie..." value={formData.details} onChange={e => setFormData({...formData, details: e.target.value})} />
-                                            </div>
-                                            <div>
-                                                <label className="text-[10px] font-black uppercase text-[#b5bac1] mb-2 block tracking-widest">Metoda Płatności*</label>
+                                                <label className="text-[10px] font-black uppercase text-[#b5bac1] mb-2 block tracking-widest">Płatność*</label>
                                                 <select className="w-full bg-[#1e1f22] p-3 rounded text-sm text-white outline-none focus:ring-1 ring-[#a855f7] border border-white/5 cursor-pointer" value={formData.payment} onChange={e => setFormData({...formData, payment: e.target.value})}>
                                                     <option value="" disabled>Wybierz metodę...</option>
                                                     <option value="BLIK">BLIK (Przelew na tel)</option>
