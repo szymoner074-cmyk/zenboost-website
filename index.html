@@ -73,11 +73,11 @@
     <script type="text/babel">
         const { useState, useEffect } = React;
 
-        // --- ⚙️ KONFIGURACJA OAUTH2 (DANE Z TWOJEGO PANELU) ---
+        // --- ⚙️ KONFIGURACJA OAUTH2 ---
         const CLIENT_ID = '1490818531955183747'; 
-        const REDIRECT_URI = encodeURIComponent(window.location.origin + '/');
+        const REDIRECT_URI = 'http://zenboost-tweak.pl/'; // Wpisz to na sztywno, bez encodeURIComponent
+        const DISCORD_AUTH_URL = `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=code&scope=identify%20email&prompt=consent`;
         // Dodano prompt=consent, aby wymusić okno autoryzacji
-        const DISCORD_AUTH_URL = `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code&scope=identify%20email&prompt=consent`;
         const API_BASE = 'https://api.zenboost-tweak.pl';
 
         const App = () => {
