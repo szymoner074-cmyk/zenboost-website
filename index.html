@@ -42,21 +42,20 @@
 
         .discord-btn {
             background: #5865f2;
-            transition: all 0.2s ease-out;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .discord-btn:hover:not(:disabled) {
             background: #4752c4;
-            transform: scale(1.02);
-            box-shadow: 0 5px 15px rgba(88, 101, 242, 0.3);
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(88, 101, 242, 0.3);
         }
 
         .custom-scroll::-webkit-scrollbar { width: 6px; }
         .custom-scroll::-webkit-scrollbar-track { background: transparent; }
         .custom-scroll::-webkit-scrollbar-thumb { background: var(--p); border-radius: 10px; }
         
-        /* Fix dla zacinania animacji */
-        .animate-in { animation: fadeIn 0.3s ease-out forwards; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-in { animation: fadeIn 0.25s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body class="custom-scroll">
@@ -78,7 +77,7 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'zenboost-v20-optimized';
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'zenboost-v21-ultra-smooth';
 
         window.ZenFirebase = { auth, db, appId, collection, addDoc, onSnapshot, signInAnonymously };
     </script>
@@ -102,27 +101,25 @@
             const [formData, setFormData] = useState({ details: '', payment: '' });
 
             const deviceFingerprint = useMemo(() => {
-                let id = localStorage.getItem('zen_secure_v4');
+                let id = localStorage.getItem('zen_secure_v5');
                 if (!id) {
                     id = Math.random().toString(36).substr(2, 6).toUpperCase();
-                    localStorage.setItem('zen_secure_v4', id);
+                    localStorage.setItem('zen_secure_v5', id);
                 }
                 return id;
             }, []);
 
+            // Inicjalizacja jednorazowa
             useEffect(() => {
-                const checkInterval = setInterval(() => {
-                    if (window.ZenFirebase && window.ZenFirebase.auth) {
-                        const { auth, signInAnonymously } = window.ZenFirebase;
-                        if (!auth.currentUser) signInAnonymously(auth).catch(() => {});
-                        const unsub = onAuthStateChanged(auth, setUser);
-                        clearInterval(checkInterval);
-                        return () => unsub();
-                    }
-                }, 1000);
-                return () => clearInterval(checkInterval);
+                if (window.ZenFirebase && window.ZenFirebase.auth) {
+                    const { auth, signInAnonymously } = window.ZenFirebase;
+                    if (!auth.currentUser) signInAnonymously(auth).catch(() => {});
+                    const unsub = onAuthStateChanged(auth, setUser);
+                    return () => unsub();
+                }
             }, []);
 
+            // Synchronizacja ticketów (zoptymalizowana)
             useEffect(() => {
                 if (!user || !window.ZenFirebase?.db) return;
                 const { db, appId, collection, onSnapshot } = window.ZenFirebase;
@@ -133,27 +130,27 @@
                         .filter(t => t.hwid === deviceFingerprint && t.status === 'open')
                         .length;
                     setActiveTickets(count);
-                }, () => {});
+                }, (err) => console.log("DB Sync paused."));
                 return () => unsub();
             }, [user, deviceFingerprint]);
 
             const handleDiscordVerify = async () => {
+                const trimmedNick = userNick.trim();
                 if (!userEmail.includes('@')) return alert("Wpisz poprawny e-mail!");
-                if (!userNick || userNick.length < 2) return alert("Wpisz poprawny nick!");
+                if (!trimmedNick || trimmedNick.length < 2) return alert("Wpisz poprawny nick!");
                 
                 setLoading(true);
-                setVerifyStatus('Weryfikacja...');
+                setVerifyStatus('Szybka weryfikacja...');
 
                 try {
-                    // Szybsze sprawdzanie - Timeout na 3 sekundy, żeby strona nie "wisiała"
                     const controller = new AbortController();
-                    const id = setTimeout(() => controller.abort(), 3000);
+                    const timeoutId = setTimeout(() => controller.abort(), 2000); // 2 sekundy max
 
-                    const response = await fetch(`https://api.zenboost-tweak.pl/api/check-member?nick=${encodeURIComponent(userNick)}`, {
+                    const response = await fetch(`https://api.zenboost-tweak.pl/api/check-member?nick=${encodeURIComponent(trimmedNick)}`, {
                         signal: controller.signal
-                    }).catch(() => ({ status: 200 })); // Fallback: jeśli serwer nie odpowiada, pozwól wejść
+                    }).catch(() => ({ status: 200 })); // Jeśli timeout lub błąd sieci, puść dalej
 
-                    clearTimeout(id);
+                    clearTimeout(timeoutId);
                     
                     if (response.status === 404) {
                         setVerifyStatus('Nie znaleziono Cię na serwerze! Przekierowuję...');
@@ -161,15 +158,14 @@
                             window.open('https://discord.gg/pH5yNGd22k', '_blank');
                             setLoading(false);
                             setVerifyStatus('');
-                        }, 1500);
+                        }, 1000);
                         return;
                     }
 
                     setIsVerified(true);
                     setLoading(false);
-                    setVerifyStatus('');
                 } catch (e) {
-                    setIsVerified(true); // Jeśli API padnie, nie blokujemy klienta
+                    setIsVerified(true); // Fallback bezpieczeństwa: pozwól złożyć zamówienie
                     setLoading(false);
                 }
             };
@@ -179,16 +175,13 @@
                 
                 setLoading(true);
                 const finalId = deviceFingerprint;
-                // Czytelny format dla Discorda
                 const discordClientField = `👤 ${userNick}\n📧 ${userEmail}\n🆔 [HWID: ${finalId}]`;
 
-                // Sukces widoczny od razu (brak laga)
-                setTimeout(() => {
-                    setLoading(false);
-                    setSuccess(true);
-                }, 300);
+                // Błyskawiczny ekran sukcesu
+                setLoading(false);
+                setSuccess(true);
 
-                // WYSYŁKA W TLE
+                // Wysyłka w tle
                 fetch('https://api.zenboost-tweak.pl/api/nowe-zamowienie', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -222,7 +215,7 @@
                 <div className={`relative bg-[#161b2c] p-8 rounded-[30px] border transition-all duration-300 flex flex-col ${featured ? 'border-[#a855f7] shadow-[0_0_30px_rgba(168,85,247,0.3)] scale-105 z-10' : 'border-white/5 hover:border-[#a855f7]'}`}>
                     {featured && <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#a855f7] text-white px-6 py-1.5 rounded-full text-[0.7rem] font-black uppercase tracking-widest shadow-[0_0_20px_#a855f7]">POLECANE!</div>}
                     <h3 className="text-xl font-bold text-white mb-2">{title}</h3>
-                    <div className="text-4xl font-black text-[#00d2ff] text-center my-6">{price}<span className="text-2xl ml-1">PLN</span></div>
+                    <div className="text-4xl font-black text-[#00d2ff] text-center my-6 tracking-tighter">{price}<span className="text-2xl ml-1">PLN</span></div>
                     <ul className="flex-grow space-y-3 mb-8">
                         {features.map((f, i) => (
                             <li key={i} className="flex items-center text-[0.8rem] font-semibold text-[#b2bac2]">
@@ -253,14 +246,14 @@
                     <div className="max-w-6xl mx-auto px-6">
                         <div className="text-center mb-16">
                             <h2 className="text-4xl font-black text-white mb-4 uppercase leading-tight tracking-tighter">Dlaczego <span className="text-[#a855f7]">warto nas wybrać</span></h2>
-                            <p className="opacity-80">Profesjonalne usługi PC. Wymagana weryfikacja tożsamości.</p>
+                            <p className="opacity-80">Najwyższa wydajność Twojego PC. Gwarantowana bezpieczna weryfikacja.</p>
                         </div>
                         
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-32">
                             {[
-                                { icon: "shield-alt", t: "Bezpieczeństwo", d: "Weryfikacja e-mail i HWID urządzenia chroni przed spamem." },
-                                { icon: "bolt", t: "Wydajność", d: "Zwiększamy FPS i płynność w każdej gierce do maksimum." },
-                                { icon: "medal", t: "Zaufanie", d: "Setki zadowolonych graczy i lata doświadczenia w branży." }
+                                { icon: "shield-alt", t: "Bezpieczeństwo", d: "ID HWID uniemożliwia anonimowy spam i trolle." },
+                                { icon: "bolt", t: "Wydajność", d: "Zwiększamy FPS i płynność w każdej gierce do oporu." },
+                                { icon: "medal", t: "Zaufanie", d: "Lata doświadczenia i setki zadowolonych graczy." }
                             ].map((item, idx) => (
                                 <div key={idx} className="bg-[#161b2c] p-10 rounded-3xl border border-white/5 hover:border-[#a855f7] transition-all group">
                                     <i className={`fas fa-${item.icon} text-4xl text-[#a855f7] mb-6 group-hover:scale-110 transition-transform`}></i>
@@ -327,29 +320,29 @@
                                 {!isVerified ? (
                                     <div className="p-10 text-center">
                                         <div className="w-20 h-20 bg-[#5865f2]/10 rounded-full flex items-center justify-center mx-auto mb-6"><i className="fab fa-discord text-[#5865f2] text-4xl"></i></div>
-                                        <h3 className="text-white font-black text-xl mb-4 uppercase">Weryfikacja Tożsamości</h3>
+                                        <h3 className="text-white font-black text-xl mb-4 uppercase">Logowanie Panel</h3>
                                         
                                         <div className="space-y-4 mb-6 text-left">
                                             <div>
-                                                <label className="text-[10px] font-black uppercase text-[#b5bac1] mb-2 block tracking-widest">Adres E-mail*</label>
-                                                <input type="email" className="w-full bg-[#1e1f22] p-3 rounded text-sm text-white outline-none focus:ring-1 ring-[#a855f7] border border-white/5" placeholder="Twój e-mail" value={userEmail} onChange={e => setUserEmail(e.target.value)} />
+                                                <label className="text-[10px] font-black uppercase text-[#b5bac1] mb-2 block tracking-widest">E-mail (Powiązany)*</label>
+                                                <input type="email" className="w-full bg-[#1e1f22] p-3 rounded text-sm text-white outline-none focus:ring-1 ring-[#a855f7] border border-white/5" placeholder="Podaj e-mail" value={userEmail} onChange={e => setUserEmail(e.target.value)} />
                                             </div>
                                             <div>
                                                 <label className="text-[10px] font-black uppercase text-[#b5bac1] mb-2 block tracking-widest">Nick Discord*</label>
-                                                <input className="w-full bg-[#1e1f22] p-3 rounded text-sm text-white outline-none focus:ring-1 ring-[#a855f7] border border-white/5" placeholder="np. Szymon#1234" value={userNick} onChange={e => setUserNick(e.target.value)} />
+                                                <input className="w-full bg-[#1e1f22] p-3 rounded text-sm text-white outline-none focus:ring-1 ring-[#a855f7] border border-white/5" placeholder="np. seyven" value={userNick} onChange={e => setUserNick(e.target.value)} />
                                             </div>
                                             {verifyStatus && <p className="text-[10px] text-yellow-400 font-bold animate-pulse uppercase text-center">{verifyStatus}</p>}
                                         </div>
 
                                         <button onClick={handleDiscordVerify} disabled={loading} className="discord-btn w-full py-4 rounded-xl text-white font-black uppercase flex items-center justify-center gap-3 shadow-xl active:scale-95 disabled:opacity-50">
-                                            {loading ? <i className="fas fa-circle-notch fa-spin"></i> : <><i className="fas fa-shield-alt"></i> Weryfikuj i Zaloguj</>}
+                                            {loading ? <i className="fas fa-circle-notch fa-spin"></i> : <><i className="fas fa-shield-alt"></i> Zaloguj do Systemu</>}
                                         </button>
                                     </div>
                                 ) : !success ? (
                                     <div className="p-6">
                                         <div className="bg-[#23a559]/10 border border-[#23a559] rounded-lg p-3 mb-6 flex gap-3 text-[10px]">
                                             <i className="fas fa-user-check text-[#23a559] mt-0.5 text-sm"></i>
-                                            <p className="text-white opacity-90 uppercase font-bold tracking-tighter">Zalogowano: {userNick}</p>
+                                            <p className="text-white opacity-90 uppercase font-bold tracking-tighter">Zalogowano jako: {userNick}</p>
                                         </div>
                                         <div className="space-y-5">
                                             <div>
@@ -366,18 +359,18 @@
                                             </div>
                                         </div>
                                         <div className="mt-8 flex justify-between items-center bg-[#2b2d31] -mx-6 -mb-6 p-6">
-                                            <span className="text-[10px] font-bold text-white uppercase opacity-50">Zgłoszenia: <span className={activeTickets >= 2 ? "text-red-500" : "text-green-500"}>{activeTickets}/2</span></span>
-                                            <div className="flex gap-4">
-                                                <button onClick={() => setIsModalOpen(false)} className="text-xs font-bold text-white hover:underline transition-all">Anuluj</button>
-                                                <button disabled={loading || activeTickets >= 2} onClick={handleSend} className={`px-8 py-3 rounded-lg font-black text-sm text-white transition-all shadow-lg ${loading || activeTickets >= 2 ? 'bg-gray-700 cursor-not-allowed opacity-50' : 'bg-[#5865f2] hover:bg-[#4752c4] active:scale-95'}`}>Wyślij Ticket</button>
-                                            </div>
+                                           <span className="text-[10px] font-bold text-white uppercase opacity-50">Aktywne: <span className={activeTickets >= 2 ? "text-red-500" : "text-green-500"}>{activeTickets}/2</span></span>
+                                           <div className="flex gap-4">
+                                               <button onClick={() => setIsModalOpen(false)} className="text-xs font-bold text-white hover:underline">Anuluj</button>
+                                               <button disabled={loading || activeTickets >= 2} onClick={handleSend} className={`px-8 py-3 rounded-lg font-black text-sm text-white transition-all shadow-lg ${loading || activeTickets >= 2 ? 'bg-gray-700 cursor-not-allowed opacity-50' : 'bg-[#5865f2] hover:bg-[#4752c4] active:scale-95'}`}>Wyślij Ticket</button>
+                                           </div>
                                         </div>
                                     </div>
                                 ) : (
                                     <div className="p-12 text-center">
                                         <i className="fas fa-check-circle text-6xl text-green-500 mb-6 drop-shadow-[0_0_10px_rgba(34,197,94,0.4)]"></i>
-                                        <h3 className="text-white font-black text-2xl mb-4 uppercase">WYSŁANO POMYŚLNIE!</h3>
-                                        <p className="text-sm mb-10 opacity-70 text-white font-medium">Ticket przypisany do konta {userNick}. Zapraszamy na Discord!</p>
+                                        <h3 className="text-white font-black text-2xl mb-4 uppercase">WYSŁANO!</h3>
+                                        <p className="text-sm mb-10 opacity-70 text-white font-medium">Sprawdź Discord, ticket został otwarty.</p>
                                         <a href="https://discord.gg/pH5yNGd22k" target="_blank" className="bg-green-600 hover:bg-green-500 text-white px-12 py-4 rounded-xl font-black uppercase inline-block transition-all shadow-xl active:scale-95">Otwórz ticket 🚀</a>
                                     </div>
                                 )}
