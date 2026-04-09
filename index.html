@@ -101,12 +101,13 @@
                     });
                     const data = await res.json();
 
-                    if (data.authorized && data.onServer) {
-                        setUser(data.user);
+                    if (data.authorized) {
+                        // Zapisujemy użytkownika niezależnie od tego czy jest na serwerze (onServer sprawdzimy w formularzu)
+                        setUser({
+                            ...data.user,
+                            onServer: data.onServer
+                        });
                         window.history.replaceState({}, document.title, "/");
-                    } else if (data.authorized && !data.onServer) {
-                        alert("Musisz być na naszym serwerze Discord!");
-                        window.location.href = "https://discord.gg/pH5yNGd22k";
                     }
                 } catch (e) {
                     console.error("Auth error:", e);
@@ -160,8 +161,8 @@
             if (!user) {
                 return (
                     <div className="h-screen flex flex-col items-center justify-center text-center px-4">
-                        <h1 className="text-6xl md:text-8xl font-black text-white glow-text mb-6">ZEN<span className="text-[#a855f7]">BOOST</span></h1>
-                        <p className="text-lg mb-10 max-w-md opacity-70">Weryfikacja Discord jest wymagana, aby uzyskać dostęp do panelu usług.</p>
+                        <h1 className="text-6xl md:text-8xl font-black text-white glow-text mb-6 uppercase tracking-tighter">ZEN<span className="text-[#a855f7]">BOOST</span></h1>
+                        <p className="text-lg mb-10 max-w-md opacity-70">Zaloguj się kontem Discord, aby uzyskać dostęp do naszych profesjonalnych usług.</p>
                         <a href={DISCORD_AUTH_URL} className="discord-btn px-12 py-6 rounded-2xl text-white font-black uppercase flex items-center gap-4 text-xl shadow-2xl">
                             {loading ? <i className="fas fa-circle-notch fa-spin"></i> : <><i className="fab fa-discord text-3xl"></i> Zaloguj przez Discord</>}
                         </a>
@@ -189,12 +190,12 @@
                     </header>
 
                     <main className="max-w-6xl mx-auto px-6 space-y-32">
-                        {/* Why Us Section */}
+                        {/* Dlaczego My */}
                         <section className="grid grid-cols-1 md:grid-cols-3 gap-8">
                             {[
-                                { icon: "shield-alt", t: "Bezpieczeństwo", d: "ID urządzenia i weryfikacja OAuth2 chronią Twoje zamówienie." },
-                                { icon: "bolt", t: "Wydajność", d: "Zwiększamy Twoje FPS i płynność rozgrywki do maksimum." },
-                                { icon: "medal", t: "Zaufanie", d: "Setki zadowolonych graczy i lata doświadczenia w tweakowaniu." }
+                                { icon: "shield-alt", t: "Bezpieczeństwo", d: "ID urządzenia i weryfikacja OAuth2 gwarantują bezpieczne zamówienie." },
+                                { icon: "bolt", t: "Wydajność", d: "Zapewniamy najwyższą płynność i więcej FPS w każdej grze." },
+                                { icon: "medal", t: "Doświadczenie", d: "Setki zadowolonych graczy potwierdzają naszą jakość usług." }
                             ].map((item, idx) => (
                                 <div key={idx} className="glass p-10 rounded-3xl border-white/5 hover:border-[#a855f7] transition-all text-center">
                                     <i className={`fas fa-${item.icon} text-4xl text-[#a855f7] mb-6`}></i>
@@ -204,7 +205,7 @@
                             ))}
                         </section>
 
-                        {/* PC BOOST */}
+                        {/* Sekcje cenowe */}
                         <section>
                             <h2 className="text-3xl font-black text-white text-center mb-16 uppercase tracking-widest"><i className="fas fa-bolt text-[#a855f7] mr-4"></i> OPTYMALIZACJE PC</h2>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -214,7 +215,6 @@
                             </div>
                         </section>
 
-                        {/* BOTS */}
                         <section>
                             <h2 className="text-3xl font-black text-white text-center mb-16 uppercase tracking-widest"><i className="fas fa-robot text-[#a855f7] mr-4"></i> BOTY DISCORD</h2>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -224,7 +224,6 @@
                             </div>
                         </section>
 
-                        {/* WEBSITES */}
                         <section>
                             <h2 className="text-3xl font-black text-white text-center mb-16 uppercase tracking-widest"><i className="fas fa-globe text-[#a855f7] mr-4"></i> STRONY WWW</h2>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -235,7 +234,7 @@
                         </section>
                     </main>
 
-                    {/* Team Section */}
+                    {/* Team */}
                     <section className="bg-black/30 py-32 border-t border-white/5 mt-32 text-center">
                         <h2 className="text-white text-3xl font-black uppercase tracking-[0.4em] mb-20">Ownerzy Serwera</h2>
                         <div className="flex flex-wrap justify-center gap-24">
@@ -252,16 +251,34 @@
                         </div>
                     </section>
 
-                    {/* MODAL */}
+                    {/* MODAL ZAMÓWIENIA */}
                     {isModalOpen && (
                         <div className="fixed inset-0 bg-black/90 backdrop-blur-md flex items-center justify-center p-4 z-[200]">
                             <div className="bg-[#1e1f22] w-full max-w-md rounded-3xl overflow-hidden shadow-2xl border border-white/10">
                                 <div className="p-6 border-b border-white/5 flex justify-between items-center">
-                                    <h3 className="text-white font-bold uppercase text-xs tracking-widest">Złóż zamówienie</h3>
+                                    <h3 className="text-white font-bold uppercase text-xs tracking-widest">Konfiguracja Ticketu</h3>
                                     <i className="fas fa-times cursor-pointer text-[#b5bac1] hover:text-white" onClick={() => setIsModalOpen(false)}></i>
                                 </div>
 
-                                {!success ? (
+                                {/* Sprawdzanie czy użytkownik jest na serwerze */}
+                                {!user.onServer ? (
+                                    <div className="p-10 text-center space-y-6">
+                                        <div className="w-20 h-20 bg-yellow-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                                            <i className="fas fa-exclamation-triangle text-4xl text-yellow-500"></i>
+                                        </div>
+                                        <h2 className="text-white text-xl font-black uppercase">Nie jesteś na serwerze!</h2>
+                                        <p className="text-sm opacity-60">Aby złożyć zamówienie, musisz być członkiem naszego Discorda. Dołącz teraz, a potem wróć tutaj.</p>
+                                        <div className="flex flex-col gap-4">
+                                            <a href="https://discord.gg/pH5yNGd22k" target="_blank" className="bg-[#5865f2] block py-4 rounded-xl text-white font-black uppercase shadow-xl hover:brightness-110">DOŁĄCZ DO NAS 🚀</a>
+                                            <button 
+                                                onClick={() => window.location.reload()} 
+                                                className="text-xs font-bold text-[#a855f7] hover:underline"
+                                            >
+                                                Zrobiłem to, odśwież status
+                                            </button>
+                                        </div>
+                                    </div>
+                                ) : !success ? (
                                     <div className="p-6 space-y-6">
                                         <div className="p-4 bg-black/30 rounded-2xl flex items-center gap-4 border border-white/5">
                                             <img src={user.avatar} className="w-12 h-12 rounded-full border border-[#a855f7]" />
