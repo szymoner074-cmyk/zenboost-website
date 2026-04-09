@@ -35,14 +35,19 @@
 
         .container { max-width: 1200px; margin: auto; padding: 0 20px 50px; }
 
-        /* WHY US */
+        /* WHY US HEADER - ZAKTUALIZOWANE WEDŁUG TWOJEJ PROŚBY */
+        .why-header { text-align: center; margin-bottom: 60px; }
+        .why-header h2 { color: #fff; font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 900; margin-bottom: 15px; }
+        .why-header h2 span { color: var(--p); } /* Zmieniono z --accent na --p (fioletowy) */
+        .why-header p { color: var(--text-soft); font-size: 1.1rem; max-width: 800px; margin: 0 auto; line-height: 1.6; }
+
         .why-us-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 80px; }
         .why-card { background: var(--card); padding: 35px; border-radius: 25px; border: 1px solid rgba(168, 85, 247, 0.1); transition: var(--t); text-align: left; }
         .why-card:hover { transform: translateY(-10px); border-color: var(--p); box-shadow: 0 0 30px var(--p-glow); }
         .why-card i { font-size: 2.8rem; color: var(--p); margin-bottom: 20px; }
         .why-card h4 { color: #fff; margin-bottom: 12px; font-weight: 800; }
 
-        /* TYTUŁY KATEGORII - TERAZ BIAŁE */
+        /* TYTUŁY KATEGORII - BIAŁE */
         .category-title { text-align: center; margin: 80px 0 40px; font-size: 2.5rem; font-weight: 900; text-transform: uppercase; color: #ffffff; letter-spacing: 4px; }
         
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px; margin-bottom: 60px; }
@@ -52,7 +57,7 @@
         .price-card.featured { border: 2px solid var(--p); box-shadow: 0 0 25px var(--p-glow); }
         .badge-recommended { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: var(--p); color: white; padding: 8px 25px; border-radius: 50px; font-weight: 900; font-size: 0.7rem; text-transform: uppercase; box-shadow: 0 0 20px var(--p); z-index: 10; }
 
-        /* CENY - TERAZ JASNY NIEBIESKI */
+        /* CENY - JASNY NIEBIESKI */
         .price-tag { font-size: 2.8rem; font-weight: 900; margin: 20px 0; color: var(--accent); text-align: center; }
         .price-tag span { font-size: 1.8rem; margin-left: 5px; }
 
@@ -134,13 +139,18 @@
         <p>NASZ SERWER DISCORD ORAZ TIKTOK</p>
         <div class="social-wrapper" id="social-box">
             <a href="https://discord.gg/pH5yNGd22k" target="_blank" class="social-btn"><i class="fab fa-discord"></i></a>
-            <a href="https://tiktok.com/@seyven" target="_blank" class="social-btn"><i class="fab fa-tiktok"></i></a>
+            <a href="https://www.tiktok.com/@dexboost1" target="_blank" class="social-btn"><i class="fab fa-tiktok"></i></a>
         </div>
     </div>
 </header>
 
 <div class="container">
-    <h2 style="text-align:center; color:#fff; font-size:2.5rem; margin-bottom:50px; text-transform:uppercase;">Dlaczego akurat my?</h2>
+    <!-- WHY US SECTION UPDATED -->
+    <div class="why-header">
+        <h2>Dlaczego <span>warto nas wybrać</span></h2>
+        <p>Poczuj różnicę dzięki naszej zaawansowanej technologii optymalizacji komputera</p>
+    </div>
+
     <div class="why-us-grid">
         <div class="why-card"><i class="fas fa-shield-alt"></i><h4>Bezpieczeństwo</h4><p>Dzięki AnyDesk masz pełny podgląd sesji. Widzisz każdy nasz ruch.</p></div>
         <div class="why-card"><i class="fas fa-bolt"></i><h4>Wydajność</h4><p>Gwarantujemy najwyższe FPS i najniższe opóźnienia na Twoim sprzęcie.</p></div>
