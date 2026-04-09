@@ -147,13 +147,33 @@
             flex-shrink: 0;
             box-shadow: 0 0 10px rgba(168, 85, 247, 0.4);
         }
+
+        /* Styl Menu Wylogowywania */
+        .logout-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 10px;
+            background: #1e1f22;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            padding: 8px;
+            min-width: 160px;
+            z-index: 2000;
+            animation: slideDown 0.3s ease-out;
+        }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body class="custom-scroll overflow-x-hidden">
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState, useEffect } = React;
+        const { useState, useEffect, useRef } = React;
 
         // --- ⚙️ KONFIGURACJA OAUTH2 ---
         const CLIENT_ID = '1490818531955183747'; 
@@ -163,13 +183,17 @@
 
         const App = () => {
             const [user, setUser] = useState(null);
+            const [activeTickets, setActiveTickets] = useState(0); // Licznik ticketów
             const [isScrolled, setIsScrolled] = useState(false);
             const [isModalOpen, setIsModalOpen] = useState(false);
+            const [showLogout, setShowLogout] = useState(false);
             const [selectedService, setSelectedService] = useState('');
             const [formData, setFormData] = useState({ specs: '', payment: '' });
             const [success, setSuccess] = useState(false);
             const [loading, setLoading] = useState(false);
             const [refreshing, setRefreshing] = useState(false);
+            
+            const logoutRef = useRef(null);
 
             useEffect(() => {
                 const handleScroll = () => {
@@ -177,7 +201,19 @@
                     else setIsScrolled(false);
                 };
                 window.addEventListener('scroll', handleScroll);
-                return () => window.removeEventListener('scroll', handleScroll);
+                
+                // Zamykanie menu po kliknięciu obok
+                const handleClickOutside = (event) => {
+                    if (logoutRef.current && !logoutRef.current.contains(event.target)) {
+                        setShowLogout(false);
+                    }
+                };
+                document.addEventListener("mousedown", handleClickOutside);
+
+                return () => {
+                    window.removeEventListener('scroll', handleScroll);
+                    document.removeEventListener("mousedown", handleClickOutside);
+                };
             }, []);
 
             useEffect(() => {
@@ -197,10 +233,18 @@
                     const data = await res.json();
                     if (data.authorized) {
                         setUser({...data.user, onServer: data.onServer});
+                        // Tutaj można by pobrać liczbę ticketów z bazy, ale na razie symulujemy 0
+                        setActiveTickets(0);
                         window.history.replaceState({}, document.title, "/");
                     }
                 } catch (e) { console.error(e); }
                 setLoading(false);
+            };
+
+            const handleLogout = () => {
+                setUser(null);
+                setShowLogout(false);
+                window.location.href = "/";
             };
 
             const checkMembership = async () => {
@@ -215,7 +259,12 @@
             };
 
             const sendOrder = async () => {
+                if (activeTickets >= 3) {
+                    alert("Osiągnięto limit 3 aktywnych ticketów. Zamknij jedno ze zgłoszeń na Discordzie.");
+                    return;
+                }
                 if (!formData.specs || !formData.payment) return alert("Wypełnij wszystkie pola formularza!");
+                
                 setLoading(true);
                 try {
                     const res = await fetch(`${API_BASE}/api/nowe-zamowienie`, {
@@ -226,7 +275,10 @@
                             avatar: user.avatar, gra: selectedService, specs: formData.specs, platnosc: formData.payment
                         })
                     });
-                    if (res.ok) setSuccess(true);
+                    if (res.ok) {
+                        setSuccess(true);
+                        setActiveTickets(prev => prev + 1);
+                    }
                 } catch (e) { alert("Błąd połączenia z serwerem."); }
                 setLoading(false);
             };
@@ -255,18 +307,34 @@
 
             return (
                 <div className="min-h-screen">
-                    {/* Socials Fixed (Na prawej stronie - widoczne po scrollu lub na stałe) */}
+                    {/* Socials Fixed (Na prawej stronie) */}
                     <div className={`social-fixed ${isScrolled ? 'opacity-100 translate-x-0' : 'md:opacity-0 md:translate-x-10'}`}>
                         <a href="https://discord.gg/pH5yNGd22k" target="_blank" className="social-icon" title="Dołącz do Discorda"><i className="fab fa-discord text-2xl"></i></a>
                         <a href="https://www.tiktok.com/@dexboost1" target="_blank" className="social-icon" title="Obserwuj na TikTok"><i className="fab fa-tiktok text-2xl"></i></a>
                     </div>
 
-                    {/* Stała Nawigacja z Logowaniem */}
+                    {/* Stała Nawigacja z Logowaniem / Profilem */}
                     <nav className={`p-6 flex justify-end items-center fixed top-0 left-0 w-full z-[1100] transition-all ${isScrolled ? 'bg-black/40 backdrop-blur-md' : ''}`}>
                         {user ? (
-                            <div className="flex items-center gap-4 bg-black/40 p-1.5 pr-6 rounded-full border border-white/5">
-                                <img src={user.avatar} className="w-10 h-10 rounded-full border-2 border-[#a855f7]" alt="User Avatar" />
-                                <span className="text-white font-bold text-sm">{user.username}</span>
+                            <div className="relative" ref={logoutRef}>
+                                <div 
+                                    onClick={() => setShowLogout(!showLogout)}
+                                    className="flex items-center gap-4 bg-black/40 p-1.5 pr-6 rounded-full border border-white/5 cursor-pointer hover:bg-white/5 transition-all active:scale-95"
+                                >
+                                    <img src={user.avatar} className="w-10 h-10 rounded-full border-2 border-[#a855f7]" alt="User Avatar" />
+                                    <span className="text-white font-bold text-sm">{user.username}</span>
+                                    <i className={`fas fa-chevron-down text-[10px] transition-transform ${showLogout ? 'rotate-180' : ''}`}></i>
+                                </div>
+                                {showLogout && (
+                                    <div className="logout-menu">
+                                        <button 
+                                            onClick={handleLogout}
+                                            className="w-full text-left p-3 rounded-lg text-sm text-white font-bold hover:bg-red-500/20 hover:text-red-400 transition-all flex items-center gap-3"
+                                        >
+                                            <i className="fas fa-sign-out-alt"></i> Wyloguj się
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         ) : (
                             <a href={DISCORD_AUTH_URL} className="nav-login-btn px-6 py-3 rounded-xl text-white font-black uppercase text-xs flex items-center gap-3">
@@ -334,7 +402,7 @@
                             ))}
                         </div>
 
-                        {/* PRICING SECTIONS - WSZYSTKIE INFO ZGODNIE ZE SCREENAMI */}
+                        {/* PRICING SECTIONS */}
                         <div className="space-y-40 mb-40">
                             {/* PC TWEAK SECTION */}
                             <section>
@@ -367,7 +435,7 @@
                             </section>
                         </div>
 
-                        {/* Owners Section (Z Animacją WOW i Fioletowymi Ramkami Kulistymi) */}
+                        {/* Owners Section (WOW + Fioletowe Ramki) */}
                         <section className="py-40 text-center border-t border-white/5">
                             <h2 className="text-3xl font-black text-white uppercase tracking-[0.5em] mb-24 opacity-80 text-sm">Ownerzy Serwera</h2>
                             <div className="flex flex-wrap justify-center gap-32">
@@ -376,14 +444,14 @@
                                         <img src="z.png" className="w-full h-full object-cover rounded-full" alt="ZenBoost" />
                                     </div>
                                     <h3 className="owner-name text-3xl font-black uppercase tracking-tighter">ZenBoost</h3>
-                                    <p className="text-[#gaming] font-bold text-xs uppercase tracking-widest mt-2">Twórca Treści</p>
+                                    <p className="text-[#22d3ee] font-bold text-xs uppercase tracking-widest mt-2">Twórca Treści</p>
                                 </div>
                                 <div className="flex flex-col items-center group">
                                     <div className="avatar-frame w-56 h-56 overflow-hidden mb-8">
                                         <img src="s.jpg" className="w-full h-full object-cover rounded-full" alt="Seyven" />
                                     </div>
                                     <h3 className="owner-name text-3xl font-black uppercase tracking-tighter">Seyven</h3>
-                                    <p className="text-[#gaming] font-bold text-xs uppercase tracking-widest mt-2 uppercase">Twórca Strony & Bota</p>
+                                    <p className="text-[#22d3ee] font-bold text-xs uppercase tracking-widest mt-2 uppercase">Twórca Strony & Bota</p>
                                 </div>
                             </div>
                         </section>
@@ -429,27 +497,37 @@
                                                 <div className="text-white font-bold text-sm">{user.username}</div>
                                             </div>
                                         </div>
-                                        <div className="space-y-4">
-                                            <div>
-                                                <label className="text-[10px] font-black uppercase opacity-40 block mb-2 tracking-widest">Wybrany Pakiet</label>
+
+                                        {/* LIMIT TICKETÓW OSTRZEŻENIE */}
+                                        {activeTickets >= 3 ? (
+                                            <div className="bg-red-500/10 border border-red-500/50 p-6 rounded-2xl text-center">
+                                                <i className="fas fa-lock text-red-500 text-3xl mb-4"></i>
+                                                <h4 className="text-white font-black uppercase text-sm mb-2">Limit Osiągnięty</h4>
+                                                <p className="text-xs opacity-60">Masz już 3 aktywne zgłoszenia. Zamknij chociaż jedno na Discordzie, aby móc wysłać nowe.</p>
+                                            </div>
+                                        ) : (
+                                            <div className="space-y-4">
+                                                <div className="flex justify-between items-center px-1">
+                                                    <label className="text-[10px] font-black uppercase opacity-40 tracking-widest">Wybrany Pakiet</label>
+                                                    <span className="text-[9px] font-black uppercase text-[#a855f7]">Aktywne: {activeTickets}/3</span>
+                                                </div>
                                                 <div className="w-full bg-[#1a1f33] p-4 rounded-2xl text-[#22d3ee] font-bold border border-white/5">{selectedService}</div>
-                                            </div>
-                                            <div>
-                                                <label className="text-[10px] font-black uppercase opacity-40 block mb-2 tracking-widest">Specyfikacja PC / Opis*</label>
+                                                
+                                                <label className="text-[10px] font-black uppercase opacity-40 block tracking-widest px-1">Specyfikacja PC / Opis*</label>
                                                 <textarea onChange={e => setFormData({...formData, specs: e.target.value})} className="w-full bg-[#1a1f33] p-4 rounded-2xl text-white h-24 focus:ring-1 ring-[#a855f7] outline-none border border-white/5 transition-all resize-none" placeholder="Opisz swoje wymagania..."></textarea>
-                                            </div>
-                                            <div>
-                                                <label className="text-[10px] font-black uppercase opacity-40 block mb-2 tracking-widest">Metoda Płatności*</label>
+                                                
+                                                <label className="text-[10px] font-black uppercase opacity-40 block tracking-widest px-1">Metoda Płatności*</label>
                                                 <select onChange={e => setFormData({...formData, payment: e.target.value})} className="w-full bg-[#1a1f33] p-4 rounded-2xl text-white focus:ring-1 ring-[#a855f7] outline-none border border-white/5 cursor-pointer">
                                                     <option value="">Wybierz...</option>
                                                     <option value="BLIK">BLIK (Nr Telefonu)</option>
                                                     <option value="PSC">PSC (PaySafeCard)</option>
                                                 </select>
+
+                                                <button onClick={sendOrder} disabled={loading} className="w-full bg-[#a855f7] py-6 rounded-2xl text-white font-black uppercase shadow-xl hover:brightness-110 transition-all flex items-center justify-center gap-3 active:scale-95 mt-4">
+                                                    {loading ? <i className="fas fa-circle-notch fa-spin text-xl"></i> : "Wyślij Zgłoszenie 🚀"}
+                                                </button>
                                             </div>
-                                        </div>
-                                        <button onClick={sendOrder} disabled={loading} className="w-full bg-[#a855f7] py-6 rounded-2xl text-white font-black uppercase shadow-xl hover:brightness-110 transition-all flex items-center justify-center gap-3 active:scale-95">
-                                            {loading ? <i className="fas fa-circle-notch fa-spin text-xl"></i> : "Wyślij Zgłoszenie 🚀"}
-                                        </button>
+                                        )}
                                     </div>
                                 ) : (
                                     <div className="p-12 text-center animate-in zoom-in duration-300">
