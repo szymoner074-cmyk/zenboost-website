@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
-    <!-- Skrypty React i Tailwind -->
+    <!-- Skrypty zewnętrzne -->
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -57,24 +57,26 @@
 <body class="custom-scroll">
     <div id="root"></div>
 
+    <!-- Integracja z Firebase -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         try {
             const firebaseConfig = JSON.parse(__firebase_config);
             const app = initializeApp(firebaseConfig);
             const auth = getAuth(app);
             const db = getFirestore(app);
-            const appId = typeof __app_id !== 'undefined' ? __app_id : 'zenboost-secure-v7';
+            const appId = typeof __app_id !== 'undefined' ? __app_id : 'zenboost-v8-bot-direct';
 
             window.ZenFirebase = { auth, db, appId, collection, addDoc, onSnapshot, signInAnonymously, signInWithCustomToken };
         } catch (e) {
-            console.error("Błąd bazy danych:", e);
+            console.error("Firebase error:", e);
         }
     </script>
 
+    <!-- Logika Aplikacji -->
     <script type="text/babel">
         const { useState, useEffect } = React;
 
@@ -88,37 +90,34 @@
             const [success, setSuccess] = useState(false);
             const [formData, setFormData] = useState({ details: '', payment: '' });
 
+            // Inicjalizacja sesji
             useEffect(() => {
-                const initAuth = async () => {
-                    if (window.ZenFirebase) {
-                        const { auth, signInAnonymously, signInWithCustomToken } = window.ZenFirebase;
-                        try {
-                            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                                await signInWithCustomToken(auth, __initial_auth_token);
-                            } else {
-                                await signInAnonymously(auth);
-                            }
+                const init = async () => {
+                    const timer = setInterval(async () => {
+                        if (window.ZenFirebase) {
+                            const { auth, signInAnonymously } = window.ZenFirebase;
+                            if (!auth.currentUser) await signInAnonymously(auth);
                             onAuthStateChanged(auth, setUser);
-                        } catch (e) { console.error("Auth error:", e); }
-                    }
+                            clearInterval(timer);
+                        }
+                    }, 500);
                 };
-                const timer = setTimeout(initAuth, 500);
-                return () => clearTimeout(timer);
+                init();
             }, []);
 
+            // Licznik ticketów (dla limitu 2)
             useEffect(() => {
                 if (!user || !window.ZenFirebase) return;
                 const { db, appId, collection, onSnapshot } = window.ZenFirebase;
                 const ticketsRef = collection(db, 'artifacts', appId, 'public', 'data', 'tickets');
                 
-                const unsub = onSnapshot(ticketsRef, (snapshot) => {
+                return onSnapshot(ticketsRef, (snapshot) => {
                     const count = snapshot.docs
                         .map(doc => doc.data())
                         .filter(t => t.userId === user.uid && t.status === 'open')
                         .length;
                     setActiveTickets(count);
-                }, (err) => console.error("Snapshot error:", err));
-                return () => unsub();
+                });
             }, [user]);
 
             const handleDiscordVerify = () => {
@@ -131,7 +130,7 @@
 
             const handleSend = async () => {
                 if (!formData.details || !formData.payment) return alert("Wypełnij wszystkie pola!");
-                if (activeTickets >= 2) return alert("Masz już 2 aktywne zgłoszenia!");
+                if (activeTickets >= 2) return alert("Masz już 2 aktywne zgłoszenia na tym koncie!");
 
                 setLoading(true);
                 const { db, appId, collection, addDoc } = window.ZenFirebase;
@@ -139,19 +138,8 @@
                 try {
                     const secureNick = `ZenClient_${user.uid.substring(0, 6)}`;
                     
-                    // 1. NAJPIERW ZAPISUJEMY DO BAZY (TO JEST PEWNE)
-                    await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'tickets'), {
-                        userId: user.uid,
-                        nick: secureNick,
-                        service: selectedService,
-                        details: formData.details,
-                        payment: formData.payment,
-                        status: 'open',
-                        createdAt: new Date().toISOString()
-                    });
-
-                    // 2. WYSYŁAMY DO BOTA (ALE NIE CZEKAMY W NIESKOŃCZONOŚĆ)
-                    fetch('https://api.zenboost-tweak.pl/api/nowe-zamowienie', {
+                    // 1. Wysyłamy do Twojego Bota (jak wcześniej)
+                    const botResponse = await fetch('https://api.zenboost-tweak.pl/api/nowe-zamowienie', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
@@ -161,12 +149,19 @@
                             platnosc: formData.payment,
                             secureId: user.uid
                         })
-                    }).catch(e => console.warn("Bot API error, but data is safe in DB."));
+                    });
 
-                    // 3. OD RAZU POKAZUJEMY SUKCES (KLIENT NIE CZEKA)
+                    // 2. Zapisujemy w bazie, żeby limit działał
+                    await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'tickets'), {
+                        userId: user.uid,
+                        nick: secureNick,
+                        status: 'open',
+                        createdAt: new Date().toISOString()
+                    });
+
                     setSuccess(true);
                 } catch (e) {
-                    alert("Błąd zapisu w bazie danych. Spróbuj ponownie.");
+                    alert("Błąd połączenia z botem. Spróbuj ponownie za chwilę.");
                 } finally {
                     setLoading(false);
                 }
@@ -194,7 +189,7 @@
             );
 
             return (
-                <div className="min-h-screen pb-20 selection-purple">
+                <div className="min-h-screen pb-20">
                     <header className="h-[50vh] flex flex-col items-center justify-center text-center px-4">
                         <h1 className="text-6xl md:text-8xl font-black text-white glow-text mb-6 tracking-tighter">ZEN<span className="text-[#a855f7]">BOOST</span></h1>
                         <p className="text-[0.7rem] font-black text-[#a855f7] tracking-[0.4em] uppercase mb-6">NASZ SERWER DISCORD ORAZ TIKTOK</p>
@@ -210,26 +205,25 @@
 
                     <div className="max-w-6xl mx-auto px-6">
                         <div className="text-center mb-16">
-                            <h2 className="text-4xl font-black text-white mb-4 uppercase">Dlaczego <span className="text-[#a855f7]">warto nas wybrać</span></h2>
-                            <p className="opacity-80">Najlepsze optymalizacje PC, Boty i Strony WWW w jednym miejscu.</p>
+                            <h2 className="text-4xl font-black text-white mb-4 uppercase leading-tight">Dlaczego <span className="text-[#a855f7]">warto nas wybrać</span></h2>
+                            <p className="opacity-80">Profesjonalne usługi PC, które przyspieszają Twoją rozgrywkę.</p>
                         </div>
                         
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-32">
                             {[
-                                { icon: "shield-alt", t: "Bezpieczeństwo", d: "Weryfikacja ID zapobiega trollom i chroni Twoją sesję." },
-                                { icon: "bolt", t: "Wydajność", d: "Zwiększamy FPS i redukujemy input lag do minimum." },
-                                { icon: "medal", t: "Profesjonalizm", d: "Ręczna konfiguracja każdego elementu systemu." }
+                                { icon: "shield-alt", t: "Bezpieczeństwo", d: "Weryfikacja Discord ID zapobiega trollowaniu zgłoszeń." },
+                                { icon: "bolt", t: "Wydajność", d: "Zwiększamy FPS i eliminujemy stuttering w każdej gierce." },
+                                { icon: "medal", t: "Profesjonalizm", d: "Ręczna konfiguracja systemu pod Twoje podzespoły." }
                             ].map((item, idx) => (
-                                <div key={idx} className="bg-[#161b2c] p-10 rounded-3xl border border-white/5 hover:border-[#a855f7] transition-all group shadow-2xl">
+                                <div key={idx} className="bg-[#161b2c] p-10 rounded-3xl border border-white/5 hover:border-[#a855f7] transition-all group">
                                     <i className={`fas fa-${item.icon} text-4xl text-[#a855f7] mb-6 group-hover:scale-110 transition-transform`}></i>
                                     <h4 className="text-white font-bold mb-2 text-xl">{item.t}</h4>
-                                    <p className="text-xs leading-relaxed opacity-70">{item.d}</p>
+                                    <p className="text-xs opacity-70 leading-relaxed">{item.d}</p>
                                 </div>
                             ))}
                         </div>
 
                         <div className="space-y-32">
-                            {/* PC BOOTS */}
                             <section>
                                 <h2 className="text-3xl font-black text-white text-center mb-16 uppercase tracking-widest"><i className="fas fa-bolt text-[#a855f7] mr-4"></i> OPTYMALIZACJE PC</h2>
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -239,7 +233,6 @@
                                 </div>
                             </section>
 
-                            {/* BOTS */}
                             <section>
                                 <h2 className="text-3xl font-black text-white text-center mb-16 uppercase tracking-widest"><i className="fas fa-robot text-[#a855f7] mr-4"></i> BOTY DISCORD</h2>
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -249,7 +242,6 @@
                                 </div>
                             </section>
 
-                            {/* WEB */}
                             <section>
                                 <h2 className="text-3xl font-black text-white text-center mb-16 uppercase tracking-widest"><i className="fas fa-globe text-[#a855f7] mr-4"></i> STRONY WWW</h2>
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -261,24 +253,26 @@
                         </div>
                     </div>
 
+                    {/* Sekcja Ownerów */}
                     <section className="bg-black/30 py-24 border-t border-white/5 mt-32">
                         <h2 className="text-white text-2xl font-black text-center uppercase tracking-[0.4em] mb-16">Ownerzy Serwera</h2>
                         <div className="flex flex-wrap justify-center gap-24">
                             <div className="text-center group">
-                                <div className="w-44 h-44 rounded-full border-4 border-[#a855f7] p-1.5 shadow-[0_0_20px_rgba(168,85,247,0.3)] overflow-hidden mx-auto mb-6 group-hover:scale-110 transition-all"><img src="z.png" className="w-full h-full object-cover rounded-full" /></div>
-                                <h3 className="text-xl font-black text-white mb-2 uppercase tracking-wider">ZENBOOST</h3>
-                                <p className="text-[#00d2ff] font-bold text-[0.7rem] uppercase tracking-widest">Twórca treści</p>
+                                <div className="w-44 h-44 rounded-full border-4 border-[#a855f7] p-1.5 shadow-[0_0_20px_rgba(168,85,247,0.3)] overflow-hidden mx-auto mb-6 group-hover:scale-110 transition-all duration-500"><img src="z.png" className="w-full h-full object-cover rounded-full" /></div>
+                                <h3 className="text-xl font-black text-white mb-2 tracking-widest">ZENBOOST</h3>
+                                <p className="text-[#00d2ff] font-bold text-[0.75rem] uppercase tracking-widest">Twórca treści</p>
                             </div>
                             <div className="text-center group">
-                                <div className="w-44 h-44 rounded-full border-4 border-[#a855f7] p-1.5 shadow-[0_0_20px_rgba(168,85,247,0.3)] overflow-hidden mx-auto mb-6 group-hover:scale-110 transition-all"><img src="s.jpg" className="w-full h-full object-cover rounded-full" /></div>
-                                <h3 className="text-xl font-black text-white mb-2 uppercase tracking-wider">SEYVEN</h3>
-                                <p className="text-[#00d2ff] font-bold text-[0.7rem] uppercase tracking-widest">Twórca strony oraz Bota discord</p>
+                                <div className="w-44 h-44 rounded-full border-4 border-[#a855f7] p-1.5 shadow-[0_0_20px_rgba(168,85,247,0.3)] overflow-hidden mx-auto mb-6 group-hover:scale-110 transition-all duration-500"><img src="s.jpg" className="w-full h-full object-cover rounded-full" /></div>
+                                <h3 className="text-xl font-black text-white mb-2 tracking-widest">SEYVEN</h3>
+                                <p className="text-[#00d2ff] font-bold text-[0.75rem] uppercase tracking-widest">Twórca strony oraz Bota discord</p>
                             </div>
                         </div>
                     </section>
 
+                    {/* MODAL */}
                     {isModalOpen && (
-                        <div className="fixed inset-0 bg-black/90 backdrop-blur-md flex items-center justify-center z-[10000] p-4 animate-in fade-in duration-300">
+                        <div className="fixed inset-0 bg-black/90 backdrop-blur-md flex items-center justify-center z-[10000] p-4">
                             <div className="bg-[#313338] w-full max-w-md rounded-2xl overflow-hidden shadow-2xl border border-white/10">
                                 <div className="p-4 flex justify-between border-b border-white/5">
                                     <h2 className="text-white font-bold flex items-center gap-3"><span className="bg-[#a855f7] w-6 h-6 rounded-full flex items-center justify-center text-[10px] text-white">ZB</span> Formularz ZenBoost</h2>
@@ -289,41 +283,37 @@
                                     <div className="p-10 text-center">
                                         <div className="w-20 h-20 bg-[#5865f2]/10 rounded-full flex items-center justify-center mx-auto mb-6"><i className="fab fa-discord text-[#5865f2] text-4xl"></i></div>
                                         <h3 className="text-white font-black text-xl mb-2 uppercase">Weryfikacja Konta</h3>
-                                        <p className="text-xs mb-8 opacity-70 leading-relaxed">Potwierdź swoją tożsamość, aby odblokować formularz. Twoje stałe ID zostanie zarejestrowane.</p>
-                                        <button onClick={handleDiscordVerify} className="discord-btn w-full py-4 rounded-xl text-white font-black uppercase flex items-center justify-center gap-3 shadow-xl">
+                                        <p className="text-xs mb-8 opacity-70 leading-relaxed">Potwierdź swoją tożsamość kontem Discord, aby wysłać zgłoszenie bezpośrednio do bota.</p>
+                                        <button onClick={handleDiscordVerify} className="discord-btn w-full py-4 rounded-xl text-white font-black uppercase flex items-center justify-center gap-3">
                                             {loading ? <i className="fas fa-circle-notch fa-spin"></i> : <><i className="fab fa-discord"></i> Zaloguj przez Discord</>}
                                         </button>
                                     </div>
                                 ) : !success ? (
                                     <div className="p-6">
-                                        <div className="bg-[#23a559]/10 border border-[#23a559] rounded-lg p-4 flex gap-3 mb-6 text-[10px]">
-                                            <i className="fas fa-user-check text-[#23a559] text-sm"></i>
-                                            <p className="text-white opacity-80">Zalogowano! Twoje unikalne ID klienta jest aktywne. Pole nicku jest zablokowane.</p>
-                                        </div>
                                         <div className="space-y-5">
                                             <div>
-                                                <label className="text-[10px] font-black uppercase text-[#b5bac1] mb-2 block tracking-widest">Twoje ID (Zablokowane)</label>
-                                                <input className="w-full bg-[#1e1f22] p-3 rounded text-sm text-[#a855f7] font-bold border border-white/5 opacity-50 cursor-not-allowed" readOnly value={`ID_${user?.uid?.substring(0, 10) || 'Active'}`} />
+                                                <label className="text-[10px] font-black uppercase text-[#b5bac1] mb-2 block tracking-widest">Twoje ID Sesji (Zablokowane)</label>
+                                                <input className="w-full bg-[#1e1f22] p-3 rounded text-sm text-[#a855f7] font-bold border border-white/5 opacity-50 cursor-not-allowed" readOnly value={`ID_${user?.uid?.substring(0, 10)}`} />
                                             </div>
                                             <div>
-                                                <label className="text-[10px] font-black uppercase text-[#b5bac1] mb-2 block tracking-widest">Specyfikacja / Opis*</label>
+                                                <label className="text-[10px] font-black uppercase text-[#b5bac1] mb-2 block tracking-widest">Opis zamówienia*</label>
                                                 <textarea className="w-full bg-[#1e1f22] p-3 rounded text-sm text-white outline-none h-24 focus:ring-1 ring-[#a855f7] border border-white/5 resize-none" placeholder="Podaj szczegóły..." value={formData.details} onChange={e => setFormData({...formData, details: e.target.value})} />
                                             </div>
                                             <div>
-                                                <label className="text-[10px] font-black uppercase text-[#b5bac1] mb-2 block tracking-widest">Płatność*</label>
+                                                <label className="text-[10px] font-black uppercase text-[#b5bac1] mb-2 block tracking-widest">Metoda Płatności*</label>
                                                 <select className="w-full bg-[#1e1f22] p-3 rounded text-sm text-white outline-none focus:ring-1 ring-[#a855f7] border border-white/5" value={formData.payment} onChange={e => setFormData({...formData, payment: e.target.value})}>
-                                                    <option value="" disabled>Wybierz metodę...</option>
+                                                    <option value="" disabled>Wybierz...</option>
                                                     <option value="BLIK">BLIK (Przelew na tel)</option>
                                                     <option value="PSC">PaySafeCard (PSC)</option>
                                                 </select>
                                             </div>
                                         </div>
                                         <div className="mt-8 flex justify-between items-center bg-[#2b2d31] -mx-6 -mb-6 p-6">
-                                            <span className="text-[10px] font-bold text-white uppercase opacity-50">Zgłoszenia: <span className={activeTickets >= 2 ? "text-red-500" : "text-green-500"}>{activeTickets} / 2</span></span>
+                                            <span className="text-[10px] font-bold text-white uppercase opacity-50">Zgłoszenia: <span className={activeTickets >= 2 ? "text-red-500" : "text-green-500"}>{activeTickets}/2</span></span>
                                             <div className="flex gap-4">
-                                                <button onClick={() => setIsModalOpen(false)} className="text-xs font-bold text-white hover:underline">Anuluj</button>
+                                                <button onClick={() => setIsModalOpen(false)} className="text-xs font-bold text-white hover:underline transition-all">Anuluj</button>
                                                 <button disabled={loading || activeTickets >= 2} onClick={handleSend} className={`px-8 py-3 rounded-lg font-black text-sm text-white transition-all shadow-lg ${loading || activeTickets >= 2 ? 'bg-gray-700 cursor-not-allowed opacity-50' : 'bg-[#5865f2] hover:scale-105 active:scale-95'}`}>
-                                                    {loading ? "Wysyłanie..." : activeTickets >= 2 ? "Limit!" : "Wyślij"}
+                                                    {loading ? "Wysyłanie..." : "Wyślij"}
                                                 </button>
                                             </div>
                                         </div>
@@ -331,8 +321,8 @@
                                 ) : (
                                     <div className="p-12 text-center animate-in zoom-in">
                                         <i className="fas fa-check-circle text-6xl text-green-500 mb-6"></i>
-                                        <h3 className="text-white font-black text-2xl mb-4 uppercase">WYSŁANO!</h3>
-                                        <p className="text-sm mb-10 opacity-70 text-white">Dane zapisane bezpiecznie. Zapraszamy na Discord, aby sfinalizować zamówienie.</p>
+                                        <h3 className="text-white font-black text-2xl mb-4 uppercase">WYSŁANO DO BOTA!</h3>
+                                        <p className="text-sm mb-10 opacity-70 text-white">Bot otrzymał Twoje zgłoszenie. Zapraszamy na Discord, aby sfinalizować zamówienie.</p>
                                         <a href="https://discord.gg/pH5yNGd22k" target="_blank" className="bg-green-600 hover:bg-green-500 text-white px-12 py-4 rounded-xl font-black uppercase inline-block transition-all shadow-xl">Otwórz ticket 🚀</a>
                                     </div>
                                 )}
