@@ -123,17 +123,7 @@
             box-shadow: 0 5px 15px rgba(88, 101, 242, 0.4);
         }
         
-        /* Ukrywanie socjali na środku po scrollu */
-        .hero-socials {
-            transition: all 0.5s ease;
-        }
-        .hero-socials.scrolled {
-            opacity: 0;
-            pointer-events: none;
-            transform: translateY(20px);
-        }
-
-        /* Styl Ticka */
+        /* Styl Ticka z fioletowym kółkiem */
         .tick-icon {
             width: 20px;
             height: 20px;
@@ -143,6 +133,7 @@
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
+            box-shadow: 0 0 10px rgba(168, 85, 247, 0.4);
         }
     </style>
 </head>
@@ -232,7 +223,7 @@
                 <div className={`service-card p-10 rounded-[45px] text-center ${featured ? 'border-[#a855f7] shadow-[0_0_30px_rgba(168,85,247,0.2)] scale-105 z-10' : ''}`}>
                     {featured && <div className="bg-[#a855f7] text-white text-[10px] font-black uppercase px-4 py-1 rounded-full self-center mb-4 tracking-widest shadow-[0_0_15px_#a855f7]">Polecane</div>}
                     <h3 className="text-2xl font-bold text-white mb-2">{title}</h3>
-                    <div className="text-5xl font-black text-[#gaming] my-8">{price} PLN</div>
+                    <div className="text-5xl font-black text-[#22d3ee] my-8">{price} PLN</div>
                     <ul className="text-left space-y-4 mb-10 opacity-70 flex-grow">
                         {features.map((f, i) => (
                             <li key={i} className="text-sm flex items-start gap-3">
@@ -331,7 +322,7 @@
                             ))}
                         </div>
 
-                        {/* PRICING SECTIONS */}
+                        {/* PRICING SECTIONS - WSZYSTKIE CENY TURKUSOWE + JEDNAKOWE TICKI */}
                         <div className="space-y-40 mb-40">
                             <section>
                                 <h2 className="text-4xl font-black text-white mb-16 uppercase text-center tracking-widest"><i className="fas fa-bolt text-[#a855f7] mr-4"></i> Optymalizacje PC</h2>
@@ -370,14 +361,14 @@
                                         <img src="z.png" className="w-full h-full object-cover rounded-full" alt="ZenBoost" />
                                     </div>
                                     <h3 className="owner-name text-3xl font-black uppercase tracking-tighter">ZenBoost</h3>
-                                    <p className="text-[#gaming] font-bold text-xs uppercase tracking-widest mt-2">Twórca Treści</p>
+                                    <p className="text-[#22d3ee] font-bold text-xs uppercase tracking-widest mt-2">Twórca Treści</p>
                                 </div>
                                 <div className="flex flex-col items-center group">
                                     <div className="avatar-container w-52 h-52 overflow-hidden mb-8">
                                         <img src="s.jpg" className="w-full h-full object-cover rounded-full" alt="Seyven" />
                                     </div>
                                     <h3 className="owner-name text-3xl font-black uppercase tracking-tighter">Seyven</h3>
-                                    <p className="text-[#gaming] font-bold text-xs uppercase tracking-widest mt-2 uppercase">Twórca Strony & Bota</p>
+                                    <p className="text-[#22d3ee] font-bold text-xs uppercase tracking-widest mt-2 uppercase">Twórca Strony & Bota</p>
                                 </div>
                             </div>
                         </section>
@@ -426,7 +417,7 @@
                                         <div className="space-y-4">
                                             <div>
                                                 <label className="text-[10px] font-black uppercase opacity-40 block mb-2 tracking-widest">Wybrany Pakiet</label>
-                                                <div className="w-full bg-[#1a1f33] p-4 rounded-2xl text-[#gaming] font-bold border border-white/5">{selectedService}</div>
+                                                <div className="w-full bg-[#1a1f33] p-4 rounded-2xl text-[#22d3ee] font-bold border border-white/5">{selectedService}</div>
                                             </div>
                                             <div>
                                                 <label className="text-[10px] font-black uppercase opacity-40 block mb-2 tracking-widest">Specyfikacja PC / Opis*</label>
