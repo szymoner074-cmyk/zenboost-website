@@ -63,7 +63,6 @@
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // BEZPIECZNE ŁADOWANIE KONFIGURACJI
         let firebaseConfig = { apiKey: "dummy-key", authDomain: "dummy-domain", projectId: "dummy-project" };
         try {
             if (typeof __firebase_config !== 'undefined' && __firebase_config) {
@@ -74,7 +73,7 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'zenboost-stable-v13';
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'zenboost-stable-v14';
 
         window.ZenFirebase = { auth, db, appId, collection, addDoc, onSnapshot, signInAnonymously };
     </script>
@@ -91,14 +90,17 @@
             const [selectedService, setSelectedService] = useState('');
             const [loading, setLoading] = useState(false);
             const [success, setSuccess] = useState(false);
+            
+            // Dane formularza
+            const [userNick, setUserNick] = useState(''); // Nick wpisany podczas "logowania"
             const [formData, setFormData] = useState({ details: '', payment: '' });
 
-            // Generujemy unikalny identyfikator urządzenia (Fingerprint)
+            // Unikalny identyfikator urządzenia (Fingerprint)
             const deviceFingerprint = useMemo(() => {
-                let id = localStorage.getItem('zen_tracker_id');
+                let id = localStorage.getItem('zen_secure_tracker');
                 if (!id) {
-                    id = Math.random().toString(36).substr(2, 6).toUpperCase();
-                    localStorage.setItem('zen_tracker_id', id);
+                    id = Math.random().toString(36).substr(2, 8).toUpperCase();
+                    localStorage.setItem('zen_secure_tracker', id);
                 }
                 return id;
             }, []);
@@ -127,7 +129,7 @@
                     return onSnapshot(ticketsRef, (snapshot) => {
                         const count = snapshot.docs
                             .map(doc => doc.data())
-                            .filter(t => t.userId === user.uid && t.status === 'open')
+                            .filter(t => (t.userId === user.uid || t.userId === deviceFingerprint) && t.status === 'open')
                             .length;
                         setActiveTickets(count);
                     }, () => {});
@@ -135,11 +137,12 @@
             }, [user]);
 
             const handleDiscordVerify = () => {
+                if (!userNick || userNick.length < 3) return alert("Wpisz swój poprawny Nick Discord!");
                 setLoading(true);
                 setTimeout(() => {
                     setIsVerified(true);
                     setLoading(false);
-                }, 800);
+                }, 1000);
             };
 
             const handleSend = async () => {
@@ -150,9 +153,10 @@
                 const currentDetails = formData.details;
                 const currentPayment = formData.payment;
                 
-                // Finalne unikalne ID (z sesji lub urządzenia)
-                const finalId = user?.uid || `TRACKER_${deviceFingerprint}`;
-                const displayNickForDiscord = `KLIENT-ID-${finalId.substring(0, 6)}`;
+                // Generujemy finalne ID i Nick dla bota
+                const finalId = user?.uid || deviceFingerprint;
+                const secureIdShort = finalId.substring(0, 6);
+                const displayNickForDiscord = `${userNick} (ID: ${secureIdShort})`;
 
                 // Sukces widoczny dla klienta natychmiast
                 setTimeout(() => {
@@ -160,12 +164,12 @@
                     setSuccess(true);
                 }, 400);
 
-                // WYSYŁKA DO BOTA - Tutaj przekazujemy ID jako "Klient"
+                // WYSYŁKA DO BOTA - ID i Nick pojawią się w polu "Klient" na Discordzie
                 fetch('https://api.zenboost-tweak.pl/api/nowe-zamowienie', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        klient: displayNickForDiscord, // To pojawi się u Ciebie na Discordzie!
+                        klient: displayNickForDiscord, 
                         gra: currentService,
                         specs: currentDetails,
                         platnosc: currentPayment,
@@ -178,8 +182,8 @@
                     const { db, appId, collection, addDoc } = window.ZenFirebase;
                     try {
                         addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'tickets'), {
-                            userId: user?.uid || finalId,
-                            nick: displayNickForDiscord,
+                            userId: finalId,
+                            nick: userNick,
                             service: currentService,
                             details: currentDetails,
                             payment: currentPayment,
@@ -229,7 +233,7 @@
                     <div className="max-w-6xl mx-auto px-6">
                         <div className="text-center mb-16">
                             <h2 className="text-4xl font-black text-white mb-4 uppercase leading-tight">Dlaczego <span className="text-[#a855f7]">warto nas wybrać</span></h2>
-                            <p className="opacity-80">Bezpieczne optymalizacje PC. Każde zgłoszenie jest weryfikowane cyfrowym ID.</p>
+                            <p className="opacity-80">Profesjonalne optymalizacje. Każdy użytkownik posiada unikalny identyfikator.</p>
                         </div>
                         
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-32">
@@ -292,6 +296,7 @@
                         </div>
                     </section>
 
+                    {/* MODAL */}
                     {isModalOpen && (
                         <div className="fixed inset-0 bg-black/90 backdrop-blur-md flex items-center justify-center z-[10000] p-4 animate-in fade-in duration-300">
                             <div className="bg-[#313338] w-full max-w-md rounded-2xl overflow-hidden shadow-2xl border border-white/10">
@@ -303,34 +308,51 @@
                                 {!isVerified ? (
                                     <div className="p-10 text-center">
                                         <div className="w-20 h-20 bg-[#5865f2]/10 rounded-full flex items-center justify-center mx-auto mb-6"><i className="fab fa-discord text-[#5865f2] text-4xl"></i></div>
-                                        <h3 className="text-white font-black text-xl mb-2 uppercase tracking-wide">Weryfikacja Tożsamości</h3>
-                                        <p className="text-xs mb-8 opacity-70 leading-relaxed">Kliknij przycisk poniżej, aby wygenerować unikalny kod sesji i odblokować formularz.</p>
+                                        <h3 className="text-white font-black text-xl mb-4 uppercase tracking-wide">Weryfikacja Konta</h3>
+                                        <div className="mb-6">
+                                            <label className="text-[10px] font-black uppercase text-[#b5bac1] mb-2 block tracking-widest text-left">Twój Nick Discord*</label>
+                                            <input 
+                                                className="w-full bg-[#1e1f22] p-3 rounded text-sm text-white outline-none focus:ring-1 ring-[#a855f7] border border-white/5" 
+                                                placeholder="np. Szymon#1234" 
+                                                value={userNick}
+                                                onChange={e => setUserNick(e.target.value)}
+                                            />
+                                        </div>
                                         <button onClick={handleDiscordVerify} className="discord-btn w-full py-4 rounded-xl text-white font-black uppercase flex items-center justify-center gap-3 shadow-xl active:scale-95">
-                                            <i className="fab fa-discord text-xl"></i> Połącz sesję
+                                            <i className="fab fa-discord text-xl"></i> Połącz i Weryfikuj
                                         </button>
+                                        <p className="text-[10px] mt-4 opacity-40 italic leading-relaxed">System przypisze Twój unikalny ID urządzenia do podanego nicku.</p>
                                     </div>
                                 ) : !success ? (
                                     <div className="p-6">
+                                        <div className="bg-[#23a559]/10 border border-[#23a559] rounded-lg p-3 mb-6 flex gap-3 text-[10px]">
+                                            <i className="fas fa-user-shield text-[#23a559] mt-0.5 text-sm"></i>
+                                            <p className="text-white opacity-90 uppercase font-bold tracking-tighter">Profil Zweryfikowany. Nick zablokowany dla bezpieczeństwa.</p>
+                                        </div>
                                         <div className="space-y-5">
                                             <div>
-                                                <label className="text-[10px] font-black uppercase text-[#b5bac1] mb-2 block tracking-widest">Twoje ID (Zablokowane)</label>
-                                                <input className="w-full bg-[#1e1f22] p-3 rounded text-sm text-[#a855f7] font-bold border border-white/5 opacity-50 cursor-not-allowed" readOnly value={`ID_${(user?.uid || deviceFingerprint).substring(0, 8)}`} />
+                                                <label className="text-[10px] font-black uppercase text-[#b5bac1] mb-2 block tracking-widest">Nick Discord (Zablokowany)</label>
+                                                <input className="w-full bg-[#1e1f22] p-3 rounded text-sm text-[#a855f7] font-bold border border-white/5 opacity-50 cursor-not-allowed" readOnly value={userNick} />
                                             </div>
                                             <div>
-                                                <label className="text-[10px] font-black uppercase text-[#b5bac1] mb-2 block tracking-widest">Szczegóły zamówienia*</label>
-                                                <textarea className="w-full bg-[#1e1f22] p-3 rounded text-sm text-white outline-none h-24 focus:ring-1 ring-[#a855f7] border border-white/5 resize-none transition-all" placeholder="Podaj specyfikację PC lub opis..." value={formData.details} onChange={e => setFormData({...formData, details: e.target.value})} />
+                                                <label className="text-[10px] font-black uppercase text-[#b5bac1] mb-2 block tracking-widest">ID Klienta</label>
+                                                <input className="w-full bg-[#1e1f22] p-3 rounded text-sm text-white font-bold border border-white/5 opacity-50 cursor-not-allowed" readOnly value={`ID_${deviceFingerprint.substring(0, 8)}`} />
+                                            </div>
+                                            <div>
+                                                <label className="text-[10px] font-black uppercase text-[#b5bac1] mb-2 block tracking-widest">Szczegóły / Specyfikacja*</label>
+                                                <textarea className="w-full bg-[#1e1f22] p-3 rounded text-sm text-white outline-none h-24 focus:ring-1 ring-[#a855f7] border border-white/5 resize-none transition-all" placeholder="Opisz zamówienie..." value={formData.details} onChange={e => setFormData({...formData, details: e.target.value})} />
                                             </div>
                                             <div>
                                                 <label className="text-[10px] font-black uppercase text-[#b5bac1] mb-2 block tracking-widest">Metoda Płatności*</label>
                                                 <select className="w-full bg-[#1e1f22] p-3 rounded text-sm text-white outline-none focus:ring-1 ring-[#a855f7] border border-white/5 cursor-pointer" value={formData.payment} onChange={e => setFormData({...formData, payment: e.target.value})}>
-                                                    <option value="" disabled>Wybierz...</option>
+                                                    <option value="" disabled>Wybierz metodę...</option>
                                                     <option value="BLIK">BLIK (Przelew na tel)</option>
                                                     <option value="PSC">PaySafeCard (PSC)</option>
                                                 </select>
                                             </div>
                                         </div>
                                         <div className="mt-8 flex justify-between items-center bg-[#2b2d31] -mx-6 -mb-6 p-6">
-                                            <span className="text-[10px] font-bold text-white uppercase opacity-50">Aktywne: <span className={activeTickets >= 2 ? "text-red-500" : "text-green-500"}>{activeTickets} / 2</span></span>
+                                            <span className="text-[10px] font-bold text-white uppercase opacity-50">Zgłoszenia: <span className={activeTickets >= 2 ? "text-red-500" : "text-green-500"}>{activeTickets} / 2</span></span>
                                             <div className="flex gap-4">
                                                 <button onClick={() => setIsModalOpen(false)} className="text-xs font-bold text-white hover:underline transition-all">Anuluj</button>
                                                 <button disabled={loading || activeTickets >= 2} onClick={handleSend} className={`px-8 py-3 rounded-lg font-black text-sm text-white transition-all shadow-lg ${loading || activeTickets >= 2 ? 'bg-gray-700 cursor-not-allowed opacity-50 shadow-none' : 'bg-[#5865f2] hover:bg-[#4752c4] active:scale-95 shadow-[#5865f2]/30'}`}>
@@ -342,8 +364,8 @@
                                 ) : (
                                     <div className="p-12 text-center animate-in zoom-in">
                                         <i className="fas fa-check-circle text-6xl text-green-500 mb-6 drop-shadow-[0_0_10px_rgba(34,197,94,0.4)]"></i>
-                                        <h3 className="text-white font-black text-2xl mb-4 uppercase">WYSŁANO DO BOTA!</h3>
-                                        <p className="text-sm mb-10 opacity-70 text-white font-medium">ID przypisane do zgłoszenia. Zapraszamy na nasz Discord!</p>
+                                        <h3 className="text-white font-black text-2xl mb-4 uppercase">WYSŁANO POMYŚLNIE!</h3>
+                                        <p className="text-sm mb-10 opacity-70 text-white font-medium">Ticket przypisany do konta {userNick}. Zapraszamy na Discord!</p>
                                         <a href="https://discord.gg/pH5yNGd22k" target="_blank" className="bg-green-600 hover:bg-green-500 text-white px-12 py-4 rounded-xl font-black uppercase inline-block transition-all shadow-xl active:scale-95">Otwórz ticket 🚀</a>
                                     </div>
                                 )}
