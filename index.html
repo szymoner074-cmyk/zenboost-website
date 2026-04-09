@@ -30,6 +30,7 @@
             color: var(--text-soft);
             overflow-x: hidden;
             margin: 0;
+            min-height: 100vh;
             -webkit-font-smoothing: antialiased;
         }
         .glow-text { text-shadow: 0 0 20px var(--p); }
@@ -67,17 +68,18 @@
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
+        // BEZPIECZNE ŁADOWANIE KONFIGURACJI
         const firebaseConfig = { apiKey: "dummy-key", authDomain: "dummy-domain", projectId: "dummy-project" };
         try {
             if (typeof __firebase_config !== 'undefined' && __firebase_config) {
                 Object.assign(firebaseConfig, JSON.parse(__firebase_config));
             }
-        } catch(e) {}
+        } catch(e) { console.error("Firebase config error"); }
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'zenboost-v23-email-verification';
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'zenboost-v24-final-fix';
 
         window.ZenFirebase = { auth, db, appId, collection, addDoc, onSnapshot, signInAnonymously };
     </script>
@@ -101,35 +103,43 @@
             const [formData, setFormData] = useState({ details: '', payment: '' });
 
             const deviceFingerprint = useMemo(() => {
-                let id = localStorage.getItem('zen_secure_v7');
+                let id = localStorage.getItem('zen_secure_v8');
                 if (!id) {
                     id = Math.random().toString(36).substr(2, 6).toUpperCase();
-                    localStorage.setItem('zen_secure_v7', id);
+                    localStorage.setItem('zen_secure_v8', id);
                 }
                 return id;
             }, []);
 
+            // Inicjalizacja sesji z opóźnieniem, aby nie blokować renderu
             useEffect(() => {
-                if (window.ZenFirebase && window.ZenFirebase.auth) {
-                    const { auth, signInAnonymously } = window.ZenFirebase;
-                    if (!auth.currentUser) signInAnonymously(auth).catch(() => {});
-                    const unsub = onAuthStateChanged(auth, setUser);
-                    return () => unsub();
-                }
+                const initAuth = async () => {
+                    if (window.ZenFirebase && window.ZenFirebase.auth) {
+                        const { auth, signInAnonymously } = window.ZenFirebase;
+                        try {
+                            if (!auth.currentUser) await signInAnonymously(auth);
+                            onAuthStateChanged(auth, setUser);
+                        } catch (e) { console.warn("Auth check deferred"); }
+                    }
+                };
+                setTimeout(initAuth, 500);
             }, []);
 
+            // Synchronizacja ticketów
             useEffect(() => {
                 if (!user || !window.ZenFirebase?.db) return;
                 const { db, appId, collection, onSnapshot } = window.ZenFirebase;
-                const ticketsRef = collection(db, 'artifacts', appId, 'public', 'data', 'tickets');
-                const unsub = onSnapshot(ticketsRef, (snapshot) => {
-                    const count = snapshot.docs
-                        .map(doc => doc.data())
-                        .filter(t => t.hwid === deviceFingerprint && t.status === 'open')
-                        .length;
-                    setActiveTickets(count);
-                }, (err) => {});
-                return () => unsub();
+                try {
+                    const ticketsRef = collection(db, 'artifacts', appId, 'public', 'data', 'tickets');
+                    const unsub = onSnapshot(ticketsRef, (snapshot) => {
+                        const count = snapshot.docs
+                            .map(doc => doc.data())
+                            .filter(t => (t.hwid === deviceFingerprint || t.userId === user.uid) && t.status === 'open')
+                            .length;
+                        setActiveTickets(count);
+                    }, (err) => {});
+                    return () => unsub();
+                } catch(e) {}
             }, [user, deviceFingerprint]);
 
             const handleDiscordVerify = async () => {
@@ -140,26 +150,26 @@
                 if (!trimmedNick || trimmedNick.length < 2) return alert("Wpisz poprawny nick Discord!");
                 
                 setLoading(true);
-                setVerifyStatus('Weryfikacja konta...');
+                setVerifyStatus('Weryfikacja danych...');
 
                 try {
                     const controller = new AbortController();
-                    const timeoutId = setTimeout(() => controller.abort(), 2500);
+                    const timeoutId = setTimeout(() => controller.abort(), 2000);
 
-                    // Wysyłamy zarówno NICK jak i EMAIL do bota
+                    // Wysyłamy Nick i Email do weryfikacji
                     const response = await fetch(`https://api.zenboost-tweak.pl/api/check-member?nick=${encodeURIComponent(trimmedNick)}&email=${encodeURIComponent(trimmedEmail)}`, {
                         signal: controller.signal
-                    }).catch(() => ({ status: 200 })); // Fallback: jeśli bot nie odpowiada, pozwól wejść
+                    }).catch(() => ({ status: 200 })); // Fallback: w razie błędu sieci, puść dalej
 
                     clearTimeout(timeoutId);
                     
                     if (response.status === 404) {
-                        setVerifyStatus('Dane nieprawidłowe lub brak Cię na serwerze!');
+                        setVerifyStatus('Nie znaleziono konta na serwerze!');
                         setTimeout(() => {
                             window.open('https://discord.gg/pH5yNGd22k', '_blank');
                             setLoading(false);
                             setVerifyStatus('');
-                        }, 1200);
+                        }, 1000);
                         return;
                     }
 
@@ -177,12 +187,12 @@
                 
                 setLoading(true);
                 const finalId = deviceFingerprint;
-                // Pełna informacja dla Twojego bota
                 const discordClientField = `👤 Klient: ${userNick}\n📧 E-mail: ${userEmail}\n🆔 HWID: ${finalId}`;
 
                 setLoading(false);
                 setSuccess(true);
 
+                // Wysyłka do bota
                 fetch('https://api.zenboost-tweak.pl/api/nowe-zamowienie', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -196,6 +206,7 @@
                     })
                 }).catch(() => {});
 
+                // Logowanie w bazie
                 if (window.ZenFirebase?.db) {
                     const { db, appId, collection, addDoc } = window.ZenFirebase;
                     try {
@@ -248,12 +259,12 @@
                     <div className="max-w-6xl mx-auto px-6">
                         <div className="text-center mb-16">
                             <h2 className="text-4xl font-black text-white mb-4 uppercase leading-tight tracking-tighter">Dlaczego <span className="text-[#a855f7]">warto nas wybrać</span></h2>
-                            <p className="opacity-80">Profesjonalne optymalizacje PC. Weryfikacja e-mail oraz Discord obowiązkowa.</p>
+                            <p className="opacity-80">Profesjonalne optymalizacje PC. Wymagana weryfikacja e-mail oraz Discord.</p>
                         </div>
                         
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-32">
                             {[
-                                { icon: "shield-alt", t: "Weryfikacja E-mail", d: "Twój adres e-mail jest sprawdzany, co gwarantuje autentyczność konta." },
+                                { icon: "shield-alt", t: "Bezpieczeństwo", d: "Weryfikacja e-mail i ID urządzenia chroni system przed spamem." },
                                 { icon: "bolt", t: "Wydajność", d: "Zwiększamy FPS i płynność w każdej gierce do maksimum." },
                                 { icon: "medal", t: "Zaufanie", d: "Setki zadowolonych graczy i lata doświadczenia w branży." }
                             ].map((item, idx) => (
@@ -315,19 +326,19 @@
                         <div className="fixed inset-0 bg-black/90 backdrop-blur-md flex items-center justify-center z-[10000] p-4 animate-in">
                             <div className="bg-[#313338] w-full max-w-md rounded-2xl overflow-hidden shadow-2xl border border-white/10">
                                 <div className="p-4 flex justify-between border-b border-white/5">
-                                    <h2 className="text-white font-bold flex items-center gap-3"><span className="bg-[#a855f7] w-6 h-6 rounded-full flex items-center justify-center text-[10px] text-white font-black">ZB</span> Weryfikacja</h2>
+                                    <h2 className="text-white font-bold flex items-center gap-3"><span className="bg-[#a855f7] w-6 h-6 rounded-full flex items-center justify-center text-[10px] text-white font-black">ZB</span> Formularz</h2>
                                     <i className="fas fa-times text-[#b5bac1] cursor-pointer hover:text-white" onClick={() => setIsModalOpen(false)}></i>
                                 </div>
                                 
                                 {!isVerified ? (
                                     <div className="p-10 text-center">
-                                        <div className="w-20 h-20 bg-[#5865f2]/10 rounded-full flex items-center justify-center mx-auto mb-6"><i className="fas fa-envelope-open-text text-[#5865f2] text-4xl"></i></div>
-                                        <h3 className="text-white font-black text-xl mb-4 uppercase">Logowanie do Systemu</h3>
+                                        <div className="w-20 h-20 bg-[#5865f2]/10 rounded-full flex items-center justify-center mx-auto mb-6"><i className="fas fa-user-shield text-[#5865f2] text-4xl"></i></div>
+                                        <h3 className="text-white font-black text-xl mb-4 uppercase">Weryfikacja Konta</h3>
                                         
                                         <div className="space-y-4 mb-6 text-left">
                                             <div>
-                                                <label className="text-[10px] font-black uppercase text-[#b5bac1] mb-2 block tracking-widest">E-mail z konta Discord*</label>
-                                                <input type="email" className="w-full bg-[#1e1f22] p-3 rounded text-sm text-white outline-none focus:ring-1 ring-[#a855f7] border border-white/5" placeholder="Podaj e-mail" value={userEmail} onChange={e => setUserEmail(e.target.value)} />
+                                                <label className="text-[10px] font-black uppercase text-[#b5bac1] mb-2 block tracking-widest">E-mail (Powiązany)*</label>
+                                                <input type="email" className="w-full bg-[#1e1f22] p-3 rounded text-sm text-white outline-none focus:ring-1 ring-[#a855f7] border border-white/5" placeholder="Podaj adres e-mail" value={userEmail} onChange={e => setUserEmail(e.target.value)} />
                                             </div>
                                             <div>
                                                 <label className="text-[10px] font-black uppercase text-[#b5bac1] mb-2 block tracking-widest">Nick Discord*</label>
@@ -344,16 +355,12 @@
                                     <div className="p-6">
                                         <div className="bg-[#23a559]/10 border border-[#23a559] rounded-lg p-3 mb-6 flex gap-3 text-[10px]">
                                             <i className="fas fa-user-check text-[#23a559] mt-0.5 text-sm"></i>
-                                            <p className="text-white opacity-90 uppercase font-bold tracking-tighter">Zalogowano jako: {userNick}</p>
+                                            <p className="text-white opacity-90 uppercase font-bold tracking-tighter">Zalogowano: {userNick}</p>
                                         </div>
                                         <div className="space-y-5">
                                             <div>
-                                                <label className="text-[10px] font-black uppercase text-[#b5bac1] mb-2 block tracking-widest">E-mail (Zablokowany)</label>
-                                                <input className="w-full bg-[#1e1f22] p-3 rounded text-sm text-[#a855f7] font-bold border border-white/5 opacity-50 cursor-not-allowed" readOnly value={userEmail} />
-                                            </div>
-                                            <div>
-                                                <label className="text-[10px] font-black uppercase text-[#b5bac1] mb-2 block tracking-widest">Szczegóły zamówienia*</label>
-                                                <textarea className="w-full bg-[#1e1f22] p-3 rounded text-sm text-white outline-none h-24 focus:ring-1 ring-[#a855f7] border border-white/5 resize-none" placeholder="Opisz zamówienie..." value={formData.details} onChange={e => setFormData({...formData, details: e.target.value})} />
+                                                <label className="text-[10px] font-black uppercase text-[#b5bac1] mb-2 block tracking-widest">Opis zamówienia*</label>
+                                                <textarea className="w-full bg-[#1e1f22] p-3 rounded text-sm text-white outline-none h-24 focus:ring-1 ring-[#a855f7] border border-white/5 resize-none" placeholder="Podaj szczegóły..." value={formData.details} onChange={e => setFormData({...formData, details: e.target.value})} />
                                             </div>
                                             <div>
                                                 <label className="text-[10px] font-black uppercase text-[#b5bac1] mb-2 block tracking-widest">Metoda Płatności*</label>
@@ -376,7 +383,7 @@
                                     <div className="p-12 text-center animate-in">
                                         <i className="fas fa-check-circle text-6xl text-green-500 mb-6 drop-shadow-[0_0_10px_rgba(34,197,94,0.4)]"></i>
                                         <h3 className="text-white font-black text-2xl mb-4 uppercase">WYSŁANO POMYŚLNIE!</h3>
-                                        <p className="text-sm mb-10 opacity-70 text-white font-medium">Ticket przypisany do e-maila: {userEmail}. Zapraszamy na Discord!</p>
+                                        <p className="text-sm mb-10 opacity-70 text-white font-medium">Sprawdź Discord, ticket został otwarty.</p>
                                         <a href="https://discord.gg/pH5yNGd22k" target="_blank" className="bg-green-600 hover:bg-green-500 text-white px-12 py-4 rounded-xl font-black uppercase inline-block transition-all shadow-xl active:scale-95">Otwórz ticket 🚀</a>
                                     </div>
                                 )}
