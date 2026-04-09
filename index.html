@@ -67,11 +67,11 @@
             const app = initializeApp(firebaseConfig);
             const auth = getAuth(app);
             const db = getFirestore(app);
-            const appId = typeof __app_id !== 'undefined' ? __app_id : 'zenboost-secure-v5';
+            const appId = typeof __app_id !== 'undefined' ? __app_id : 'zenboost-secure-v6';
 
             window.ZenFirebase = { auth, db, appId, collection, addDoc, onSnapshot, signInAnonymously };
         } catch (e) {
-            console.error("Firebase Init Error:", e);
+            console.error("Błąd inicjalizacji bazy danych:", e);
         }
     </script>
 
@@ -90,16 +90,20 @@
 
             useEffect(() => {
                 const init = async () => {
-                    if (window.ZenFirebase) {
-                        const { auth, signInAnonymously } = window.ZenFirebase;
-                        try {
-                            await signInAnonymously(auth);
-                            onAuthStateChanged(auth, setUser);
-                        } catch (e) { console.error("Auth init error:", e); }
-                    }
+                    const checkInterval = setInterval(async () => {
+                        if (window.ZenFirebase) {
+                            const { auth, signInAnonymously } = window.ZenFirebase;
+                            try {
+                                if (!auth.currentUser) {
+                                    await signInAnonymously(auth);
+                                }
+                                onAuthStateChanged(auth, setUser);
+                                clearInterval(checkInterval);
+                            } catch (e) { console.error("Logowanie nieudane:", e); }
+                        }
+                    }, 500);
                 };
-                const timer = setTimeout(init, 500);
-                return () => clearTimeout(timer);
+                init();
             }, []);
 
             useEffect(() => {
@@ -113,32 +117,33 @@
                         .filter(t => t.userId === user.uid && t.status === 'open')
                         .length;
                     setActiveTickets(count);
-                }, (err) => console.error("Sync error:", err));
+                }, (err) => console.error("Problem z licznikiem:", err));
                 return () => unsub();
             }, [user]);
 
             const handleDiscordVerify = () => {
-                if (!user) return;
                 setLoading(true);
+                // Przyspieszamy proces, aby użytkownik nie czekał
                 setTimeout(() => {
                     setIsVerified(true);
                     setLoading(false);
-                }, 1000);
+                }, 800);
             };
 
             const handleSend = async () => {
-                if (!formData.details || !formData.payment) return alert("Wypełnij wszystkie pola!");
-                if (activeTickets >= 2) return alert("Masz już 2 otwarte tickety!");
+                if (!formData.details || !formData.payment) return alert("Musisz wypełnić wszystkie pola!");
+                if (activeTickets >= 2) return alert("Masz już 2 otwarte tickety. Zamknij je przed wysłaniem kolejnego!");
 
                 setLoading(true);
                 const { db, appId, collection, addDoc } = window.ZenFirebase;
 
                 try {
-                    const secureNick = `ZenClient_${user.uid.substring(0, 6)}`;
+                    // Generujemy nick z ID sesji, unikając 'undefined'
+                    const uidSuffix = user ? user.uid.substring(0, 6) : Math.random().toString(36).substring(2, 8);
+                    const secureNick = `ZenClient_${uidSuffix}`;
                     
-                    // 1. Zapis do Firebase (Zawsze priorytet)
                     await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'tickets'), {
-                        userId: user.uid,
+                        userId: user?.uid || 'anon',
                         nick: secureNick,
                         service: selectedService,
                         details: formData.details,
@@ -147,9 +152,8 @@
                         createdAt: new Date().toISOString()
                     });
 
-                    // 2. Wysłanie do Twojego bota (z Timeoutem, żeby nie wisiało)
                     const controller = new AbortController();
-                    const timeoutId = setTimeout(() => controller.abort(), 5000);
+                    const timeoutId = setTimeout(() => controller.abort(), 4000);
 
                     try {
                         await fetch('https://api.zenboost-tweak.pl/api/nowe-zamowienie', {
@@ -160,18 +164,18 @@
                                 gra: selectedService,
                                 specs: formData.details,
                                 platnosc: formData.payment,
-                                secureId: user.uid
+                                secureId: user?.uid || 'anon'
                             }),
                             signal: controller.signal
                         });
                         clearTimeout(timeoutId);
                     } catch (e) {
-                        console.warn("Bot API timeout/error, but ticket saved in DB.");
+                        console.warn("API bota nie odpowiedziało, ale ticket zapisano w bazie.");
                     }
 
                     setSuccess(true);
                 } catch (e) {
-                    alert("Błąd podczas wysyłania: " + e.message);
+                    alert("Błąd serwera: " + e.message);
                 } finally {
                     setLoading(false);
                 }
@@ -207,7 +211,7 @@
                             <a href="https://discord.gg/pH5yNGd22k" target="_blank" className="w-14 h-14 rounded-full bg-[#161b2c] border-2 border-[#a855f7] flex items-center justify-center text-white shadow-[0_0_15px_rgba(168,85,247,0.4)] hover:scale-110 transition-transform">
                                 <i className="fab fa-discord text-2xl"></i>
                             </a>
-                            <a href="https://www.tiktok.com/@dexboost1" target="_blank" className="w-14 h-14 rounded-full bg-[#161b2c] border-2 border-[#a855f7] flex items-center justify-center text-white shadow-[0_0_15px_rgba(168,85,247,0.4)] hover:scale-110 transition-transform">
+                            <a href="https://tiktok.com/@seyven" target="_blank" className="w-14 h-14 rounded-full bg-[#161b2c] border-2 border-[#a855f7] flex items-center justify-center text-white shadow-[0_0_15px_rgba(168,85,247,0.4)] hover:scale-110 transition-transform">
                                 <i className="fab fa-tiktok text-2xl"></i>
                             </a>
                         </div>
@@ -216,7 +220,7 @@
                     <div className="max-w-6xl mx-auto px-6">
                         <div className="text-center mb-16">
                             <h2 className="text-4xl font-black text-white mb-4 uppercase">Dlaczego <span className="text-[#a855f7]">warto nas wybrać</span></h2>
-                            <p className="opacity-80">Profesjonalne optymalizacje, które czuć w każdej gierce.</p>
+                            <p className="opacity-80">Profesjonalne optymalizacje, które poczujesz w każdej grze.</p>
                         </div>
                         
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-32">
@@ -296,11 +300,10 @@
                                             <i className="fab fa-discord text-[#5865f2] text-4xl"></i>
                                         </div>
                                         <h3 className="text-white font-black text-xl mb-2 uppercase">Weryfikacja Konta</h3>
-                                        <p className="text-xs mb-8 opacity-70 leading-relaxed">Potwierdź swoją tożsamość, aby odblokować formularz. Twoje stałe ID zostanie zarejestrowane.</p>
+                                        <p className="text-xs mb-8 opacity-70 leading-relaxed">Potwierdź swoją tożsamość, aby odblokować formularz. Twoje ID zostanie zarejestrowane.</p>
                                         <button 
                                             onClick={handleDiscordVerify}
-                                            disabled={loading || !user}
-                                            className="discord-btn w-full py-4 rounded-xl text-white font-black uppercase flex items-center justify-center gap-3 shadow-xl disabled:opacity-50"
+                                            className="discord-btn w-full py-4 rounded-xl text-white font-black uppercase flex items-center justify-center gap-3 shadow-xl"
                                         >
                                             {loading ? <i className="fas fa-circle-notch fa-spin"></i> : <><i className="fab fa-discord"></i> Zaloguj przez Discord</>}
                                         </button>
@@ -309,16 +312,16 @@
                                     <div className="p-6">
                                         <div className="bg-[#23a559]/10 border border-[#23a559] rounded-lg p-4 flex gap-3 mb-6 text-[10px]">
                                             <i className="fas fa-user-check text-[#23a559] text-sm"></i>
-                                            <p className="text-white opacity-80">Zalogowano jako: <strong>ZenClient_{user?.uid.substring(0,6)}</strong>. Nick jest zablokowany w celach bezpieczeństwa.</p>
+                                            <p className="text-white opacity-80">Zalogowano! Twoje unikalne ID klienta jest aktywne. Pole nicku jest zablokowane.</p>
                                         </div>
                                         <div className="space-y-5">
                                             <div>
-                                                <label className="text-[10px] font-black uppercase text-[#b5bac1] mb-2 block tracking-widest">Twoje ID (Read-only)</label>
-                                                <input className="w-full bg-[#1e1f22] p-3 rounded text-sm text-[#a855f7] font-bold border border-white/5 opacity-50" readOnly value={`ID_${user?.uid.substring(0, 10)}`} />
+                                                <label className="text-[10px] font-black uppercase text-[#b5bac1] mb-2 block tracking-widest">Twoje ID (Zablokowane)</label>
+                                                <input className="w-full bg-[#1e1f22] p-3 rounded text-sm text-[#a855f7] font-bold border border-white/5 opacity-50" readOnly value={`Verified_${user?.uid?.substring(0, 8) || 'Active'}`} />
                                             </div>
                                             <div>
                                                 <label className="text-[10px] font-black uppercase text-[#b5bac1] mb-2 block tracking-widest">Specyfikacja / Opis*</label>
-                                                <textarea className="w-full bg-[#1e1f22] p-3 rounded text-sm text-white outline-none h-24 focus:ring-1 ring-[#a855f7] border border-white/5 resize-none" placeholder="Podaj dane techniczne..." value={formData.details} onChange={e => setFormData({...formData, details: e.target.value})} />
+                                                <textarea className="w-full bg-[#1e1f22] p-3 rounded text-sm text-white outline-none h-24 focus:ring-1 ring-[#a855f7] border border-white/5 resize-none" placeholder="Podaj szczegóły..." value={formData.details} onChange={e => setFormData({...formData, details: e.target.value})} />
                                             </div>
                                             <div>
                                                 <label className="text-[10px] font-black uppercase text-[#b5bac1] mb-2 block tracking-widest">Płatność*</label>
@@ -330,7 +333,7 @@
                                             </div>
                                         </div>
                                         <div className="mt-8 flex justify-between items-center bg-[#2b2d31] -mx-6 -mb-6 p-6">
-                                            <span className="text-[10px] font-bold text-white uppercase opacity-50">Aktywne: <span className={activeTickets >= 2 ? "text-red-500" : "text-green-500"}>{activeTickets} / 2</span></span>
+                                            <span className="text-[10px] font-bold text-white uppercase opacity-50">Zgłoszenia: <span className={activeTickets >= 2 ? "text-red-500" : "text-green-500"}>{activeTickets} / 2</span></span>
                                             <div className="flex gap-4">
                                                 <button onClick={() => setIsModalOpen(false)} className="text-xs font-bold text-white hover:underline transition-all">Anuluj</button>
                                                 <button 
@@ -338,16 +341,16 @@
                                                     onClick={handleSend}
                                                     className={`px-8 py-3 rounded-lg font-black text-sm text-white transition-all shadow-lg ${loading || activeTickets >= 2 ? 'bg-gray-700 cursor-not-allowed opacity-50' : 'bg-[#5865f2] hover:scale-105 active:scale-95'}`}
                                                 >
-                                                    {loading ? "Wysyłanie..." : activeTickets >= 2 ? "Limit!" : "Wyślij ticket"}
+                                                    {loading ? "Wysyłanie..." : activeTickets >= 2 ? "Limit!" : "Wyślij"}
                                                 </button>
                                             </div>
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="p-12 text-center animate-bounce-in">
-                                        <i className="fas fa-check-circle text-6xl text-green-500 mb-6 drop-shadow-[0_0_10px_rgba(34,197,94,0.4)]"></i>
+                                    <div className="p-12 text-center">
+                                        <i className="fas fa-check-circle text-6xl text-green-500 mb-6"></i>
                                         <h3 className="text-white font-black text-2xl mb-4 uppercase">WYSŁANO!</h3>
-                                        <p className="text-sm mb-10 opacity-70 text-white">Zapraszamy na nasz Discord, aby sfinalizować zamówienie.</p>
+                                        <p className="text-sm mb-10 opacity-70 text-white">Zapraszamy na Discord, aby sfinalizować zamówienie.</p>
                                         <a href="https://discord.gg/pH5yNGd22k" target="_blank" className="bg-green-600 hover:bg-green-500 text-white px-12 py-4 rounded-xl font-black uppercase inline-block transition-all shadow-xl">Otwórz ticket 🚀</a>
                                     </div>
                                 )}
