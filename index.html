@@ -63,6 +63,8 @@
             border: 1px solid var(--p);
             box-shadow: 0 0 30px rgba(168, 85, 247, 0.2);
         }
+        .animate-spin-slow { animation: spin 3s linear infinite; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
     </style>
 </head>
 <body class="custom-scroll">
@@ -74,7 +76,8 @@
         // --- ⚙️ KONFIGURACJA OAUTH2 (DANE Z TWOJEGO PANELU) ---
         const CLIENT_ID = '1490818531955183747'; 
         const REDIRECT_URI = encodeURIComponent(window.location.origin + '/');
-        const DISCORD_AUTH_URL = `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code&scope=identify%20email`;
+        // Dodano prompt=consent, aby wymusić okno autoryzacji
+        const DISCORD_AUTH_URL = `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code&scope=identify%20email&prompt=consent`;
         const API_BASE = 'https://api.zenboost-tweak.pl';
 
         const App = () => {
@@ -84,6 +87,7 @@
             const [selectedService, setSelectedService] = useState('');
             const [formData, setFormData] = useState({ specs: '', payment: '' });
             const [success, setSuccess] = useState(false);
+            const [refreshing, setRefreshing] = useState(false);
 
             useEffect(() => {
                 const urlParams = new URLSearchParams(window.location.search);
@@ -102,7 +106,6 @@
                     const data = await res.json();
 
                     if (data.authorized) {
-                        // Zapisujemy użytkownika niezależnie od tego czy jest na serwerze (onServer sprawdzimy w formularzu)
                         setUser({
                             ...data.user,
                             onServer: data.onServer
@@ -115,11 +118,28 @@
                 setLoading(false);
             };
 
+            // Nowa funkcja do sprawdzania obecności na serwerze bez przelogowania
+            const checkServerStatus = async () => {
+                if (!user) return;
+                setRefreshing(true);
+                try {
+                    const res = await fetch(`${API_BASE}/api/check-membership?userId=${user.id}`);
+                    const data = await res.json();
+                    setUser(prev => ({ ...prev, onServer: data.onServer }));
+                    if (data.onServer) {
+                        console.log("Status zaktualizowany: Jesteś na serwerze!");
+                    }
+                } catch (e) {
+                    console.error("Błąd sprawdzania statusu:", e);
+                }
+                setTimeout(() => setRefreshing(false), 800);
+            };
+
             const handleSendOrder = async () => {
                 if (!formData.specs || !formData.payment) return alert("Wypełnij wszystkie pola!");
                 setLoading(true);
                 try {
-                    await fetch(`${API_BASE}/api/nowe-zamowienie`, {
+                    const res = await fetch(`${API_BASE}/api/nowe-zamowienie`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
@@ -132,7 +152,7 @@
                             platnosc: formData.payment
                         })
                     });
-                    setSuccess(true);
+                    if (res.ok) setSuccess(true);
                 } catch (e) { alert("Błąd połączenia."); }
                 setLoading(false);
             };
@@ -162,9 +182,9 @@
                 return (
                     <div className="h-screen flex flex-col items-center justify-center text-center px-4">
                         <h1 className="text-6xl md:text-8xl font-black text-white glow-text mb-6 uppercase tracking-tighter">ZEN<span className="text-[#a855f7]">BOOST</span></h1>
-                        <p className="text-lg mb-10 max-w-md opacity-70">Zaloguj się kontem Discord, aby uzyskać dostęp do naszych profesjonalnych usług.</p>
+                        <p className="text-lg mb-10 max-w-md opacity-70 leading-relaxed">Zaloguj się kontem Discord, aby uzyskać dostęp do strefy Premium.</p>
                         <a href={DISCORD_AUTH_URL} className="discord-btn px-12 py-6 rounded-2xl text-white font-black uppercase flex items-center gap-4 text-xl shadow-2xl">
-                            {loading ? <i className="fas fa-circle-notch fa-spin"></i> : <><i className="fab fa-discord text-3xl"></i> Zaloguj przez Discord</>}
+                            {loading ? <i className="fas fa-circle-notch fa-spin text-2xl"></i> : <><i className="fab fa-discord text-3xl"></i> Zaloguj przez Discord</>}
                         </a>
                     </div>
                 );
@@ -190,7 +210,6 @@
                     </header>
 
                     <main className="max-w-6xl mx-auto px-6 space-y-32">
-                        {/* Dlaczego My */}
                         <section className="grid grid-cols-1 md:grid-cols-3 gap-8">
                             {[
                                 { icon: "shield-alt", t: "Bezpieczeństwo", d: "ID urządzenia i weryfikacja OAuth2 gwarantują bezpieczne zamówienie." },
@@ -205,7 +224,6 @@
                             ))}
                         </section>
 
-                        {/* Sekcje cenowe */}
                         <section>
                             <h2 className="text-3xl font-black text-white text-center mb-16 uppercase tracking-widest"><i className="fas fa-bolt text-[#a855f7] mr-4"></i> OPTYMALIZACJE PC</h2>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -245,7 +263,7 @@
                             </div>
                             <div className="group">
                                 <div className="w-44 h-44 rounded-full border-4 border-[#a855f7] p-1.5 shadow-[0_0_25px_rgba(168,85,247,0.3)] overflow-hidden mx-auto mb-6 group-hover:scale-110 transition-all duration-500"><img src="s.jpg" className="w-full h-full object-cover rounded-full" /></div>
-                                <h3 className="text-xl font-black text-white mb-2 uppercase tracking-widest">SEYVEN</h3>
+                                <h3 className="text-xl font-black text-white mb-2 uppercase tracking-widest uppercase">SEYVEN</h3>
                                 <p className="text-[#00d2ff] font-bold text-[0.7rem] uppercase tracking-widest">Twórca strony & bota</p>
                             </div>
                         </div>
@@ -260,21 +278,22 @@
                                     <i className="fas fa-times cursor-pointer text-[#b5bac1] hover:text-white" onClick={() => setIsModalOpen(false)}></i>
                                 </div>
 
-                                {/* Sprawdzanie czy użytkownik jest na serwerze */}
                                 {!user.onServer ? (
                                     <div className="p-10 text-center space-y-6">
                                         <div className="w-20 h-20 bg-yellow-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
                                             <i className="fas fa-exclamation-triangle text-4xl text-yellow-500"></i>
                                         </div>
                                         <h2 className="text-white text-xl font-black uppercase">Nie jesteś na serwerze!</h2>
-                                        <p className="text-sm opacity-60">Aby złożyć zamówienie, musisz być członkiem naszego Discorda. Dołącz teraz, a potem wróć tutaj.</p>
+                                        <p className="text-sm opacity-60 leading-relaxed">Aby złożyć zamówienie, musisz być członkiem naszego Discorda. Dołącz teraz, a potem kliknij przycisk poniżej.</p>
                                         <div className="flex flex-col gap-4">
                                             <a href="https://discord.gg/pH5yNGd22k" target="_blank" className="bg-[#5865f2] block py-4 rounded-xl text-white font-black uppercase shadow-xl hover:brightness-110">DOŁĄCZ DO NAS 🚀</a>
                                             <button 
-                                                onClick={() => window.location.reload()} 
-                                                className="text-xs font-bold text-[#a855f7] hover:underline"
+                                                onClick={checkServerStatus}
+                                                disabled={refreshing}
+                                                className="text-sm font-bold text-[#a855f7] hover:underline flex items-center justify-center gap-3 mx-auto mt-2"
                                             >
-                                                Zrobiłem to, odśwież status
+                                                <i className={`fas fa-sync-alt ${refreshing ? 'animate-spin' : ''}`}></i>
+                                                {refreshing ? 'Sprawdzanie...' : 'Zrobiłem to, sprawdź ponownie'}
                                             </button>
                                         </div>
                                     </div>
