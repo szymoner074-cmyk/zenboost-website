@@ -46,8 +46,10 @@
         .why-card i { font-size: 2.8rem; color: var(--p); margin-bottom: 20px; }
         .why-card h4 { color: #fff; margin-bottom: 12px; font-weight: 800; }
 
-        /* KATEGORIE BIAŁE */
-        .category-title { text-align: center; margin: 80px 0 40px; font-size: 2.5rem; font-weight: 900; text-transform: uppercase; color: #ffffff; letter-spacing: 4px; }
+        /* KATEGORIE WEDŁUG ZDJĘĆ */
+        .category-title { text-align: center; margin: 100px 0 40px; font-size: clamp(1.8rem, 4vw, 2.5rem); font-weight: 900; text-transform: uppercase; color: #ffffff; letter-spacing: 4px; display: flex; align-items: center; justify-content: center; gap: 15px; }
+        .category-title i { color: var(--p); font-size: 0.9em; }
+
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px; margin-bottom: 60px; }
         
         .price-card { background: var(--card); border-radius: 30px; padding: 45px; border: 1px solid rgba(255,255,255,0.03); transition: var(--t); position: relative; display: flex; flex-direction: column; }
@@ -55,18 +57,17 @@
         .price-card.featured { border: 2px solid var(--p); box-shadow: 0 0 25px var(--p-glow); }
         .badge-recommended { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: var(--p); color: white; padding: 8px 25px; border-radius: 50px; font-weight: 900; font-size: 0.7rem; text-transform: uppercase; box-shadow: 0 0 20px var(--p); z-index: 10; }
 
-        /* CENY JASNONIEBIESKIE */
         .price-tag { font-size: 2.8rem; font-weight: 900; margin: 20px 0; color: var(--accent); text-align: center; }
         .price-tag span { font-size: 1.8rem; margin-left: 5px; }
 
         ul { list-style: none; margin-bottom: 30px; flex-grow: 1; }
-        ul li { margin: 12px 0; color: var(--text-soft); display: flex; align-items: center; font-size: 0.85rem; }
-        ul li i { color: var(--p); margin-right: 12px; font-size: 1rem; }
+        ul li { margin: 15px 0; color: var(--text-soft); display: flex; align-items: center; font-size: 0.9rem; font-weight: 600; }
+        ul li i { color: var(--p); margin-right: 15px; font-size: 1.1rem; }
 
         .buy-btn { width: 100%; background: var(--p); color: #fff; border: none; padding: 18px; border-radius: 15px; font-weight: 800; cursor: pointer; transition: var(--t); text-transform: uppercase; }
         .buy-btn:hover { transform: scale(1.05); filter: brightness(1.2); }
 
-        /* OWNERZY - ZMODYFIKOWANA SEKCJA */
+        /* OWNERZY */
         .owner-section { text-align: center; padding: 100px 20px; background: rgba(0,0,0,0.3); border-top: 1px solid rgba(255,255,255,0.05); }
         .owner-grid { display: flex; justify-content: center; gap: 80px; flex-wrap: wrap; margin-top: 40px; }
         .owner-card { text-align: center; transition: var(--t); width: 280px; }
@@ -74,24 +75,16 @@
         .avatar-frame { width: 170px; height: 170px; border-radius: 50%; border: 4px solid var(--p); padding: 6px; box-shadow: 0 0 20px var(--p-glow); overflow: hidden; margin: 0 auto 20px; transition: var(--t-slow); }
         .avatar-frame img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
         
-        .owner-nick { font-size: 1.8rem; font-weight: 900; color: #fff; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px; transition: var(--t); }
+        .owner-nick { font-size: 1.8rem; font-weight: 900; color: #fff; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; transition: var(--t); }
         
-        .owner-role { font-size: 0.85rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
-        .role-zen { color: var(--accent); }
-        .role-seyven { color: var(--p); }
+        /* ROLE OBU OWNERÓW NA NIEBIESKO */
+        .owner-role { font-size: 0.85rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); transition: var(--t); }
 
         .owner-card:hover .avatar-frame { transform: scale(1.1) rotate(5deg); border-color: #fff; box-shadow: 0 0 50px var(--p); }
         .owner-card:hover .owner-nick { color: var(--p); text-shadow: 0 0 15px var(--p); }
+        .owner-card:hover .owner-role { filter: brightness(1.2); text-shadow: 0 0 8px var(--accent); }
 
-        footer { text-align: center; padding: 80px 20px; border-top: 1px solid rgba(255,255,255,0.05); }
-        .creator-title { font-size: 2rem; font-weight: 900; color: var(--p); margin-bottom: 25px; text-transform: uppercase; letter-spacing: 3px; }
-        .creator-avatar { width: 90px; height: 90px; border-radius: 50%; border: 3px solid var(--p); padding: 5px; margin: 0 auto 15px; overflow: hidden; transition: var(--t-slow); box-shadow: 0 0 15px var(--p); cursor: pointer; }
-        .creator-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
-        .creator-avatar:hover { transform: scale(1.15) rotate(10deg); box-shadow: 0 0 35px var(--p); border-color: #fff; }
-        .creator-nick { font-weight: 900; color: var(--text-soft); text-transform: uppercase; font-size: 1.2rem; transition: var(--t); }
-        footer:hover .creator-nick { color: var(--p); text-shadow: 0 0 10px var(--p); }
-
-        /* MODAL - NO LAG */
+        /* MODAL */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; z-index: 9999; transform: translateZ(0); }
         .modal-content { background: #313338; border-radius: 8px; width: 95%; max-width: 440px; text-align: left; overflow: hidden; box-shadow: 0 8px 16px rgba(0,0,0,0.24); border: none; }
         .modal-header { padding: 16px; display: flex; justify-content: space-between; align-items: center; }
@@ -106,7 +99,7 @@
         .form-group { margin-bottom: 16px; }
         .form-group label { display: block; color: #b5bac1; font-size: 12px; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; }
         
-        .modal-input, .modal-select, .modal-textarea { width: 100%; background: #1e1f22; border: none; border-radius: 3px; padding: 10px; color: var(--text-soft) !important; font-family: inherit; font-size: 16px; outline: none; }
+        .modal-input, .modal-select, .modal-textarea { width: 100%; background: #1e1f22; border: none; border-radius: 3px; padding: 10px; color: var(--text-soft) !important; font-family: inherit; font-size: 16px; outline: none; transition: none; }
         .modal-textarea { resize: none; min-height: 80px; }
         
         input:-webkit-autofill, textarea:-webkit-autofill { -webkit-text-fill-color: var(--text-soft) !important; -webkit-box-shadow: 0 0 0px 1000px #1e1f22 inset !important; }
@@ -149,7 +142,8 @@
         <div class="why-card"><i class="fas fa-medal"></i><h4>Profesjonalizm</h4><p>Każdy detal systemu przygotowujemy z najwyższą starannością i pasją.</p></div>
     </div>
 
-    <h2 class="category-title">⚡ Optymalizacje PC</h2>
+    <!-- OPTYMALIZACJE PC -->
+    <h2 class="category-title"><i class="fas fa-bolt"></i> OPTYMALIZACJE PC</h2>
     <div class="grid">
         <div class="price-card">
             <h3>Zwykły Boost</h3>
@@ -172,7 +166,8 @@
         </div>
     </div>
 
-    <h2 class="category-title">🤖 Boty Discord</h2>
+    <!-- BOTY DISCORD -->
+    <h2 class="category-title"><i class="fas fa-robot"></i> BOTY DISCORD</h2>
     <div class="grid">
         <div class="price-card">
             <h3>Startowy Bot</h3>
@@ -183,33 +178,39 @@
         <div class="price-card featured"><div class="badge-recommended">POLECANE!</div><h3>Ekonomiczny Plus</h3><div class="price-tag">500<span>PLN</span></div><ul><li><i class="fas fa-check-circle"></i> Pełna Ekonomia & Sklep</li><li><i class="fas fa-check-circle"></i> Bazy Danych SQL</li></ul><button class="buy-btn" onclick="openModal('Ekonomiczny Plus (500 PLN)')">WYBIERZ</button></div>
         <div class="price-card"><h3>Mega Custom Bot</h3><div class="price-tag">1000<span>PLN</span></div><ul><li><i class="fas fa-check-circle"></i> Dashboard WWW Premium</li><li><i class="fas fa-check-circle"></i> Płatności BLIK</li></ul><button class="buy-btn" onclick="openModal('Mega Custom Bot (1000 PLN)')">WYBIERZ</button></div>
     </div>
+
+    <!-- STRONY WWW -->
+    <h2 class="category-title"><i class="fas fa-globe"></i> STRONY WWW</h2>
+    <div class="grid">
+        <div class="price-card">
+            <h3>Landing Page</h3>
+            <div class="price-tag">300<span>PLN</span></div>
+            <ul><li><i class="fas fa-check-circle"></i> Modern One-Page</li><li><i class="fas fa-check-circle"></i> Responsywność Mobile</li></ul>
+            <button class="buy-btn" onclick="openModal('Landing Page (300 PLN)')">WYBIERZ</button>
+        </div>
+        <div class="price-card featured"><div class="badge-recommended">POLECANE!</div><h3>Gamingowa</h3><div class="price-tag">600<span>PLN</span></div><ul><li><i class="fas fa-check-circle"></i> Design Premium (Glow)</li><li><i class="fas fa-check-circle"></i> Widgety Discord Live</li></ul><button class="buy-btn" onclick="openModal('Strona Gamingowa (600 PLN)')">WYBIERZ</button></div>
+        <div class="price-card"><h3>Sklep / Dashboard</h3><div class="price-tag">1000<span>PLN</span></div><ul><li><i class="fas fa-check-circle"></i> System Płatności BLIK</li><li><i class="fas fa-check-circle"></i> Pełna Integracja z Botem</li></ul><button class="buy-btn" onclick="openModal('Sklep/Dashboard (1000 PLN)')">WYBIERZ</button></div>
+    </div>
 </div>
 
 <section class="owner-section">
-    <h2 style="color:#fff; text-transform:uppercase; letter-spacing:4px; margin-bottom:10px;">Ownerzy Serwera</h2>
+    <h2 style="color:#fff; text-transform:uppercase; letter-spacing:4px; margin-bottom:40px;">Ownerzy Serwera</h2>
     <div class="owner-grid">
         <!-- ZENBOOST -->
         <div class="owner-card">
             <div class="avatar-frame"><img src="z.png" alt="ZenBoost"></div>
             <div class="owner-nick">ZenBoost</div>
-            <div class="owner-role role-zen">Twórca treści</div>
+            <div class="owner-role">Twórca treści</div>
         </div>
         <!-- SEYVEN -->
         <div class="owner-card">
             <div class="avatar-frame"><img src="s.jpg" alt="Seyven"></div>
             <div class="owner-nick">Seyven</div>
-            <div class="owner-role role-seyven">Twórca strony oraz Bota discord</div>
+            <div class="owner-role">Twórca strony oraz Bota discord</div>
         </div>
     </div>
 </section>
 
-<footer>
-    <div class="creator-title">TWÓRCA STRONY:</div>
-    <div class="creator-avatar"><img src="s.jpg" alt="Seyven"></div>
-    <div class="creator-nick">Seyven</div>
-</footer>
-
-<!-- MODAL -->
 <div id="orderModal" class="modal">
     <div class="modal-content">
         <div class="modal-header"><h2><span>ZB</span> Formularz ZenBoost</h2><div class="close-btn" onclick="closeModal()">&times;</div></div>
