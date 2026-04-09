@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZenBoost Tweak | Secure Gaming Services 🌿</title>
+    <title>ZenBoost Tweak | Professional Gaming Services 🌿</title>
     
-    <!-- Czcionki i Ikony -->
+    <!-- Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
-    <!-- Skrypty React i Tailwind -->
+    <!-- React & Tailwind Scripts -->
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -21,36 +21,49 @@
             --accent: #00d2ff; 
             --bg: #0b0f1a; 
             --card: #161b2c; 
+            --text-soft: #b2bac2;
         }
         body { 
             background: var(--bg); 
             background-image: radial-gradient(circle at top center, #130d24 0%, #0b0f1a 100%);
             font-family: 'Montserrat', sans-serif;
-            color: #b2bac2;
+            color: var(--text-soft);
             overflow-x: hidden;
+            margin: 0;
         }
         .glow-text { text-shadow: 0 0 20px var(--p); }
-        .selection-purple::selection { background: rgba(168, 85, 247, 0.4); }
+        ::selection { background: rgba(168, 85, 247, 0.4); color: white; }
+        
+        /* Styl dla inputów, aby nie miały białego tła przy autouzupełnianiu */
+        input:-webkit-autofill, textarea:-webkit-autofill {
+            -webkit-text-fill-color: white !important;
+            -webkit-box-shadow: 0 0 0px 1000px #1e1f22 inset !important;
+        }
     </style>
 </head>
-<body class="selection-purple">
+<body>
     <div id="root"></div>
 
-    <!-- Firebase SDKs -->
+    <!-- Firebase Integration -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        const firebaseConfig = JSON.parse(__firebase_config);
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'zenboost-secure-v2';
+        try {
+            const firebaseConfig = JSON.parse(__firebase_config);
+            const app = initializeApp(firebaseConfig);
+            const auth = getAuth(app);
+            const db = getFirestore(app);
+            const appId = typeof __app_id !== 'undefined' ? __app_id : 'zenboost-secure-v3';
 
-        window.ZenFirebase = { auth, db, appId, collection, addDoc, onSnapshot };
+            window.ZenFirebase = { auth, db, appId, collection, addDoc, onSnapshot };
+        } catch (e) {
+            console.error("Firebase Init Error:", e);
+        }
     </script>
 
+    <!-- UI Application Logic -->
     <script type="text/babel">
         const { useState, useEffect } = React;
 
@@ -63,34 +76,43 @@
             const [success, setSuccess] = useState(false);
             const [formData, setFormData] = useState({ nick: '', details: '', payment: '' });
 
+            // Initialize Auth
             useEffect(() => {
-                const { auth } = window.ZenFirebase;
-                signInAnonymously(auth).catch(console.error);
-                const unsubAuth = onAuthStateChanged(auth, setUser);
-                return () => unsubAuth();
+                const checkFirebase = setInterval(() => {
+                    if (window.ZenFirebase) {
+                        const { auth } = window.ZenFirebase;
+                        signInAnonymously(auth).catch(err => console.error("Auth failed:", err));
+                        const unsubAuth = onAuthStateChanged(auth, setUser);
+                        clearInterval(checkFirebase);
+                    }
+                }, 500);
+                return () => clearInterval(checkFirebase);
             }, []);
 
+            // Real-time Ticket Counter
             useEffect(() => {
-                if (!user) return;
+                if (!user || !window.ZenFirebase) return;
                 const { db, appId, collection, onSnapshot } = window.ZenFirebase;
                 const ticketsRef = collection(db, 'artifacts', appId, 'public', 'data', 'tickets');
+                
                 const unsubSnap = onSnapshot(ticketsRef, (snapshot) => {
                     const count = snapshot.docs
                         .map(doc => doc.data())
                         .filter(t => t.userId === user.uid && t.status === 'open')
                         .length;
                     setActiveTickets(count);
-                }, (err) => console.error("Sync error:", err));
+                }, (err) => console.error("Snapshot error:", err));
+
                 return () => unsubSnap();
             }, [user]);
 
             const handleSend = async () => {
                 if (!formData.nick || !formData.details || !formData.payment) {
-                    alert("Wypełnij wszystkie pola!");
+                    alert("Proszę wypełnić wszystkie pola formularza!");
                     return;
                 }
                 if (activeTickets >= 2) {
-                    alert("Masz już 2 otwarte tickety! Zamknij je na Discordzie przed kolejnym zamówieniem.");
+                    alert("Osiągnąłeś limit 2 aktywnych zgłoszeń. Zamknij poprzednie sprawy na Discordzie.");
                     return;
                 }
 
@@ -98,6 +120,7 @@
                 const { db, appId, collection, addDoc } = window.ZenFirebase;
 
                 try {
+                    // 1. Zapis do bezpiecznej bazy Firestore
                     await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'tickets'), {
                         userId: user.uid,
                         nick: formData.nick,
@@ -108,6 +131,7 @@
                         createdAt: new Date().toISOString()
                     });
 
+                    // 2. Wysyłka do Twojego API bota
                     await fetch('https://api.zenboost-tweak.pl/api/nowe-zamowienie', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -116,13 +140,13 @@
                             gra: selectedService,
                             specs: formData.details,
                             platnosc: formData.payment,
-                            secureId: user.uid
+                            secureUserId: user.uid
                         })
                     }).catch(() => {});
 
                     setSuccess(true);
                 } catch (e) {
-                    alert("Błąd serwera. Spróbuj później.");
+                    alert("Wystąpił błąd podczas przesyłania. Spróbuj ponownie.");
                 } finally {
                     setLoading(false);
                 }
@@ -142,7 +166,7 @@
                     </ul>
                     <button 
                         onClick={() => { setSelectedService(`${title} (${price} PLN)`); setIsModalOpen(true); setSuccess(false); }}
-                        className="w-full bg-[#a855f7] hover:brightness-110 text-white py-4 rounded-xl font-black uppercase transition-all"
+                        className="w-full bg-[#a855f7] hover:brightness-110 text-white py-4 rounded-xl font-black uppercase transition-all shadow-lg active:scale-95"
                     >
                         WYBIERZ
                     </button>
@@ -150,11 +174,12 @@
             );
 
             return (
-                <div className="min-h-screen">
+                <div className="min-h-screen pb-20">
+                    {/* Hero Section */}
                     <header className="h-[50vh] flex flex-col items-center justify-center text-center px-4">
-                        <h1 className="text-6xl md:text-8xl font-black text-white glow-text mb-6">ZEN<span className="text-[#a855f7]">BOOST</span></h1>
-                        <p className="text-[0.7rem] font-black text-[#a855f7] tracking-[0.4em] uppercase mb-4">NASZ SERWER DISCORD ORAZ TIKTOK</p>
-                        <div className="flex gap-4">
+                        <h1 className="text-6xl md:text-8xl font-black text-white glow-text mb-6 tracking-tighter">ZEN<span className="text-[#a855f7]">BOOST</span></h1>
+                        <p className="text-[0.7rem] font-black text-[#a855f7] tracking-[0.4em] uppercase mb-6">NASZ SERWER DISCORD ORAZ TIKTOK</p>
+                        <div className="flex gap-5">
                             <a href="https://discord.gg/pH5yNGd22k" target="_blank" className="w-14 h-14 rounded-full bg-[#161b2c] border-2 border-[#a855f7] flex items-center justify-center text-white shadow-[0_0_15px_rgba(168,85,247,0.4)] hover:scale-110 transition-transform">
                                 <i className="fab fa-discord text-2xl"></i>
                             </a>
@@ -164,20 +189,30 @@
                         </div>
                     </header>
 
-                    <div className="max-w-6xl mx-auto px-6 pb-24">
+                    <div className="max-w-6xl mx-auto px-6">
+                        {/* Why Us */}
                         <div className="text-center mb-16">
-                            <h2 className="text-4xl font-black text-white mb-4 uppercase leading-tight">Dlaczego <span className="text-[#a855f7]">warto nas wybrać</span></h2>
-                            <p className="opacity-80">Poczuj różnicę dzięki naszej zaawansowanej technologii optymalizacji komputera</p>
+                            <h2 className="text-4xl font-black text-white mb-4 uppercase">Dlaczego <span className="text-[#a855f7]">warto nas wybrać</span></h2>
+                            <p className="opacity-80 max-w-2xl mx-auto">Zaufaj profesjonalistom i wyciśnij 100% możliwości ze swojego sprzętu.</p>
                         </div>
                         
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-32">
-                            <div className="bg-[#161b2c] p-10 rounded-3xl border border-white/5 hover:border-[#a855f7] transition-all"><i className="fas fa-shield-alt text-4xl text-[#a855f7] mb-6"></i><h4 className="text-white font-bold mb-2">Bezpieczeństwo</h4><p className="text-xs">Dzięki AnyDesk widzisz każdy nasz ruch.</p></div>
-                            <div className="bg-[#161b2c] p-10 rounded-3xl border border-white/5 hover:border-[#a855f7] transition-all"><i className="fas fa-bolt text-4xl text-[#a855f7] mb-6"></i><h4 className="text-white font-bold mb-2">Wydajność</h4><p className="text-xs">Gwarantujemy najwyższe FPS i najniższe opóźnienia.</p></div>
-                            <div className="bg-[#161b2c] p-10 rounded-3xl border border-white/5 hover:border-[#a855f7] transition-all"><i className="fas fa-medal text-4xl text-[#a855f7] mb-6"></i><h4 className="text-white font-bold mb-2">Profesjonalizm</h4><p className="text-xs">Każdy detal z najwyższą starannością.</p></div>
+                            {[
+                                { icon: "shield-alt", t: "Bezpieczeństwo", d: "Dzięki AnyDesk widzisz każdy nasz ruch w czasie rzeczywistym." },
+                                { icon: "bolt", t: "Wydajność", d: "Gwarantujemy najwyższe FPS i najniższe możliwe opóźnienia." },
+                                { icon: "medal", t: "Profesjonalizm", d: "Każdy detal Twojego systemu z najwyższą starannością." }
+                            ].map((item, idx) => (
+                                <div key={idx} className="bg-[#161b2c] p-10 rounded-3xl border border-white/5 hover:border-[#a855f7] transition-all group">
+                                    <i className={`fas fa-${item.icon} text-4xl text-[#a855f7] mb-6 group-hover:scale-110 transition-transform`}></i>
+                                    <h4 className="text-white font-bold mb-2 text-xl">{item.t}</h4>
+                                    <p className="text-xs leading-relaxed opacity-70">{item.d}</p>
+                                </div>
+                            ))}
                         </div>
 
+                        {/* Offers Sections */}
                         <div className="space-y-32">
-                            {/* OPTYMALIZACJE PC */}
+                            {/* PC BOOTS */}
                             <section>
                                 <h2 className="text-3xl font-black text-white text-center mb-16 uppercase tracking-widest"><i className="fas fa-bolt text-[#a855f7] mr-4"></i> OPTYMALIZACJE PC</h2>
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -187,7 +222,7 @@
                                 </div>
                             </section>
 
-                            {/* BOTY DISCORD */}
+                            {/* BOTS */}
                             <section>
                                 <h2 className="text-3xl font-black text-white text-center mb-16 uppercase tracking-widest"><i className="fas fa-robot text-[#a855f7] mr-4"></i> BOTY DISCORD</h2>
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -197,7 +232,7 @@
                                 </div>
                             </section>
 
-                            {/* STRONY WWW */}
+                            {/* WEB */}
                             <section>
                                 <h2 className="text-3xl font-black text-white text-center mb-16 uppercase tracking-widest"><i className="fas fa-globe text-[#a855f7] mr-4"></i> STRONY WWW</h2>
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -209,8 +244,8 @@
                         </div>
                     </div>
 
-                    {/* OWNERZY */}
-                    <section className="bg-black/30 py-24 border-t border-white/5">
+                    {/* Team Section */}
+                    <section className="bg-black/30 py-24 border-t border-white/5 mt-32">
                         <h2 className="text-white text-2xl font-black text-center uppercase tracking-[0.4em] mb-16">Ownerzy Serwera</h2>
                         <div className="flex flex-wrap justify-center gap-24">
                             <div className="text-center group">
@@ -226,36 +261,36 @@
                         </div>
                     </section>
 
-                    {/* Modal */}
+                    {/* Secure Modal */}
                     {isModalOpen && (
-                        <div className="fixed inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center z-[10000] p-4">
+                        <div className="fixed inset-0 bg-black/90 backdrop-blur-md flex items-center justify-center z-[10000] p-4 animate-in fade-in duration-300">
                             <div className="bg-[#313338] w-full max-w-md rounded-2xl overflow-hidden shadow-2xl border border-white/10">
                                 <div className="p-4 flex justify-between border-b border-white/5">
                                     <h2 className="text-white font-bold flex items-center gap-3"><span className="bg-[#a855f7] w-6 h-6 rounded-full flex items-center justify-center text-[10px] text-white">ZB</span> Formularz ZenBoost</h2>
-                                    <i className="fas fa-times text-[#b5bac1] cursor-pointer hover:text-white" onClick={() => setIsModalOpen(false)}></i>
+                                    <i className="fas fa-times text-[#b5bac1] cursor-pointer hover:text-white transition-colors" onClick={() => setIsModalOpen(false)}></i>
                                 </div>
                                 {!success ? (
                                     <div className="p-6">
-                                        <div className="bg-[#f0b232]/10 border border-[#f0b232] rounded-lg p-3 flex gap-3 mb-6 text-[10px]">
-                                            <i className="fas fa-shield-alt text-[#f0b232] mt-1"></i>
-                                            <p>Twoje unikalne ID jest rejestrowane w celu zapobiegania trollowaniu. System limituje zgłoszenia do 2 na użytkownika.</p>
+                                        <div className="bg-[#f0b232]/10 border border-[#f0b232] rounded-lg p-4 flex gap-3 mb-6 text-[10px]">
+                                            <i className="fas fa-shield-alt text-[#f0b232] text-sm mt-0.5"></i>
+                                            <p className="text-white opacity-80 leading-relaxed">System bezpieczeństwa aktywny. Rejestrujemy unikalne ID urządzenia w celu weryfikacji zgłoszenia i ochrony przed nadużyciami.</p>
                                         </div>
-                                        <div className="space-y-4">
-                                            <div className="form-group">
+                                        <div className="space-y-5">
+                                            <div>
                                                 <label className="text-[10px] font-black uppercase text-[#b5bac1] mb-2 block tracking-widest">Twój Nick Discord*</label>
                                                 <input className="w-full bg-[#1e1f22] p-3 rounded text-sm text-white outline-none focus:ring-1 ring-[#a855f7]" placeholder="np. seyven#0000" value={formData.nick} onChange={e => setFormData({...formData, nick: e.target.value})} />
                                             </div>
-                                            <div className="form-group">
+                                            <div>
                                                 <label className="text-[10px] font-black uppercase text-[#b5bac1] mb-2 block tracking-widest">Wybrana Usługa</label>
-                                                <input className="w-full bg-[#1e1f22] p-3 rounded text-sm text-[#a855f7] font-bold" readOnly value={selectedService} />
+                                                <input className="w-full bg-[#1e1f22] p-3 rounded text-sm text-[#a855f7] font-bold cursor-not-allowed" readOnly value={selectedService} />
                                             </div>
-                                            <div className="form-group">
+                                            <div>
                                                 <label className="text-[10px] font-black uppercase text-[#b5bac1] mb-2 block tracking-widest">Specyfikacja / Opis*</label>
-                                                <textarea className="w-full bg-[#1e1f22] p-3 rounded text-sm text-white outline-none h-24 focus:ring-1 ring-[#a855f7] resize-none" placeholder="Opisz swoje wymagania..." value={formData.details} onChange={e => setFormData({...formData, details: e.target.value})} />
+                                                <textarea className="w-full bg-[#1e1f22] p-3 rounded text-sm text-white outline-none h-24 focus:ring-1 ring-[#a855f7] resize-none" placeholder="Opisz swoje wymagania lub podaj specyfikację PC..." value={formData.details} onChange={e => setFormData({...formData, details: e.target.value})} />
                                             </div>
-                                            <div className="form-group">
+                                            <div>
                                                 <label className="text-[10px] font-black uppercase text-[#b5bac1] mb-2 block tracking-widest">Metoda Płatności*</label>
-                                                <select className="w-full bg-[#1e1f22] p-3 rounded text-sm text-white outline-none focus:ring-1 ring-[#a855f7]" value={formData.payment} onChange={e => setFormData({...formData, payment: e.target.value})}>
+                                                <select className="w-full bg-[#1e1f22] p-3 rounded text-sm text-white outline-none focus:ring-1 ring-[#a855f7] cursor-pointer" value={formData.payment} onChange={e => setFormData({...formData, payment: e.target.value})}>
                                                     <option value="" disabled>Wybierz metodę...</option>
                                                     <option value="BLIK">BLIK (Przelew na tel)</option>
                                                     <option value="PSC">PaySafeCard (PSC)</option>
@@ -263,25 +298,30 @@
                                             </div>
                                         </div>
                                         <div className="mt-8 flex justify-between items-center bg-[#2b2d31] -mx-6 -mb-6 p-6">
-                                            <span className="text-[10px] font-bold">Aktywne zgłoszenia: <span className={activeTickets >= 2 ? "text-red-500" : "text-green-500"}>{activeTickets}/2</span></span>
+                                            <div className="flex flex-col">
+                                                <span className="text-[10px] font-bold text-white uppercase tracking-tighter opacity-50">Zgłoszenia użytkownika</span>
+                                                <span className={`text-sm font-black ${activeTickets >= 2 ? "text-red-500" : "text-green-500"}`}>{activeTickets} / 2</span>
+                                            </div>
                                             <div className="flex gap-4">
-                                                <button onClick={() => setIsModalOpen(false)} className="text-xs font-bold text-white hover:underline">Anuluj</button>
+                                                <button onClick={() => setIsModalOpen(false)} className="text-xs font-bold text-white hover:underline transition-all">Anuluj</button>
                                                 <button 
                                                     disabled={loading || activeTickets >= 2} 
                                                     onClick={handleSend}
-                                                    className={`px-8 py-3 rounded-lg font-black text-sm text-white transition-all ${loading || activeTickets >= 2 ? 'bg-gray-700 cursor-not-allowed opacity-50' : 'bg-[#5865f2] hover:bg-[#4752c4] active:scale-95 shadow-lg shadow-[#5865f2]/20'}`}
+                                                    className={`px-8 py-3 rounded-lg font-black text-sm text-white transition-all shadow-lg ${loading || activeTickets >= 2 ? 'bg-gray-700 cursor-not-allowed opacity-50 shadow-none' : 'bg-[#5865f2] hover:bg-[#4752c4] active:scale-95 shadow-[#5865f2]/20'}`}
                                                 >
-                                                    {loading ? "Wysyłanie..." : activeTickets >= 2 ? "Limit!" : "Wyślij ticket"}
+                                                    {loading ? "Przetwarzanie..." : activeTickets >= 2 ? "Limit!" : "Wyślij ticket"}
                                                 </button>
                                             </div>
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="p-12 text-center">
-                                        <i className="fas fa-check-circle text-6xl text-green-500 mb-6 drop-shadow-[0_0_15px_rgba(34,197,94,0.4)]"></i>
-                                        <h3 className="text-white font-black text-2xl mb-4 uppercase tracking-wider">WYSŁANO POMYŚLNIE!</h3>
-                                        <p className="text-sm mb-10 opacity-70">Twoje unikalne ID zostało przypisane do zamówienia. Zapraszamy na nasz kanał Discord, aby kontynuować!</p>
-                                        <a href="https://discord.gg/pH5yNGd22k" target="_blank" className="bg-green-600 hover:bg-green-500 text-white px-10 py-4 rounded-xl font-black uppercase inline-block transition-all shadow-xl shadow-green-600/20 active:scale-95">Otwórz ticket 🚀</a>
+                                    <div className="p-12 text-center animate-in zoom-in duration-300">
+                                        <div className="w-20 h-20 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                                            <i className="fas fa-check-circle text-5xl text-green-500 drop-shadow-[0_0_10px_rgba(34,197,94,0.4)]"></i>
+                                        </div>
+                                        <h3 className="text-white font-black text-2xl mb-4 uppercase tracking-wider">ZGŁOSZENIE WYSŁANE!</h3>
+                                        <p className="text-sm mb-10 opacity-70 text-white font-medium">Twoje unikalne ID zostało przypisane do ticketu. Zapraszamy na nasz kanał Discord, aby sfinalizować zamówienie.</p>
+                                        <a href="https://discord.gg/pH5yNGd22k" target="_blank" className="bg-green-600 hover:bg-green-500 text-white px-12 py-4 rounded-xl font-black uppercase inline-block transition-all shadow-xl shadow-green-600/30 active:scale-95">Otwórz ticket 🚀</a>
                                     </div>
                                 )}
                             </div>
