@@ -37,26 +37,28 @@
             margin: 0;
         }
 
-        /* Animacja WOW dla Avatarów */
-        .avatar-container {
+        /* Animacja WOW dla Avatarów z fioletową ramką kulistą */
+        .avatar-frame {
             position: relative;
             padding: 8px;
             border-radius: 50%;
             border: 4px solid var(--p);
             transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 0 15px rgba(168, 85, 247, 0.3);
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
+            background: rgba(168, 85, 247, 0.1);
         }
-        .group:hover .avatar-container {
+        .group:hover .avatar-frame {
             transform: scale(1.15) rotate(360deg);
-            box-shadow: 0 0 50px var(--p), 0 0 80px rgba(168, 85, 247, 0.5);
+            box-shadow: 0 0 50px var(--p), 0 0 80px rgba(168, 85, 247, 0.6);
             border-color: #fff;
         }
         
-        /* Styl nicków pod avatarami */
+        /* Styl nicków pod avatarami - Fioletowe + Glow */
         .owner-name {
             color: var(--p);
             font-weight: 900;
             transition: all 0.4s ease;
+            text-shadow: 0 0 5px rgba(168, 85, 247, 0.3);
         }
         .group:hover .owner-name {
             color: #fff;
@@ -123,7 +125,17 @@
             box-shadow: 0 5px 15px rgba(88, 101, 242, 0.4);
         }
         
-        /* Styl Ticka z fioletowym kółkiem */
+        /* Ukrywanie socjali na środku po scrollu */
+        .hero-socials {
+            transition: all 0.5s ease;
+        }
+        .hero-socials.scrolled {
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(20px);
+        }
+
+        /* Styl Ticka z fioletowym kółkiem (Ujednolicony) */
         .tick-icon {
             width: 20px;
             height: 20px;
@@ -228,7 +240,7 @@
                         {features.map((f, i) => (
                             <li key={i} className="text-sm flex items-start gap-3">
                                 <div className="tick-icon mt-0.5"><i className="fas fa-check text-[10px] text-white"></i></div>
-                                <span>{f}</span>
+                                <span className="leading-tight">{f}</span>
                             </li>
                         ))}
                     </ul>
@@ -322,8 +334,9 @@
                             ))}
                         </div>
 
-                        {/* PRICING SECTIONS - WSZYSTKIE CENY TURKUSOWE + JEDNAKOWE TICKI */}
+                        {/* PRICING SECTIONS - WSZYSTKIE INFO ZGODNIE ZE SCREENAMI */}
                         <div className="space-y-40 mb-40">
+                            {/* PC TWEAK SECTION */}
                             <section>
                                 <h2 className="text-4xl font-black text-white mb-16 uppercase text-center tracking-widest"><i className="fas fa-bolt text-[#a855f7] mr-4"></i> Optymalizacje PC</h2>
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
@@ -333,42 +346,44 @@
                                 </div>
                             </section>
 
+                            {/* BOTS SECTION */}
                             <section>
                                 <h2 className="text-4xl font-black text-white mb-16 uppercase text-center tracking-widest"><i className="fas fa-robot text-[#a855f7] mr-4"></i> Boty Discord</h2>
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
                                     <PricingCard title="Startowy Bot" price="200" features={["Systemy Administracji", "Auto-Moderacja treści"]} />
-                                    <PricingCard title="Ekonomiczny Plus" price="500" features={["Systemy Administracji", "Auto-Moderacja treści", "Pełna Ekonomia & Sklep", "Bazy Danych SQL", "XP Leveling", "Zaawansowane Logi"]} featured />
-                                    <PricingCard title="Mega Custom Bot" price="1000" features={["Weryfikacja OAuth2", "Płatności BLIK", "Dashboard WWW", "Integracje Twitch & YT", "Autorskie Minigry"]} />
+                                    <PricingCard title="Ekonomiczny Plus" price="500" features={["Systemy Administracji", "Auto-Moderacja treści", "Pełna Ekonomia & Sklep", "Bazy Danych SQL", "System Levelowania (XP)", "Zaawansowane Logi Serwera"]} featured />
+                                    <PricingCard title="Mega Custom Bot" price="1000" features={["Systemy Administracji", "Pełna Ekonomia & Sklep", "Dashboard WWW Premium", "Weryfikacja OAuth2", "Płatności BLIK", "Integracje Twitch & YT", "Hosting w cenie", "Autorskie Minigry"]} />
                                 </div>
                             </section>
 
+                            {/* WWW SECTION */}
                             <section>
                                 <h2 className="text-4xl font-black text-white mb-16 uppercase text-center tracking-widest"><i className="fas fa-globe text-[#a855f7] mr-4"></i> Strony WWW</h2>
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-                                    <PricingCard title="Landing Page" price="300" features={["Modern One-Page", "Responsywność Mobile", "SEO Optimization"]} />
-                                    <PricingCard title="Gamingowa" price="600" features={["Design Premium (Glow)", "Widgety Discord Live", "Animacje CSS"]} featured />
-                                    <PricingCard title="Sklep / Dashboard" price="1000" features={["Logowanie OAuth2", "System Płatności BLIK", "Pełna Integracja z Botem", "Panel Admina"]} />
+                                    <PricingCard title="Landing Page" price="300" features={["Modern One-Page", "Responsywność Mobile"]} />
+                                    <PricingCard title="Gamingowa" price="600" features={["Modern One-Page", "Responsywność Mobile", "Design Premium (Glow)", "Widgety Discord Live"]} featured />
+                                    <PricingCard title="Sklep / Dashboard" price="1000" features={["Modern One-Page", "Responsywność Mobile", "Design Premium (Glow)", "Logowanie Discord OAuth2", "Sklep z Koszykiem", "System Płatności BLIK", "Automatyczne Role", "Panel Statystyk Online", "Pełna Integracja z Botem"]} />
                                 </div>
                             </section>
                         </div>
 
-                        {/* Owners Section (Z Animacją WOW i Ramkami) */}
+                        {/* Owners Section (Z Animacją WOW i Fioletowymi Ramkami Kulistymi) */}
                         <section className="py-40 text-center border-t border-white/5">
                             <h2 className="text-3xl font-black text-white uppercase tracking-[0.5em] mb-24 opacity-80 text-sm">Ownerzy Serwera</h2>
                             <div className="flex flex-wrap justify-center gap-32">
                                 <div className="flex flex-col items-center group">
-                                    <div className="avatar-container w-52 h-52 overflow-hidden mb-8">
+                                    <div className="avatar-frame w-56 h-56 overflow-hidden mb-8">
                                         <img src="z.png" className="w-full h-full object-cover rounded-full" alt="ZenBoost" />
                                     </div>
                                     <h3 className="owner-name text-3xl font-black uppercase tracking-tighter">ZenBoost</h3>
-                                    <p className="text-[#22d3ee] font-bold text-xs uppercase tracking-widest mt-2">Twórca Treści</p>
+                                    <p className="text-[#gaming] font-bold text-xs uppercase tracking-widest mt-2">Twórca Treści</p>
                                 </div>
                                 <div className="flex flex-col items-center group">
-                                    <div className="avatar-container w-52 h-52 overflow-hidden mb-8">
+                                    <div className="avatar-frame w-56 h-56 overflow-hidden mb-8">
                                         <img src="s.jpg" className="w-full h-full object-cover rounded-full" alt="Seyven" />
                                     </div>
                                     <h3 className="owner-name text-3xl font-black uppercase tracking-tighter">Seyven</h3>
-                                    <p className="text-[#22d3ee] font-bold text-xs uppercase tracking-widest mt-2 uppercase">Twórca Strony & Bota</p>
+                                    <p className="text-[#gaming] font-bold text-xs uppercase tracking-widest mt-2 uppercase">Twórca Strony & Bota</p>
                                 </div>
                             </div>
                         </section>
