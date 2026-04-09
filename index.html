@@ -34,6 +34,17 @@
             border-color: var(--p);
         }
 
+        /* Hover na nickach ownerów */
+        .owner-name {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .owner-name:hover {
+            color: #fff;
+            text-shadow: 0 0 20px var(--p), 0 0 40px var(--p);
+            transform: scale(1.05);
+        }
+
         /* Social Side Buttons (Prawa Strona) */
         .social-fixed { 
             position: fixed; 
@@ -44,6 +55,7 @@
             flex-direction: column; 
             gap: 15px; 
             z-index: 1000; 
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .social-icon { 
             width: 55px; 
@@ -79,6 +91,27 @@
 
         .fade-in-section { animation: fadeIn 1s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Dynamiczny Header Logic */
+        .zen-logo {
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .zen-logo.scrolled {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            font-size: 1.5rem !important;
+            z-index: 1100;
+        }
+
+        .hero-socials {
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .hero-socials.scrolled {
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(20px);
+        }
     </style>
 </head>
 <body class="custom-scroll overflow-x-hidden">
@@ -95,12 +128,22 @@
 
         const App = () => {
             const [user, setUser] = useState(null);
+            const [isScrolled, setIsScrolled] = useState(false);
             const [isModalOpen, setIsModalOpen] = useState(false);
             const [selectedService, setSelectedService] = useState('');
             const [formData, setFormData] = useState({ specs: '', payment: '' });
             const [success, setSuccess] = useState(false);
             const [loading, setLoading] = useState(false);
             const [refreshing, setRefreshing] = useState(false);
+
+            useEffect(() => {
+                const handleScroll = () => {
+                    if (window.scrollY > 100) setIsScrolled(true);
+                    else setIsScrolled(false);
+                };
+                window.addEventListener('scroll', handleScroll);
+                return () => window.removeEventListener('scroll', handleScroll);
+            }, []);
 
             useEffect(() => {
                 const urlParams = new URLSearchParams(window.location.search);
@@ -176,7 +219,7 @@
 
             if (!user) {
                 return (
-                    <div className="h-screen flex flex-col items-center justify-center text-center p-6 bg-radial-gradient from-[#130d24] to-[#0b0f1a]">
+                    <div className="h-screen flex flex-col items-center justify-center text-center p-6 bg-[#0b0f1a]">
                         <h1 className="text-7xl md:text-9xl font-black text-white glow-text mb-6 tracking-tighter uppercase">ZEN<span className="text-[#a855f7]">BOOST</span></h1>
                         <p className="text-xl opacity-60 max-w-lg mb-12">Zaloguj się kontem Discord, aby uzyskać dostęp do strefy Premium.</p>
                         <a href={DISCORD_AUTH_URL} className="bg-[#5865f2] hover:bg-[#4752c4] px-12 py-6 rounded-2xl text-white font-black uppercase flex items-center gap-4 text-xl transition-all active:scale-95 shadow-[0_10px_30px_rgba(88,101,242,0.4)]">
@@ -188,21 +231,38 @@
 
             return (
                 <div className="min-h-screen">
-                    {/* Socials Fixed (Na prawej stronie) */}
-                    <div className="social-fixed">
+                    {/* Socials Fixed (Pojawia się na prawej stronie po scrollu lub zostaje tam na stałe) */}
+                    <div className={`social-fixed ${isScrolled ? 'opacity-100' : 'opacity-0 md:opacity-100 md:translate-x-0'}`}>
                         <a href="https://discord.gg/pH5yNGd22k" target="_blank" className="social-icon" title="Dołącz do Discorda"><i className="fab fa-discord text-2xl"></i></a>
                         <a href="https://www.tiktok.com/@dexboost1" target="_blank" className="social-icon" title="Obserwuj na TikTok"><i className="fab fa-tiktok text-2xl"></i></a>
                     </div>
 
-                    <nav className="p-8 flex justify-between items-center glass sticky top-0 z-50">
-                        <h2 className="text-3xl font-black text-white tracking-tighter">ZEN<span className="text-[#a855f7]">BOOST</span></h2>
+                    {/* Nawigacja użytkownika */}
+                    <nav className={`p-8 flex justify-end items-center fixed top-0 left-0 w-full z-[1000] transition-all ${isScrolled ? 'bg-black/40 backdrop-blur-md' : ''}`}>
                         <div className="flex items-center gap-4 bg-black/40 p-1.5 pr-6 rounded-full border border-white/5">
                             <img src={user.avatar} className="w-10 h-10 rounded-full border-2 border-[#a855f7]" alt="User Avatar" />
                             <span className="text-white font-bold text-sm">{user.username}</span>
                         </div>
                     </nav>
 
-                    <main className="max-w-7xl mx-auto px-6 pt-20">
+                    {/* Banner Section (image_bb321e.jpg) */}
+                    <section className="relative w-full h-[60vh] overflow-hidden flex flex-col items-center justify-center text-center px-4">
+                        <img src="image_bb321e.jpg" className="absolute inset-0 w-full h-full object-cover opacity-60 -z-10" alt="Banner" />
+                        
+                        <h1 className={`zen-logo text-7xl md:text-9xl font-black text-white glow-text uppercase tracking-tighter ${isScrolled ? 'scrolled' : ''}`}>
+                            ZEN<span className="text-[#a855f7]">BOOST</span>
+                        </h1>
+                        
+                        <div className={`hero-socials mt-10 space-y-4 ${isScrolled ? 'scrolled' : ''}`}>
+                            <p className="text-[#a855f7] font-black uppercase tracking-[0.4em] text-xs">Nasz serwer discord oraz tiktok</p>
+                            <div className="flex justify-center gap-6">
+                                <a href="https://discord.gg/pH5yNGd22k" target="_blank" className="w-12 h-12 rounded-full border-2 border-white/20 flex items-center justify-center hover:bg-[#5865f2] hover:border-[#5865f2] transition-all"><i className="fab fa-discord text-xl"></i></a>
+                                <a href="https://www.tiktok.com/@dexboost1" target="_blank" className="w-12 h-12 rounded-full border-2 border-white/20 flex items-center justify-center hover:bg-black hover:border-white transition-all"><i className="fab fa-tiktok text-xl"></i></a>
+                            </div>
+                        </div>
+                    </section>
+
+                    <main className="max-w-7xl mx-auto px-6 pt-32">
                         {/* Why Us Hero Section */}
                         <div className="text-center mb-32 fade-in-section">
                             <h1 className="text-6xl md:text-8xl font-black text-white glow-text uppercase mb-4 tracking-tighter">Dlaczego <span className="text-[#a855f7]">warto nas wybrać</span></h1>
@@ -280,7 +340,7 @@
                             </section>
                         </div>
 
-                        {/* Owners Section (Z Animacją) */}
+                        {/* Owners Section (Z Animacją i Hoverem) */}
                         <section className="py-40 text-center border-t border-white/5">
                             <h2 className="text-3xl font-black text-white uppercase tracking-[0.5em] mb-24 opacity-80">Ownerzy Serwera</h2>
                             <div className="flex flex-wrap justify-center gap-32">
@@ -288,14 +348,14 @@
                                     <div className="w-52 h-52 rounded-full avatar-glow overflow-hidden mb-8">
                                         <img src="z.png" className="w-full h-full object-cover" alt="ZenBoost" />
                                     </div>
-                                    <h3 className="text-3xl font-black text-white uppercase tracking-tighter">ZenBoost</h3>
+                                    <h3 className="owner-name text-3xl font-black text-white uppercase tracking-tighter">ZenBoost</h3>
                                     <p className="text-[#00d2ff] font-bold text-xs uppercase tracking-widest mt-2">Twórca Treści</p>
                                 </div>
                                 <div className="flex flex-col items-center group">
                                     <div className="w-52 h-52 rounded-full avatar-glow overflow-hidden mb-8">
                                         <img src="s.jpg" className="w-full h-full object-cover" alt="Seyven" />
                                     </div>
-                                    <h3 className="text-3xl font-black text-[#a855f7] glow-text uppercase tracking-tighter">Seyven</h3>
+                                    <h3 className="owner-name text-3xl font-black text-white uppercase tracking-tighter">Seyven</h3>
                                     <p className="text-[#00d2ff] font-bold text-xs uppercase tracking-widest mt-2">Twórca Strony & Bota</p>
                                 </div>
                             </div>
