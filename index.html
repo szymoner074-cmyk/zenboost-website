@@ -11,11 +11,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <!-- Skrypty zewnętrzne -->
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/react@18.2.0/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone@7.24.7/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-
     <style>
         :root { --p: #a855f7; --accent: #00d2ff; --bg: #0b0f1a; --card: #111522; --gaming: #22d3ee; }
         body { background: var(--bg); color: #b2bac2; font-family: 'Montserrat', sans-serif; margin: 0; }
@@ -173,7 +172,7 @@
 <body class="custom-scroll overflow-x-hidden">
     <div id="root"></div>
 
-    <script type="text/babel">
+    <script type="text/babel" data-presets="react">
         const { useState, useEffect, useRef } = React;
 
         // --- ⚙️ KONFIGURACJA OAUTH2 ---
