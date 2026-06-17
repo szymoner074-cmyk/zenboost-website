@@ -5,11 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ZenBoost Tweak | High Performance 🌿</title>
     
-    <!-- Czcionki i Ikony -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
-    <!-- Skrypty zewnętrzne -->
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -18,164 +16,27 @@
     <style>
         :root { --p: #a855f7; --accent: #00d2ff; --bg: #0b0f1a; --card: #111522; --gaming: #22d3ee; }
         body { background: var(--bg); color: #b2bac2; font-family: 'Montserrat', sans-serif; margin: 0; }
-        
         .glow-text { text-shadow: 0 0 15px var(--p); }
-        .glass { background: rgba(17, 21, 34, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.05); }
-        
-        /* Animacja Logo ZenBoost - Przejście do lewego rogu */
-        .zen-logo {
-            transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-            position: relative;
-            transform: scale(1);
-        }
-        .zen-logo.scrolled {
-            position: fixed;
-            top: 25px;
-            left: 40px;
-            font-size: 1.8rem !important;
-            z-index: 1200;
-            margin: 0;
-        }
-
-        /* Animacja WOW dla Avatarów z fioletową ramką kulistą */
-        .avatar-frame {
-            position: relative;
-            padding: 8px;
-            border-radius: 50%;
-            border: 4px solid var(--p);
-            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
-            background: rgba(168, 85, 247, 0.1);
-        }
-        .group:hover .avatar-frame {
-            transform: scale(1.15) rotate(360deg);
-            box-shadow: 0 0 50px var(--p), 0 0 80px rgba(168, 85, 247, 0.6);
-            border-color: #fff;
-        }
-        
-        /* Styl nicków pod avatarami - Fioletowe + Glow */
-        .owner-name {
-            color: var(--p);
-            font-weight: 900;
-            transition: all 0.4s ease;
-            text-shadow: 0 0 5px rgba(168, 85, 247, 0.3);
-        }
-        .group:hover .owner-name {
-            color: #fff;
-            text-shadow: 0 0 20px var(--p), 0 0 40px var(--p);
-            transform: translateY(-5px);
-        }
-
-        /* Social Side Buttons (Prawa Strona) */
-        .social-fixed { 
-            position: fixed; 
-            right: 25px; 
-            top: 50%; 
-            transform: translateY(-50%); 
-            display: flex; 
-            flex-direction: column; 
-            gap: 15px; 
-            z-index: 1000; 
-            transition: all 0.5s ease;
-        }
-        .social-icon { 
-            width: 55px; 
-            height: 55px; 
-            border-radius: 50%; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            background: rgba(22, 27, 44, 0.8); 
-            border: 1px solid rgba(168, 85, 247, 0.3); 
-            color: white; 
-            transition: all 0.3s ease; 
-            backdrop-filter: blur(5px);
-        }
-        .social-icon:hover { 
-            background: var(--p); 
-            transform: scale(1.1) translateX(-10px); 
-            box-shadow: 0 0 25px var(--p); 
-            border-color: white;
-        }
-
-        .service-card { background: var(--card); transition: 0.4s; border: 1px solid rgba(255,255,255,0.03); display: flex; flex-direction: column; }
-        .service-card:hover { transform: translateY(-10px); border-color: var(--p); box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
-        
-        .feature-box { background: #0f131f; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; height: 100%; }
-        .feature-box:hover { border-color: var(--p); background: #141a2b; transform: scale(1.02); }
-        
-        .gaming-box:hover { border-color: var(--gaming); box-shadow: 0 0 20px rgba(34, 211, 238, 0.2); }
-
-        .custom-scroll::-webkit-scrollbar { width: 6px; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: var(--p); border-radius: 10px; }
-
-        .animate-spin-slow { animation: spin 3s linear infinite; }
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-
-        .fade-in-section { animation: fadeIn 1s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-        .nav-login-btn {
-            background: #5865f2;
-            transition: all 0.3s ease;
-        }
-        .nav-login-btn:hover {
-            background: #4752c4;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(88, 101, 242, 0.4);
-        }
-        
-        /* Ukrywanie socjali na środku po scrollu */
-        .hero-socials {
-            transition: all 0.5s ease;
-        }
-        .hero-socials.scrolled {
-            opacity: 0;
-            pointer-events: none;
-            transform: translateY(20px);
-        }
-
-        /* Styl Ticka z fioletowym kółkiem (Ujednolicony) */
-        .tick-icon {
-            width: 20px;
-            height: 20px;
-            background: var(--p);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            box-shadow: 0 0 10px rgba(168, 85, 247, 0.4);
-        }
-
-        /* Styl Menu Wylogowywania */
-        .logout-menu {
-            position: absolute;
-            top: 100%;
-            right: 0;
-            margin-top: 10px;
-            background: #1e1f22;
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            padding: 8px;
-            min-width: 160px;
-            z-index: 2000;
-            animation: slideDown 0.3s ease-out;
-        }
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        .zen-logo { transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1); position: relative; }
+        .zen-logo.scrolled { position: fixed; top: 25px; left: 40px; font-size: 1.8rem !important; z-index: 1200; }
+        .avatar-frame { position: relative; padding: 8px; border-radius: 50%; border: 4px solid var(--p); transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 0 20px rgba(168, 85, 247, 0.4); }
+        .group:hover .avatar-frame { transform: scale(1.15) rotate(360deg); }
+        .owner-name { color: var(--p); font-weight: 900; transition: 0.4s; }
+        .social-fixed { position: fixed; right: 25px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 15px; z-index: 1000; }
+        .social-icon { width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(22, 27, 44, 0.8); border: 1px solid rgba(168, 85, 247, 0.3); color: white; transition: 0.3s; }
+        .service-card { background: var(--card); transition: 0.4s; border: 1px solid rgba(255,255,255,0.03); }
+        .feature-box { background: #0f131f; border: 1px solid rgba(255,255,255,0.05); height: 100%; }
+        .tick-icon { width: 20px; height: 20px; background: var(--p); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .logout-menu { position: absolute; top: 100%; right: 0; margin-top: 10px; background: #1e1f22; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 8px; z-index: 2000; }
     </style>
 </head>
-<body class="custom-scroll overflow-x-hidden">
+<body class="overflow-x-hidden">
     <div id="root"></div>
 
     <script type="text/babel">
+        // Używamy globalnych obiektów React zamiast importów
         const { useState, useEffect, useRef } = React;
 
-        // --- ⚙️ KONFIGURACJA OAUTH2 ---
         const CLIENT_ID = '1490818531955183747'; 
         const REDIRECT_URI = 'http://zenboost-tweak.pl/'; 
         const DISCORD_AUTH_URL = `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=code&scope=identify%20email&prompt=consent`;
@@ -183,7 +44,7 @@
 
         const App = () => {
             const [user, setUser] = useState(null);
-            const [activeTickets, setActiveTickets] = useState(0); // Licznik ticketów
+            const [activeTickets, setActiveTickets] = useState(0);
             const [isScrolled, setIsScrolled] = useState(false);
             const [isModalOpen, setIsModalOpen] = useState(false);
             const [showLogout, setShowLogout] = useState(false);
@@ -191,359 +52,61 @@
             const [formData, setFormData] = useState({ specs: '', payment: '' });
             const [success, setSuccess] = useState(false);
             const [loading, setLoading] = useState(false);
-            const [refreshing, setRefreshing] = useState(false);
-            
             const logoutRef = useRef(null);
 
             useEffect(() => {
-                const handleScroll = () => {
-                    if (window.scrollY > 150) setIsScrolled(true);
-                    else setIsScrolled(false);
-                };
+                const handleScroll = () => setIsScrolled(window.scrollY > 150);
                 window.addEventListener('scroll', handleScroll);
-                
-                // Zamykanie menu po kliknięciu obok
-                const handleClickOutside = (event) => {
-                    if (logoutRef.current && !logoutRef.current.contains(event.target)) {
-                        setShowLogout(false);
-                    }
-                };
-                document.addEventListener("mousedown", handleClickOutside);
-
-                return () => {
-                    window.removeEventListener('scroll', handleScroll);
-                    document.removeEventListener("mousedown", handleClickOutside);
-                };
+                return () => window.removeEventListener('scroll', handleScroll);
             }, []);
-
-            useEffect(() => {
-                const urlParams = new URLSearchParams(window.location.search);
-                const code = urlParams.get('code');
-                if (code) verifyUser(code);
-            }, []);
-
-            const verifyUser = async (code) => {
-                setLoading(true);
-                try {
-                    const res = await fetch(`${API_BASE}/api/auth/discord`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ code })
-                    });
-                    const data = await res.json();
-                    if (data.authorized) {
-                        setUser({...data.user, onServer: data.onServer});
-                        // Tutaj można by pobrać liczbę ticketów z bazy, ale na razie symulujemy 0
-                        setActiveTickets(0);
-                        window.history.replaceState({}, document.title, "/");
-                    }
-                } catch (e) { console.error(e); }
-                setLoading(false);
-            };
-
-            const handleLogout = () => {
-                setUser(null);
-                setShowLogout(false);
-                window.location.href = "/";
-            };
-
-            const checkMembership = async () => {
-                if (!user) return;
-                setRefreshing(true);
-                try {
-                    const res = await fetch(`${API_BASE}/api/check-membership?userId=${user.id}`);
-                    const data = await res.json();
-                    setUser(prev => ({ ...prev, onServer: data.onServer }));
-                } catch (e) { console.error(e); }
-                setTimeout(() => setRefreshing(false), 800);
-            };
-
-            const sendOrder = async () => {
-                if (activeTickets >= 3) {
-                    alert("Osiągnięto limit 3 aktywnych ticketów. Zamknij jedno ze zgłoszeń na Discordzie.");
-                    return;
-                }
-                if (!formData.specs || !formData.payment) return alert("Wypełnij wszystkie pola formularza!");
-                
-                setLoading(true);
-                try {
-                    const res = await fetch(`${API_BASE}/api/nowe-zamowienie`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            userId: user.id, username: user.username, email: user.email,
-                            avatar: user.avatar, gra: selectedService, specs: formData.specs, platnosc: formData.payment
-                        })
-                    });
-                    if (res.ok) {
-                        setSuccess(true);
-                        setActiveTickets(prev => prev + 1);
-                    }
-                } catch (e) { alert("Błąd połączenia z serwerem."); }
-                setLoading(false);
-            };
 
             const PricingCard = ({ title, price, features, featured }) => (
-                <div className={`service-card p-10 rounded-[45px] text-center ${featured ? 'border-[#a855f7] shadow-[0_0_30px_rgba(168,85,247,0.2)] scale-105 z-10' : ''}`}>
-                    {featured && <div className="bg-[#a855f7] text-white text-[10px] font-black uppercase px-4 py-1 rounded-full self-center mb-4 tracking-widest shadow-[0_0_15px_#a855f7]">Polecane</div>}
+                <div className={`service-card p-10 rounded-[45px] text-center ${featured ? 'border-[#a855f7] scale-105' : ''}`}>
+                    {featured && <div className="bg-[#a855f7] text-white text-[10px] font-black uppercase px-4 py-1 rounded-full mb-4">Polecane</div>}
                     <h3 className="text-2xl font-bold text-white mb-2">{title}</h3>
                     <div className="text-5xl font-black text-[#22d3ee] my-8">{price} PLN</div>
-                    <ul className="text-left space-y-4 mb-10 opacity-70 flex-grow">
+                    <ul className="text-left space-y-4 mb-10 opacity-70">
                         {features.map((f, i) => (
                             <li key={i} className="text-sm flex items-start gap-3">
-                                <div className="tick-icon mt-0.5"><i className="fas fa-check text-[10px] text-white"></i></div>
-                                <span className="leading-tight">{f}</span>
+                                <div className="tick-icon"><i className="fas fa-check text-[10px] text-white"></i></div>
+                                <span>{f}</span>
                             </li>
                         ))}
                     </ul>
-                    <button 
-                        onClick={() => {setSelectedService(`${title} (${price} PLN)`); setIsModalOpen(true); setSuccess(false);}} 
-                        className="w-full bg-[#a855f7] hover:brightness-110 py-5 rounded-2xl text-white font-black uppercase transition-all shadow-lg active:scale-95"
-                    >
-                        Wybierz Pakiet
-                    </button>
+                    <button onClick={() => {setSelectedService(`${title} (${price} PLN)`); setIsModalOpen(true);}} className="w-full bg-[#a855f7] py-5 rounded-2xl text-white font-black uppercase">Wybierz Pakiet</button>
                 </div>
             );
 
             return (
                 <div className="min-h-screen">
-                    {/* Socials Fixed (Na prawej stronie) */}
-                    <div className={`social-fixed ${isScrolled ? 'opacity-100 translate-x-0' : 'md:opacity-0 md:translate-x-10'}`}>
-                        <a href="https://discord.gg/pH5yNGd22k" target="_blank" className="social-icon" title="Dołącz do Discorda"><i className="fab fa-discord text-2xl"></i></a>
-                        <a href="https://www.tiktok.com/@dexboost1" target="_blank" className="social-icon" title="Obserwuj na TikTok"><i className="fab fa-tiktok text-2xl"></i></a>
-                    </div>
-
-                    {/* Stała Nawigacja z Logowaniem / Profilem */}
-                    <nav className={`p-6 flex justify-end items-center fixed top-0 left-0 w-full z-[1100] transition-all ${isScrolled ? 'bg-black/40 backdrop-blur-md' : ''}`}>
+                    <nav className={`p-6 flex justify-end fixed top-0 w-full z-[1100] transition-all ${isScrolled ? 'bg-black/40 backdrop-blur-md' : ''}`}>
                         {user ? (
-                            <div className="relative" ref={logoutRef}>
-                                <div 
-                                    onClick={() => setShowLogout(!showLogout)}
-                                    className="flex items-center gap-4 bg-black/40 p-1.5 pr-6 rounded-full border border-white/5 cursor-pointer hover:bg-white/5 transition-all active:scale-95"
-                                >
-                                    <img src={user.avatar} className="w-10 h-10 rounded-full border-2 border-[#a855f7]" alt="User Avatar" />
+                            <div className="relative" onClick={() => setShowLogout(!showLogout)} ref={logoutRef}>
+                                <div className="flex items-center gap-4 bg-black/40 p-1.5 pr-6 rounded-full border border-white/5 cursor-pointer">
+                                    <img src={user.avatar} className="w-10 h-10 rounded-full" />
                                     <span className="text-white font-bold text-sm">{user.username}</span>
-                                    <i className={`fas fa-chevron-down text-[10px] transition-transform ${showLogout ? 'rotate-180' : ''}`}></i>
                                 </div>
-                                {showLogout && (
-                                    <div className="logout-menu">
-                                        <button 
-                                            onClick={handleLogout}
-                                            className="w-full text-left p-3 rounded-lg text-sm text-white font-bold hover:bg-red-500/20 hover:text-red-400 transition-all flex items-center gap-3"
-                                        >
-                                            <i className="fas fa-sign-out-alt"></i> Wyloguj się
-                                        </button>
-                                    </div>
-                                )}
+                                {showLogout && <div className="logout-menu"><button onClick={() => setUser(null)} className="text-red-400 font-bold p-2">Wyloguj</button></div>}
                             </div>
                         ) : (
-                            <a href={DISCORD_AUTH_URL} className="nav-login-btn px-6 py-3 rounded-xl text-white font-black uppercase text-xs flex items-center gap-3">
-                                <i className="fab fa-discord text-lg"></i> Zaloguj się
-                            </a>
+                            <a href={DISCORD_AUTH_URL} className="bg-[#5865f2] px-6 py-3 rounded-xl text-white font-black uppercase text-xs">Zaloguj</a>
                         )}
                     </nav>
 
-                    <header className="h-[60vh] flex flex-col items-center justify-center text-center px-4 relative">
-                        <h1 className={`zen-logo text-7xl md:text-9xl font-black text-white glow-text uppercase tracking-tighter ${isScrolled ? 'scrolled' : ''}`}>
-                            ZEN<span className="text-[#a855f7]">BOOST</span>
-                        </h1>
-                        
-                        <div className={`hero-socials mt-10 space-y-4 ${isScrolled ? 'scrolled' : ''}`}>
-                            <p className="text-[#a855f7] font-black uppercase tracking-[0.4em] text-xs">Nasz serwer discord oraz tiktok</p>
-                            <div className="flex justify-center gap-6">
-                                <a href="https://discord.gg/pH5yNGd22k" target="_blank" className="w-12 h-12 rounded-full border-2 border-white/20 flex items-center justify-center hover:bg-[#5865f2] hover:border-[#5865f2] transition-all"><i className="fab fa-discord text-xl"></i></a>
-                                <a href="https://www.tiktok.com/@dexboost1" target="_blank" className="w-12 h-12 rounded-full border-2 border-white/20 flex items-center justify-center hover:bg-black hover:border-white transition-all"><i className="fab fa-tiktok text-xl"></i></a>
-                            </div>
-                        </div>
+                    <header className="h-[60vh] flex flex-col items-center justify-center text-center">
+                        <h1 className={`zen-logo text-9xl font-black text-white ${isScrolled ? 'scrolled' : ''}`}>ZEN<span className="text-[#a855f7]">BOOST</span></h1>
                     </header>
 
-                    <main className="max-w-7xl mx-auto px-6 pt-10">
-                        {/* Why Us Hero Section */}
-                        <div className="text-center mb-32 fade-in-section">
-                            <h1 className="text-6xl md:text-8xl font-black text-white glow-text uppercase mb-4 tracking-tighter">Dlaczego <span className="text-[#a855f7]">warto nas wybrać</span></h1>
-                            <p className="text-xl md:text-2xl opacity-80 font-medium">Poczuj różnicę dzięki naszej zaawansowanej technologii optymalizacji komputera.</p>
-                        </div>
-
-                        {/* Feature Boxes Set 1 (Zaufanie/Security) */}
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-                            {[
-                                { i: "shield-alt", t: "Bezpieczeństwo", d: "Dzięki AnyDesk/RustDesk masz pełny podgląd sesji. Widzisz każdy nasz ruch." },
-                                { i: "bolt", t: "Wydajność", d: "Gwarantujemy najwyższe FPS i najniższe opóźnienia na Twoim sprzęcie." },
-                                { i: "user-check", t: "Zaufanie", d: "Setki zadowolonych klientów i tysiące godzin spędzonych na optymalizacji." },
-                                { i: "microchip", t: "Autorskie Metody", d: "Korzystamy z własnych skryptów bezpiecznych dla Twojego hardware." },
-                                { i: "lock", t: "Bezpieczeństwo sesji", d: "Wszystkie działania wykonujemy przy użyciu sprawdzonych i bezpiecznych sesji AnyDesk/RustDesk." },
-                                { i: "medal", t: "Profesjonalizm", d: "Każdy detal systemu przygotowujemy z najwyższą starannością i pasją." }
-                            ].map((f, i) => (
-                                <div key={i} className="feature-box p-10 rounded-[35px] group">
-                                    <div className="w-14 h-14 bg-[#a855f7]/10 rounded-2xl flex items-center justify-center mb-8 border border-[#a855f7]/20 group-hover:bg-[#a855f7] transition-all">
-                                        <i className={`fas fa-${f.i} text-2xl text-[#a855f7] group-hover:text-white`}></i>
-                                    </div>
-                                    <h4 className="text-white font-bold text-xl mb-4 leading-tight">{f.t}</h4>
-                                    <p className="text-sm opacity-50 leading-relaxed">{f.d}</p>
-                                </div>
-                            ))}
-                        </div>
-
-                        {/* Feature Boxes Set 2 (Gaming Specifics) */}
-                        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-40">
-                            {[
-                                { i: "gauge-high", t: "Zwiększ klatki", d: "Wyciskamy z Twojego procesora i karty graficznej każdy brakujący FPS.", c: "#22d3ee" },
-                                { i: "wifi", t: "Zredukuj ping", d: "Optymalizacja sieci i DNS dla najbardziej stabilnego połączenia.", c: "#22d3ee" },
-                                { i: "clock-rotate-left", t: "Mniejszy Delay", d: "Zredukuj Input Lag do absolutnego minimum. Bądź szybszy od wrogów.", c: "#22d3ee" },
-                                { i: "crosshairs", t: "Idealny Aim", d: "Stabilność obrazu sprawi, że Twoje celowanie będzie precyzyjne jak nigdy.", c: "#22d3ee" }
-                            ].map((f, i) => (
-                                <div key={i} className="feature-box gaming-box p-8 rounded-[35px] text-center group border-white/5">
-                                    <div className="w-16 h-16 bg-[#22d3ee]/10 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-[#22d3ee]/20 group-hover:bg-[#22d3ee] transition-all">
-                                        <i className={`fas fa-${f.i} text-2xl text-[#22d3ee] group-hover:text-white`}></i>
-                                    </div>
-                                    <h4 className="text-white font-bold text-lg mb-3 leading-tight uppercase tracking-tighter">{f.t}</h4>
-                                    <p className="text-xs opacity-50 leading-relaxed">{f.d}</p>
-                                </div>
-                            ))}
-                        </div>
-
-                        {/* PRICING SECTIONS */}
-                        <div className="space-y-40 mb-40">
-                            {/* PC TWEAK SECTION */}
-                            <section>
-                                <h2 className="text-4xl font-black text-white mb-16 uppercase text-center tracking-widest"><i className="fas fa-bolt text-[#a855f7] mr-4"></i> Optymalizacje PC</h2>
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-                                    <PricingCard title="Zwykły Boost" price="50" features={["Full System Tweaking", "BIOS Tweaking", "24/7 support"]} />
-                                    <PricingCard title="Lepszy Boost" price="100" features={["Custom Windows", "Full System Tweaking", "BIOS Tweaking", "Monitor Settings", "24/7 support"]} featured />
-                                    <PricingCard title="Custom Windows + Boost" price="150" features={["Custom Windows", "Full System Tweaking", "Hardware Overclocking", "BIOS Tweaking", "Router Settings", "Monitor Settings", "24/7 support"]} />
-                                </div>
-                            </section>
-
-                            {/* BOTS SECTION */}
-                            <section>
-                                <h2 className="text-4xl font-black text-white mb-16 uppercase text-center tracking-widest"><i className="fas fa-robot text-[#a855f7] mr-4"></i> Boty Discord</h2>
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-                                    <PricingCard title="Startowy Bot" price="200" features={["Systemy Administracji", "Auto-Moderacja treści"]} />
-                                    <PricingCard title="Ekonomiczny Plus" price="500" features={["Systemy Administracji", "Auto-Moderacja treści", "Pełna Ekonomia & Sklep", "Bazy Danych SQL", "System Levelowania (XP)", "Zaawansowane Logi Serwera"]} featured />
-                                    <PricingCard title="Mega Custom Bot" price="1000" features={["Systemy Administracji", "Pełna Ekonomia & Sklep", "Dashboard WWW Premium", "Weryfikacja OAuth2", "Płatności BLIK", "Integracje Twitch & YT", "Hosting w cenie", "Autorskie Minigry"]} />
-                                </div>
-                            </section>
-
-                            {/* WWW SECTION */}
-                            <section>
-                                <h2 className="text-4xl font-black text-white mb-16 uppercase text-center tracking-widest"><i className="fas fa-globe text-[#a855f7] mr-4"></i> Strony WWW</h2>
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-                                    <PricingCard title="Landing Page" price="300" features={["Modern One-Page", "Responsywność Mobile"]} />
-                                    <PricingCard title="Gamingowa" price="600" features={["Modern One-Page", "Responsywność Mobile", "Design Premium (Glow)", "Widgety Discord Live"]} featured />
-                                    <PricingCard title="Sklep / Dashboard" price="1000" features={["Modern One-Page", "Responsywność Mobile", "Design Premium (Glow)", "Logowanie Discord OAuth2", "Sklep z Koszykiem", "System Płatności BLIK", "Automatyczne Role", "Panel Statystyk Online", "Pełna Integracja z Botem"]} />
-                                </div>
-                            </section>
-                        </div>
-
-                        {/* Owners Section (WOW + Fioletowe Ramki) */}
-                        <section className="py-40 text-center border-t border-white/5">
-                            <h2 className="text-3xl font-black text-white uppercase tracking-[0.5em] mb-24 opacity-80 text-sm">Ownerzy Serwera</h2>
-                            <div className="flex flex-wrap justify-center gap-32">
-                                <div className="flex flex-col items-center group">
-                                    <div className="avatar-frame w-56 h-56 overflow-hidden mb-8">
-                                        <img src="z.png" className="w-full h-full object-cover rounded-full" alt="ZenBoost" />
-                                    </div>
-                                    <h3 className="owner-name text-3xl font-black uppercase tracking-tighter">ZenBoost</h3>
-                                    <p className="text-[#22d3ee] font-bold text-xs uppercase tracking-widest mt-2">Twórca Treści</p>
-                                </div>
-                                <div className="flex flex-col items-center group">
-                                    <div className="avatar-frame w-56 h-56 overflow-hidden mb-8">
-                                        <img src="the-actor-that-plays-the-amazon-jack-reacher-would-make-a-v0-1i9h2cs24fm81.webp" className="w-full h-full object-cover rounded-full" alt="Seyven" />
-                                    </div>
-                                    <h3 className="owner-name text-3xl font-black uppercase tracking-tighter">Seyven</h3>
-                                    <p className="text-[#22d3ee] font-bold text-xs uppercase tracking-widest mt-2 uppercase">Twórca Strony & Bota</p>
-                                </div>
+                    <main className="max-w-7xl mx-auto px-6">
+                        <section>
+                            <h2 className="text-4xl font-black text-white mb-16 text-center">Optymalizacje PC</h2>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+                                <PricingCard title="Zwykły Boost" price="50" features={["Full System Tweaking", "BIOS Tweaking"]} />
+                                <PricingCard title="Lepszy Boost" price="100" features={["Custom Windows", "Full System Tweaking", "BIOS Tweaking"]} featured />
+                                <PricingCard title="Custom Windows + Boost" price="150" features={["Custom Windows", "Full System Tweaking", "Hardware Overclocking"]} />
                             </div>
                         </section>
                     </main>
-
-                    {/* MODAL SYSTEMU TICKETOWEGO */}
-                    {isModalOpen && (
-                        <div className="fixed inset-0 bg-black/95 backdrop-blur-xl flex items-center justify-center p-4 z-[2000] animate-in fade-in duration-300">
-                            <div className="bg-[#121625] w-full max-w-lg rounded-[40px] overflow-hidden border border-white/10 shadow-2xl">
-                                <div className="p-8 border-b border-white/5 flex justify-between items-center">
-                                    <h3 className="text-white font-black uppercase text-sm tracking-widest">Weryfikacja Zamówienia</h3>
-                                    <button onClick={() => setIsModalOpen(false)} className="text-white/40 hover:text-white transition-colors"><i className="fas fa-times text-2xl"></i></button>
-                                </div>
-                                
-                                {!user ? (
-                                    <div className="p-12 text-center">
-                                        <div className="w-20 h-20 bg-[#5865f2]/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                                            <i className="fab fa-discord text-4xl text-[#5865f2]"></i>
-                                        </div>
-                                        <h2 className="text-white text-2xl font-black mb-4 uppercase">Wymagane Logowanie</h2>
-                                        <p className="opacity-60 mb-8 leading-relaxed text-sm">Zaloguj się przez Discord, aby zsynchronizować zgłoszenie z naszym botem.</p>
-                                        <a href={DISCORD_AUTH_URL} className="bg-[#5865f2] block py-5 rounded-2xl text-white font-black uppercase shadow-xl hover:brightness-110 transition-all flex items-center justify-center gap-3">
-                                            <i className="fab fa-discord text-2xl"></i> KONTYNUUJ Z DISCORD
-                                        </a>
-                                    </div>
-                                ) : !user.onServer ? (
-                                    <div className="p-12 text-center">
-                                        <div className="w-20 h-20 bg-yellow-500/10 rounded-full flex items-center justify-center mx-auto mb-6"><i className="fas fa-exclamation-triangle text-3xl text-yellow-500"></i></div>
-                                        <h2 className="text-white text-2xl font-black mb-4 uppercase">Dołącz do nas!</h2>
-                                        <p className="opacity-60 mb-8 leading-relaxed text-sm">Aby sfinalizować zamówienie, musisz być na naszym serwerze.</p>
-                                        <a href="https://discord.gg/pH5yNGd22k" target="_blank" className="bg-[#5865f2] block py-5 rounded-2xl text-white font-black uppercase shadow-xl hover:brightness-110 mb-4 transition-all">Dołącz do Serwera 🚀</a>
-                                        <button onClick={checkMembership} disabled={refreshing} className="text-[#a855f7] font-bold text-sm hover:underline flex items-center justify-center gap-3 mx-auto">
-                                            <i className={`fas fa-sync-alt ${refreshing ? 'animate-spin' : ''}`}></i>
-                                            {refreshing ? 'Sprawdzanie...' : 'Już dołączyłem, sprawdź status'}
-                                        </button>
-                                    </div>
-                                ) : !success ? (
-                                    <div className="p-8 space-y-6">
-                                        <div className="p-4 bg-black/30 rounded-3xl flex items-center gap-4 border border-white/5">
-                                            <img src={user.avatar} className="w-12 h-12 rounded-full border-2 border-[#a855f7]" />
-                                            <div>
-                                                <div className="text-[10px] uppercase font-black text-[#a855f7] tracking-widest mb-1">Status Autoryzacji</div>
-                                                <div className="text-white font-bold text-sm">{user.username}</div>
-                                            </div>
-                                        </div>
-
-                                        {/* LIMIT TICKETÓW OSTRZEŻENIE */}
-                                        {activeTickets >= 3 ? (
-                                            <div className="bg-red-500/10 border border-red-500/50 p-6 rounded-2xl text-center">
-                                                <i className="fas fa-lock text-red-500 text-3xl mb-4"></i>
-                                                <h4 className="text-white font-black uppercase text-sm mb-2">Limit Osiągnięty</h4>
-                                                <p className="text-xs opacity-60">Masz już 3 aktywne zgłoszenia. Poproś administrację o zamknięcie ticketów, bądź ticketa, żeby kontynuować zakupy.</p>
-                                            </div>
-                                        ) : (
-                                            <div className="space-y-4">
-                                                <div className="flex justify-between items-center px-1">
-                                                    <label className="text-[10px] font-black uppercase opacity-40 tracking-widest">Wybrany Pakiet</label>
-                                                    <span className="text-[9px] font-black uppercase text-[#a855f7]">Aktywne: {activeTickets}/3</span>
-                                                </div>
-                                                <div className="w-full bg-[#1a1f33] p-4 rounded-2xl text-[#22d3ee] font-bold border border-white/5">{selectedService}</div>
-                                                
-                                                <label className="text-[10px] font-black uppercase opacity-40 block tracking-widest px-1">Specyfikacja PC / Opis*</label>
-                                                <textarea onChange={e => setFormData({...formData, specs: e.target.value})} className="w-full bg-[#1a1f33] p-4 rounded-2xl text-white h-24 focus:ring-1 ring-[#a855f7] outline-none border border-white/5 transition-all resize-none" placeholder="Opisz swoje wymagania..."></textarea>
-                                                
-                                                <label className="text-[10px] font-black uppercase opacity-40 block tracking-widest px-1">Metoda Płatności*</label>
-                                                <select onChange={e => setFormData({...formData, payment: e.target.value})} className="w-full bg-[#1a1f33] p-4 rounded-2xl text-white focus:ring-1 ring-[#a855f7] outline-none border border-white/5 cursor-pointer">
-                                                    <option value="">Wybierz...</option>
-                                                    <option value="BLIK">BLIK (Nr Telefonu)</option>
-                                                    <option value="PSC">PSC (PaySafeCard)</option>
-                                                </select>
-
-                                                <button onClick={sendOrder} disabled={loading} className="w-full bg-[#a855f7] py-6 rounded-2xl text-white font-black uppercase shadow-xl hover:brightness-110 transition-all flex items-center justify-center gap-3 active:scale-95 mt-4">
-                                                    {loading ? <i className="fas fa-circle-notch fa-spin text-xl"></i> : "Wyślij Zgłoszenie 🚀"}
-                                                </button>
-                                            </div>
-                                        )}
-                                    </div>
-                                ) : (
-                                    <div className="p-12 text-center animate-in zoom-in duration-300">
-                                        <div className="w-24 h-24 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-8"><i className="fas fa-check text-4xl text-green-500"></i></div>
-                                        <h2 className="text-white text-3xl font-black mb-4 uppercase tracking-tighter">Sukces!</h2>
-                                        <p className="opacity-60 mb-10 leading-relaxed text-sm">Twoje zgłoszenie dotarło do bota. Sprawdź Discorda!</p>
-                                        <a href="https://discord.gg/pH5yNGd22k" target="_blank" className="bg-green-600 block py-6 rounded-2xl text-white font-black uppercase shadow-xl hover:bg-green-700 transition-all">Otwórz Discorda 🚀</a>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    )}
-
-                    <footer className="mt-40 text-center py-10 opacity-30 border-t border-white/5">
-                        <p className="text-[10px] uppercase font-bold tracking-[0.4em]">ZenBoost Project &copy; 2026 | All Rights Reserved</p>
-                    </footer>
                 </div>
             );
         };
