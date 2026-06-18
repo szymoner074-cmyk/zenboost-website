@@ -177,9 +177,9 @@
 
         // --- ⚙️ KONFIGURACJA OAUTH2 ---
         const CLIENT_ID = '1490818531955183747'; 
-        const REDIRECT_URI = 'http://zenboost-tweak.pl/'; 
+        const REDIRECT_URI = 'https://api.zenboost.eu'; 
         const DISCORD_AUTH_URL = `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=code&scope=identify%20email&prompt=consent`;
-        const API_BASE = 'https://api.zenboost-tweak.pl';
+        const API_BASE = 'https://api.zenboost.eu';
 
         const App = () => {
             const [user, setUser] = useState(null);
